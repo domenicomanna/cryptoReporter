@@ -74,8 +74,8 @@ app.UseExceptionHandler(
     new ExceptionHandlerOptions { ExceptionHandler = new ExceptionHandler(app.Environment).Invoke }
 );
 
-app.UseAuthorization();
 app.UseCors();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
