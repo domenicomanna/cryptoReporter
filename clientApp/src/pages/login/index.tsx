@@ -31,7 +31,8 @@ const Login = () => {
   useEffect(() => {
     // clear the state
     navigate(routePaths.login, { replace: true });
-  }, [navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const formik = useFormik({
     initialValues: {
