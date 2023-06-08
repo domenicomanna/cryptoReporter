@@ -23,6 +23,11 @@ public static class SwaggerServiceCollectionExtensions
                     Description = "Enter JWT token"
                 }
             );
+            options.CustomOperationIds(apiDescription =>
+            {
+                string methodName = apiDescription.ActionDescriptor.RouteValues["action"] ?? "";
+                return char.ToLower(methodName[0]) + methodName.Substring(1);
+            });
         });
     }
 }
