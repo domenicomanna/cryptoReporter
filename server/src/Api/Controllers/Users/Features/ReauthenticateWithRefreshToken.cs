@@ -43,6 +43,11 @@ public class ReauthenticateWithRefreshTokenHandler
             throw new ApiException(HttpStatusCode.Unauthorized);
         }
 
+        if (currentRefreshToken.Expires < DateTime.UtcNow)
+        {
+            throw new ApiException(HttpStatusCode.Unauthorized);
+        }
+
         User user = currentRefreshToken.User;
         string accessToken = _jwtHelper.CreateAccessToken(user);
         (RefreshToken newRefreshToken, string newNonHashedRefreshToken) = _jwtHelper.CreateRefreshToken(user);

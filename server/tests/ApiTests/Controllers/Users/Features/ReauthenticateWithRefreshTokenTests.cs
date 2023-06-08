@@ -34,6 +34,32 @@ public class ReauthenticateWithRefreshTokenTests
     }
 
     [TestMethod]
+    public async Task AnExceptionShouldBeThrownIfTheRefreshTokenIsExpired()
+    {
+        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        User user = new User();
+        appDbContext.Users.Add(user);
+        appDbContext.SaveChanges();
+
+        string nonHashedRefreshToken = "token";
+        RefreshToken token = new RefreshToken
+        {
+            UserId = user.Id,
+            Token = nonHashedRefreshToken.ToSHA512(),
+            Expires = DateTime.UtcNow.AddMinutes(-10)
+        };
+        appDbContext.RefreshTokens.Add(token);
+        appDbContext.SaveChanges();
+
+        ReauthenticateWithRefreshTokenHandler handler = new ReauthenticateWithRefreshTokenHandler(
+            _jwtHelperMock.Object,
+            appDbContext
+        );
+
+        await Assert.ThrowsExceptionAsync<ApiException>(async () => await handler.Handle(nonHashedRefreshToken));
+    }
+
+    [TestMethod]
     public async Task ReauhenticationShouldSucceed()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
