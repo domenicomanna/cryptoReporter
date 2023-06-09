@@ -68,7 +68,12 @@ public class ReauthenticateWithRefreshTokenTests
         appDbContext.SaveChanges();
 
         string nonHashedRefreshToken = "refreshToken";
-        RefreshToken refreshToken = new RefreshToken { UserId = user.Id, Token = nonHashedRefreshToken.ToSHA512() };
+        RefreshToken refreshToken = new RefreshToken
+        {
+            UserId = user.Id,
+            Token = nonHashedRefreshToken.ToSHA512(),
+            Expires = DateTime.UtcNow.AddHours(1)
+        };
         appDbContext.RefreshTokens.Add(refreshToken);
         appDbContext.SaveChanges();
 
