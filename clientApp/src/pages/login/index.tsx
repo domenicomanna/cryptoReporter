@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link as ReactRouterLink, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { routePaths } from '../../constants/routePaths';
 import { useFormik } from 'formik';
@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import { LoginRequest } from '../../api/generatedSdk';
 import { usersApi } from '../../api';
 import { UserContext, UserInfo } from '../../contexts/UserContext';
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, Link as MuiLink } from '@mui/material';
 import { PageTitle } from '../../components/pageTitle';
 import { LoadingButton } from '@mui/lab';
 
@@ -74,6 +74,7 @@ const Login = () => {
           display: 'flex',
           gap: '1rem',
           flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
         <TextField
@@ -102,6 +103,9 @@ const Login = () => {
         >
           Sign In
         </LoadingButton>
+        <MuiLink component={ReactRouterLink} to={routePaths.signUp}>
+          Need an account? Sign up
+        </MuiLink>
       </Box>
     </Box>
   );

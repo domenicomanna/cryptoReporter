@@ -1,6 +1,7 @@
 using System.Net;
 using Api.Common.Attributes;
 using Api.Common.Exceptions;
+using Api.Common.ExtensionMethods.ValidationRules;
 using Api.Database;
 using Api.Domain.Models;
 using Api.Services;
@@ -22,7 +23,7 @@ public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
     public CreateUserRequestValidator()
     {
         RuleFor(x => x.Email).NotEmpty().EmailAddress();
-        RuleFor(x => x.Password).NotEmpty();
+        RuleFor(x => x.Password).Password();
         RuleFor(x => x.ConfirmedPassword).Equal(x => x.Password);
     }
 }
