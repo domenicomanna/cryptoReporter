@@ -1,5 +1,6 @@
 using Api.Controllers.Users.Common;
 using Api.Controllers.Users.Common.Features;
+using Api.Controllers.Users.Features;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -67,5 +68,25 @@ public class UsersController : BaseApiController
     public async Task<UserDTO> GetUser([FromServices] GetUserHandler handler, int userId)
     {
         return await handler.Handle(userId);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("reset-password-step-one")]
+    public async Task ResetPasswordStepOne(
+        [FromServices] ResetPasswordStepOneHandler handler,
+        ResetPasswordStepOneRequest resetPasswordStepOneRequest
+    )
+    {
+        await handler.Handle(resetPasswordStepOneRequest);
+    }
+
+    [AllowAnonymous]
+    [HttpPut("reset-password-step-two")]
+    public async Task ResetPasswordStepTwo(
+        [FromServices] ResetPasswordStepTwoHandler handler,
+        ResetPasswordStepTwoRequest resetPasswordStepTwoRequest
+    )
+    {
+        await handler.Handle(resetPasswordStepTwoRequest);
     }
 }

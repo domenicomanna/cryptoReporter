@@ -106,6 +106,9 @@ const Login = () => {
         <MuiLink component={ReactRouterLink} to={routePaths.signUp}>
           Need an account? Sign up
         </MuiLink>
+        <MuiLink component={ReactRouterLink} to={routePaths.resetPasswordStepOne}>
+          Forgot your password? Reset it
+        </MuiLink>
       </Box>
     </Box>
   );

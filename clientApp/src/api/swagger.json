@@ -192,6 +192,70 @@
           }
         ]
       }
+    },
+    "/api/Users/reset-password-step-one": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "resetPasswordStepOne",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordStepOneRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordStepOneRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordStepOneRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Users/reset-password-step-two": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "resetPasswordStepTwo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordStepTwoRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordStepTwoRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordStepTwoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -277,6 +341,38 @@
             "format": "int32"
           },
           "accessToken": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResetPasswordStepOneRequest": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResetPasswordStepTwoRequest": {
+        "required": [
+          "confirmedNewPassword",
+          "newPassword",
+          "resetPasswordToken"
+        ],
+        "type": "object",
+        "properties": {
+          "resetPasswordToken": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string"
+          },
+          "confirmedNewPassword": {
             "type": "string"
           }
         },

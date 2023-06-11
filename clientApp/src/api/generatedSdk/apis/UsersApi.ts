@@ -20,6 +20,8 @@ import type {
   LoginRequest,
   LoginResult,
   ReauthenticateWithRefreshTokenResult,
+  ResetPasswordStepOneRequest,
+  ResetPasswordStepTwoRequest,
   UserDTO,
 } from '../models';
 import {
@@ -33,6 +35,10 @@ import {
     LoginResultToJSON,
     ReauthenticateWithRefreshTokenResultFromJSON,
     ReauthenticateWithRefreshTokenResultToJSON,
+    ResetPasswordStepOneRequestFromJSON,
+    ResetPasswordStepOneRequestToJSON,
+    ResetPasswordStepTwoRequestFromJSON,
+    ResetPasswordStepTwoRequestToJSON,
     UserDTOFromJSON,
     UserDTOToJSON,
 } from '../models';
@@ -47,6 +53,14 @@ export interface GetUserRequest {
 
 export interface LoginOperationRequest {
     loginRequest?: LoginRequest;
+}
+
+export interface ResetPasswordStepOneOperationRequest {
+    resetPasswordStepOneRequest?: ResetPasswordStepOneRequest;
+}
+
+export interface ResetPasswordStepTwoOperationRequest {
+    resetPasswordStepTwoRequest?: ResetPasswordStepTwoRequest;
 }
 
 /**
@@ -189,6 +203,58 @@ export class UsersApi extends runtime.BaseAPI {
     async reauthenticateWithRefreshToken(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ReauthenticateWithRefreshTokenResult> {
         const response = await this.reauthenticateWithRefreshTokenRaw(initOverrides);
         return await response.value();
+    }
+
+    /**
+     */
+    async resetPasswordStepOneRaw(requestParameters: ResetPasswordStepOneOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/Users/reset-password-step-one`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ResetPasswordStepOneRequestToJSON(requestParameters.resetPasswordStepOneRequest),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async resetPasswordStepOne(requestParameters: ResetPasswordStepOneOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.resetPasswordStepOneRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async resetPasswordStepTwoRaw(requestParameters: ResetPasswordStepTwoOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/Users/reset-password-step-two`,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ResetPasswordStepTwoRequestToJSON(requestParameters.resetPasswordStepTwoRequest),
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async resetPasswordStepTwo(requestParameters: ResetPasswordStepTwoOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.resetPasswordStepTwoRaw(requestParameters, initOverrides);
     }
 
 }

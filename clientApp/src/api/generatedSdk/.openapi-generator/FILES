@@ -6,6 +6,8 @@ models/CreateUserResult.ts
 models/LoginRequest.ts
 models/LoginResult.ts
 models/ReauthenticateWithRefreshTokenResult.ts
+models/ResetPasswordStepOneRequest.ts
+models/ResetPasswordStepTwoRequest.ts
 models/UserDTO.ts
 models/index.ts
 runtime.ts

@@ -5,6 +5,9 @@ import { routePaths } from './constants/routePaths';
 import Home from './pages/home';
 import Login from './pages/login';
 import SignUp from './pages/signUp';
+import ResetPasswordStepOne from './pages/resetPasswordStepOne';
+import ResetPasswordStepTwo from './pages/resetPasswordStepTwo';
+import ResetPasswordStepOneSuccess from './pages/resetPasswordStepOneSuccess';
 
 const App = () => {
   return (
@@ -16,6 +19,9 @@ const App = () => {
       </Route>
       <Route path={routePaths.login} element={<Login />} />
       <Route path={routePaths.signUp} element={<SignUp />} />
+      <Route path={routePaths.resetPasswordStepOne} element={<ResetPasswordStepOne />} />
+      <Route path={routePaths.resetPasswordStepTwo} element={<ResetPasswordStepTwo />} />
+      <Route path={routePaths.resetPasswordStepOneSuccess} element={<ResetPasswordStepOneSuccess />} />
     </Routes>
   );
 };
