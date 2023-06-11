@@ -67,7 +67,7 @@ const Login = () => {
   if (credentialsAreValid) return <Navigate replace to={routePaths.home} />;
 
   return (
-    <Box component="form" sx={{ margin: '1rem auto', maxWidth: '375px' }} onSubmit={formik.handleSubmit}>
+    <Box component="form" sx={{ margin: '0 auto', maxWidth: '375px' }} onSubmit={formik.handleSubmit}>
       <PageTitle sx={{ textAlign: 'center', marginBottom: '1rem' }}> Login </PageTitle>
       <Box
         sx={{

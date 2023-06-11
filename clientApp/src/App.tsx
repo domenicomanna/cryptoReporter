@@ -8,6 +8,7 @@ import SignUp from './pages/signUp';
 import ResetPasswordStepOne from './pages/resetPasswordStepOne';
 import ResetPasswordStepTwo from './pages/resetPasswordStepTwo';
 import ResetPasswordStepOneSuccess from './pages/resetPasswordStepOneSuccess';
+import UnauthenticatedLayout from './components/unauthenticatedLayout/unauthenticatedLayout';
 
 const App = () => {
   return (
@@ -17,11 +18,13 @@ const App = () => {
           <Route path={routePaths.home} element={<Home />} />
         </Route>
       </Route>
-      <Route path={routePaths.login} element={<Login />} />
-      <Route path={routePaths.signUp} element={<SignUp />} />
-      <Route path={routePaths.resetPasswordStepOne} element={<ResetPasswordStepOne />} />
-      <Route path={routePaths.resetPasswordStepTwo} element={<ResetPasswordStepTwo />} />
-      <Route path={routePaths.resetPasswordStepOneSuccess} element={<ResetPasswordStepOneSuccess />} />
+      <Route element={<UnauthenticatedLayout />}>
+        <Route path={routePaths.login} element={<Login />} />
+        <Route path={routePaths.signUp} element={<SignUp />} />
+        <Route path={routePaths.resetPasswordStepOne} element={<ResetPasswordStepOne />} />
+        <Route path={routePaths.resetPasswordStepTwo} element={<ResetPasswordStepTwo />} />
+        <Route path={routePaths.resetPasswordStepOneSuccess} element={<ResetPasswordStepOneSuccess />} />
+      </Route>
     </Routes>
   );
 };
