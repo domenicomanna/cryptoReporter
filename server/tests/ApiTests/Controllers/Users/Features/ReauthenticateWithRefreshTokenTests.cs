@@ -60,7 +60,7 @@ public class ReauthenticateWithRefreshTokenTests
     }
 
     [TestMethod]
-    public async Task ReauhenticationShouldSucceed()
+    public async Task ReauthenticationShouldSucceed()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
         User user = new User();
