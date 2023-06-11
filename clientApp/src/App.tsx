@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import Layout from './components/layout/layout';
+import AuthenticatedLayout from './components/authenticatedLayout/authenticatedLayout';
 import ProtectedRoute from './components/protectedRoute';
 import { routePaths } from './constants/routePaths';
 import Home from './pages/home';
@@ -13,7 +13,7 @@ const App = () => {
   return (
     <Routes>
       <Route element={<ProtectedRoute />}>
-        <Route element={<Layout />}>
+        <Route element={<AuthenticatedLayout />}>
           <Route path={routePaths.home} element={<Home />} />
         </Route>
       </Route>
