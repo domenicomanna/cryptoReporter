@@ -33,7 +33,7 @@ const UserContextProvider: FC<Props> = ({ children }) => {
         await usersApi.getUser({ userId });
       } catch (error) {
         const loginPageRouterState: LoginPageRouterState = {
-          errorMessage: 'Session expired. Please sign in againn',
+          errorMessage: 'Session expired. Please sign in again',
         };
         await router.navigate(routePaths.login, {
           state: loginPageRouterState,
