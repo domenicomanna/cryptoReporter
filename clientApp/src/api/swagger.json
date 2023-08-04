@@ -5,6 +5,69 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/Transactions/batch": {
+      "post": {
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "addTransactions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddTransactionsRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddTransactionsRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddTransactionsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionDTO"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
     "/api/Users": {
       "post": {
         "tags": [
@@ -260,6 +323,25 @@
   },
   "components": {
     "schemas": {
+      "AddTransactionsRequest": {
+        "required": [
+          "deleteExistingTransactions",
+          "transactions"
+        ],
+        "type": "object",
+        "properties": {
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SingleTransaction"
+            }
+          },
+          "deleteExistingTransactions": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateUserRequest": {
         "required": [
           "confirmedPassword",
@@ -374,6 +456,105 @@
           },
           "confirmedNewPassword": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SingleTransaction": {
+        "required": [
+          "date",
+          "fee",
+          "numberOfCoinsSold",
+          "price",
+          "priceCurrency",
+          "quantityTransacted",
+          "transactionType"
+        ],
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "quantityTransacted": {
+            "type": "number",
+            "format": "double"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          },
+          "priceCurrency": {
+            "type": "string"
+          },
+          "fee": {
+            "type": "number",
+            "format": "double"
+          },
+          "transactionType": {
+            "type": "string"
+          },
+          "exchange": {
+            "type": "string",
+            "nullable": true
+          },
+          "numberOfCoinsSold": {
+            "type": "number",
+            "format": "double"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TransactionDTO": {
+        "required": [
+          "date",
+          "fee",
+          "id",
+          "numberOfCoinsSold",
+          "price",
+          "quantityTransacted",
+          "transactionType"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "quantityTransacted": {
+            "type": "number",
+            "format": "double"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          },
+          "fee": {
+            "type": "number",
+            "format": "double"
+          },
+          "transactionType": {
+            "type": "string"
+          },
+          "exchange": {
+            "type": "string",
+            "nullable": true
+          },
+          "numberOfCoinsSold": {
+            "type": "number",
+            "format": "double"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

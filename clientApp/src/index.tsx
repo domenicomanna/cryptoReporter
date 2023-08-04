@@ -8,10 +8,11 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { StyledEngineProvider } from '@mui/material';
+import { StyledEngineProvider, ThemeProvider } from '@mui/material';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import UserContextProvider from './contexts/UserContext';
+import { theme } from './constants/theme';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -24,12 +25,14 @@ export const router = createBrowserRouter([
 
 root.render(
   <React.StrictMode>
-    <StyledEngineProvider injectFirst>
-      <UserContextProvider>
-        <RouterProvider router={router} />
-      </UserContextProvider>
-      <ToastContainer />
-    </StyledEngineProvider>
+    <ThemeProvider theme={theme}>
+      <StyledEngineProvider injectFirst>
+        <UserContextProvider>
+          <RouterProvider router={router} />
+        </UserContextProvider>
+        <ToastContainer />
+      </StyledEngineProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 

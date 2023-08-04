@@ -1,0 +1,117 @@
+using Api.Common.Attributes;
+using Api.Common.Data;
+using Api.Common.ExtensionMethods;
+using Api.Database;
+using Api.Domain.Models;
+using AutoMapper;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+
+namespace Api.Controllers.Transactions.Common.Features;
+
+public class SingleTransaction
+{
+    public DateOnly Date { get; set; }
+    public decimal QuantityTransacted { get; set; }
+    public decimal Price { get; set; }
+    public string PriceCurrency { get; set; } = string.Empty;
+    public decimal Fee { get; set; }
+    public string TransactionType { get; set; } = string.Empty;
+    public string? Exchange { get; set; }
+    public decimal NumberOfCoinsSold { get; set; }
+    public string? Notes { get; set; }
+}
+
+public class SingleTransactionValidator : AbstractValidator<SingleTransaction>
+{
+    public SingleTransactionValidator()
+    {
+        List<string> validTransactionTypes = Enum.GetValues<TransactionTypeId>()
+            .Select(x => x.GetDescription().ToLower())
+            .ToList();
+
+        RuleFor(x => x.Date).NotEmpty();
+        RuleFor(x => x.QuantityTransacted).NotNull();
+        RuleFor(x => x.Price).NotNull();
+        RuleFor(x => x.PriceCurrency)
+            .NotEmpty()
+            .Must(x => CurrencyCodes.Codes.Contains(x))
+            .WithMessage($"Price currency must be one of {string.Join(", ", CurrencyCodes.Codes.ToList())}");
+        ;
+        RuleFor(x => x.Fee).NotNull();
+        RuleFor(x => x.TransactionType)
+            .NotEmpty()
+            .Must(x => validTransactionTypes.Contains(x.ToLower()))
+            .WithMessage($"Transaction type must be one of {string.Join(", ", validTransactionTypes)}");
+    }
+}
+
+public class AddTransactionsRequest
+{
+    public List<SingleTransaction> Transactions { get; set; } = new List<SingleTransaction>();
+    public bool DeleteExistingTransactions { get; set; } = false;
+}
+
+public class AddTransactionsRequestValidator : AbstractValidator<AddTransactionsRequest>
+{
+    public AddTransactionsRequestValidator()
+    {
+        RuleForEach(x => x.Transactions).SetValidator(new SingleTransactionValidator());
+    }
+}
+
+[Inject]
+public class AddTransactionsHandler
+{
+    IMapper _mapper;
+    AppDbContext _appDbContext;
+
+    public AddTransactionsHandler(IMapper mapper, AppDbContext appDbContext)
+    {
+        _mapper = mapper;
+        _appDbContext = appDbContext;
+    }
+
+    public async Task<List<TransactionDTO>> Handle(AddTransactionsRequest request)
+    {
+        using var transaction = await _appDbContext.Database.BeginTransactionAsync();
+
+        if (request.DeleteExistingTransactions)
+        {
+            await _appDbContext.Transactions.ExecuteDeleteAsync();
+        }
+        List<Transaction> transactions = await CreateTransactions(request);
+
+        await transaction.CommitAsync();
+
+        return _mapper.Map<List<TransactionDTO>>(transactions);
+    }
+
+    private async Task<List<Transaction>> CreateTransactions(AddTransactionsRequest request)
+    {
+        List<TransactionType> transactionTypes = _appDbContext.TransactionTypes.ToList();
+        List<Transaction> transactions = request.Transactions
+            .Select(
+                x =>
+                    new Transaction
+                    {
+                        Date = x.Date,
+                        QuantityTransacted = x.QuantityTransacted,
+                        Price = x.Price,
+                        PriceCurrency = x.PriceCurrency,
+                        Fee = x.Fee,
+                        TransactionType = transactionTypes.First(
+                            transactionType => transactionType.Name.ToLower() == x.TransactionType.ToLower()
+                        ),
+                        Exchange = x.Exchange,
+                        NumberOfCoinsSold = x.NumberOfCoinsSold,
+                        Notes = x.Notes
+                    }
+            )
+            .ToList();
+        _appDbContext.Transactions.AddRange(transactions);
+        await _appDbContext.SaveChangesAsync();
+
+        return transactions;
+    }
+}

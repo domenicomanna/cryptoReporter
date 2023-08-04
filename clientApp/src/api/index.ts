@@ -1,4 +1,5 @@
 import { configuration } from './configuration';
-import { UsersApi } from './generatedSdk';
+import { TransactionsApi, UsersApi } from './generatedSdk';
 
 export const usersApi = new UsersApi(configuration);
+export const transactionsApi = new TransactionsApi(configuration);

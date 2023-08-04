@@ -3,3 +3,9 @@ export type ProblemDetails = {
   status?: number;
   title?: string;
 };
+
+export enum TransactionType {
+  Purchase = 'Purchase',
+  Reward = 'Reward',
+  Sale = 'Sale',
+}
