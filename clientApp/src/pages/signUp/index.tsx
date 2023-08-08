@@ -1,27 +1,46 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link as ReactRouterLink, Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { routePaths } from '../../constants/routePaths';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { CreateUserRequest, ResponseError } from '../../api/generatedSdk';
-import { usersApi } from '../../api';
+import { CreateUserRequest, FiatCurrencyTypeDTO, ResponseError } from '../../api/generatedSdk';
+import { fiatCurrenciesApi, usersApi } from '../../api';
 import { UserContext, UserInfo } from '../../contexts/UserContext';
-import { Box, TextField, Link as MuiLink } from '@mui/material';
+import { Box, TextField, Link as MuiLink, Autocomplete, CircularProgress } from '@mui/material';
 import { PageTitle } from '../../components/pageTitle';
 import { LoadingButton } from '@mui/lab';
 import { passwordSchema } from '../../validationSchemas/password';
 import { ProblemDetails } from '../../api/types';
+import { ArrowDropDown } from '@mui/icons-material';
 
 const SignUp = () => {
   const { setUserInfo } = useContext(UserContext);
   const [userHasBeenCreated, setUserHasBeenCreated] = useState(false);
+  const [fiatCurrencyOptionsAreLoading, setFiatCurrencyOptionsAreLoading] = useState(true);
+  const [fiatCurrencyTypes, setFiatCurrencyTypes] = useState<FiatCurrencyTypeDTO[]>([]);
+
+  useEffect(() => {
+    const loadFiatCurrencyTypes = async () => {
+      setFiatCurrencyOptionsAreLoading(true);
+      try {
+        const fiatCurrencyTypes = await fiatCurrenciesApi.getFiatCurrencies();
+        setFiatCurrencyTypes(fiatCurrencyTypes);
+      } catch (error) {
+        toast.error('Currencies could not be loaded');
+      } finally {
+        setFiatCurrencyOptionsAreLoading(false);
+      }
+    };
+    void loadFiatCurrencyTypes();
+  }, []);
 
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
       confirmPassword: '',
+      fiatCurrency: 'USD',
     },
     validationSchema: Yup.object({
       email: Yup.string().email('Email must be a valid email').required('Required'),
@@ -29,12 +48,14 @@ const SignUp = () => {
       confirmPassword: Yup.string()
         .required('Required')
         .oneOf([Yup.ref('password')], 'Passwords must match'),
+      fiatCurrency: Yup.string().required('Required'),
     }),
     onSubmit: async (values) => {
       const createUserRequest: CreateUserRequest = {
         email: values.email,
         password: values.password,
         confirmedPassword: values.confirmPassword,
+        fiatCurrencyType: values.fiatCurrency,
       };
       try {
         const result = await usersApi.createUser({ createUserRequest });
@@ -90,6 +111,26 @@ const SignUp = () => {
           {...formik.getFieldProps('confirmPassword')}
           helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
           error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+        />
+        <Autocomplete
+          options={fiatCurrencyTypes.map((x) => x.name)}
+          fullWidth
+          disabled={fiatCurrencyOptionsAreLoading}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Fiat Currency"
+              name="fiatCurrency"
+              required
+              helperText={formik.touched.fiatCurrency && formik.errors.fiatCurrency}
+              error={formik.touched.fiatCurrency && Boolean(formik.errors.fiatCurrency)}
+            />
+          )}
+          size="small"
+          value={formik.values.fiatCurrency}
+          onChange={(event, value) => formik.setFieldValue('fiatCurrency', value)}
+          onBlur={formik.handleBlur}
+          popupIcon={fiatCurrencyOptionsAreLoading ? <CircularProgress size={16} /> : <ArrowDropDown />}
         />
         <LoadingButton
           variant="contained"

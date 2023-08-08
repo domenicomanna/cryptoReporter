@@ -37,7 +37,7 @@ public class ReauthenticateWithRefreshTokenTests
     public async Task AnExceptionShouldBeThrownIfTheRefreshTokenIsExpired()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
-        User user = new User();
+        User user = new User() { FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
         appDbContext.SaveChanges();
 
@@ -63,7 +63,7 @@ public class ReauthenticateWithRefreshTokenTests
     public async Task ReauthenticationShouldSucceed()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
-        User user = new User();
+        User user = new User() { FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
         appDbContext.SaveChanges();
 

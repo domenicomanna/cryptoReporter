@@ -5,6 +5,7 @@ using Api.Database;
 using Api.Domain.Models;
 using Api.Services;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers.Users.Common.Features;
 
@@ -30,7 +31,9 @@ public class GetUserHandler
             throw new ApiException(HttpStatusCode.Forbidden);
         }
 
-        User? user = await _appDbContext.Users.FindAsync(userId);
+        User? user = await _appDbContext.Users
+            .Include(x => x.FiatCurrencyType)
+            .FirstOrDefaultAsync(x => x.Id == currentUserId);
         if (user is null)
         {
             throw new ApiException(HttpStatusCode.NotFound);

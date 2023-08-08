@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
     public DbSet<TransactionType> TransactionTypes => Set<TransactionType>();
     public DbSet<Transaction> Transactions => Set<Transaction>();
+    public DbSet<FiatCurrencyType> FiatCurrencyTypes => Set<FiatCurrencyType>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,5 +23,6 @@ public class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new PasswordResetTokenConfiguration());
         modelBuilder.ApplyConfiguration(new TransactionConfiguration());
         modelBuilder.ApplyConfiguration(new TransactionTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new FiatCurrencyTypeConfiguration());
     }
 }

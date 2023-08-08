@@ -1,6 +1,7 @@
 using System.Net;
 using Api.Common.Attributes;
 using Api.Common.Exceptions;
+using Api.Common.ExtensionMethods;
 using Api.Common.ExtensionMethods.ValidationRules;
 using Api.Database;
 using Api.Domain.Models;
@@ -16,15 +17,24 @@ public class CreateUserRequest
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public string ConfirmedPassword { get; set; } = string.Empty;
+    public string FiatCurrencyType { get; set; } = string.Empty;
 }
 
 public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
 {
     public CreateUserRequestValidator()
     {
+        List<string> validFiatCurrencyTypes = Enum.GetValues<FiatCurrencyTypeId>()
+            .Select(x => x.GetDescription().ToLower())
+            .ToList();
+
         RuleFor(x => x.Email).NotEmpty().EmailAddress();
         RuleFor(x => x.Password).Password();
         RuleFor(x => x.ConfirmedPassword).Equal(x => x.Password);
+        RuleFor(x => x.FiatCurrencyType)
+            .NotEmpty()
+            .Must(x => validFiatCurrencyTypes.Contains(x.ToLower()))
+            .WithMessage($"Fiat currency must be one of {string.Join(", ", validFiatCurrencyTypes)}");
     }
 }
 
@@ -84,7 +94,15 @@ public class CreateUserHandler
 
     private async Task<User> CreateUser(CreateUserRequest request)
     {
-        User user = new User { Email = request.Email, Password = _passwordHasher.HashPassword(request.Password) };
+        List<FiatCurrencyType> fiatCurrencyTypes = _appDbContext.FiatCurrencyTypes.ToList();
+        User user = new User
+        {
+            Email = request.Email,
+            Password = _passwordHasher.HashPassword(request.Password),
+            FiatCurrencyType = fiatCurrencyTypes.First(
+                fiatCurrencyType => fiatCurrencyType.Name.ToLower() == request.FiatCurrencyType.ToLower()
+            ),
+        };
         _appDbContext.Users.Add(user);
         await _appDbContext.SaveChangesAsync();
         return user;

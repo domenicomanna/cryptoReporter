@@ -37,6 +37,12 @@ export interface CreateUserRequest {
      * @memberof CreateUserRequest
      */
     confirmedPassword: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateUserRequest
+     */
+    fiatCurrencyType: string;
 }
 
 /**
@@ -47,6 +53,7 @@ export function instanceOfCreateUserRequest(value: object): boolean {
     isInstance = isInstance && "email" in value;
     isInstance = isInstance && "password" in value;
     isInstance = isInstance && "confirmedPassword" in value;
+    isInstance = isInstance && "fiatCurrencyType" in value;
 
     return isInstance;
 }
@@ -64,6 +71,7 @@ export function CreateUserRequestFromJSONTyped(json: any, ignoreDiscriminator: b
         'email': json['email'],
         'password': json['password'],
         'confirmedPassword': json['confirmedPassword'],
+        'fiatCurrencyType': json['fiatCurrencyType'],
     };
 }
 
@@ -79,6 +87,7 @@ export function CreateUserRequestToJSON(value?: CreateUserRequest | null): any {
         'email': value.email,
         'password': value.password,
         'confirmedPassword': value.confirmedPassword,
+        'fiatCurrencyType': value.fiatCurrencyType,
     };
 }
 

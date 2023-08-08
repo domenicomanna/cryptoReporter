@@ -31,6 +31,12 @@ export interface UserDTO {
      * @memberof UserDTO
      */
     email: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserDTO
+     */
+    fiatCurrencyTypeName: string;
 }
 
 /**
@@ -40,6 +46,7 @@ export function instanceOfUserDTO(value: object): boolean {
     let isInstance = true;
     isInstance = isInstance && "id" in value;
     isInstance = isInstance && "email" in value;
+    isInstance = isInstance && "fiatCurrencyTypeName" in value;
 
     return isInstance;
 }
@@ -56,6 +63,7 @@ export function UserDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): U
         
         'id': json['id'],
         'email': json['email'],
+        'fiatCurrencyTypeName': json['fiatCurrencyTypeName'],
     };
 }
 
@@ -70,6 +78,7 @@ export function UserDTOToJSON(value?: UserDTO | null): any {
         
         'id': value.id,
         'email': value.email,
+        'fiatCurrencyTypeName': value.fiatCurrencyTypeName,
     };
 }
 

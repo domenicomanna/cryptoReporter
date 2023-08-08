@@ -5,6 +5,7 @@ using Api.Database;
 using Api.Domain.Models;
 using Api.Services;
 using AutoMapper;
+using FluentValidation.TestHelper;
 using Moq;
 
 namespace ApiTests.Controllers.Users.Features;
@@ -32,10 +33,25 @@ public class CreateUserTests
     }
 
     [TestMethod]
+    public void ThereShouldBeAValidationErrorIfTheCurrencyIsInvalid()
+    {
+        CreateUserRequestValidator validator = new CreateUserRequestValidator();
+        CreateUserRequest request = new CreateUserRequest
+        {
+            Email = "test@gmail.com",
+            Password = "test12345",
+            ConfirmedPassword = "test12345",
+            FiatCurrencyType = "xyz123"
+        };
+        var result = validator.TestValidate(request);
+        result.ShouldHaveValidationErrorFor(x => x.FiatCurrencyType);
+    }
+
+    [TestMethod]
     public async Task AnExceptionShouldBeThrownIfTheEmailIsTaken()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
-        User user = new User { Email = "test@gmail.com", };
+        User user = new User { Email = "test@gmail.com", FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
         appDbContext.SaveChanges();
 
@@ -45,7 +61,12 @@ public class CreateUserTests
             _jwtHelperMock.Object,
             appDbContext
         );
-        CreateUserRequest request = new CreateUserRequest { Email = user.Email, Password = "12345" };
+        CreateUserRequest request = new CreateUserRequest
+        {
+            Email = user.Email,
+            Password = "12345",
+            FiatCurrencyType = "USD"
+        };
 
         await Assert.ThrowsExceptionAsync<ApiException>(async () => await handler.Handle(request));
     }
@@ -68,7 +89,12 @@ public class CreateUserTests
             _jwtHelperMock.Object,
             appDbContext
         );
-        CreateUserRequest request = new CreateUserRequest { Email = "test@gmail.com", Password = "test12345" };
+        CreateUserRequest request = new CreateUserRequest
+        {
+            Email = "test@gmail.com",
+            Password = "test12345",
+            FiatCurrencyType = "USD"
+        };
 
         (CreateUserResult result, string nonHashedRefreshToken) = await handler.Handle(request);
         Assert.AreEqual(request.Email, result.User.Email);

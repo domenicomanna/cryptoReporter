@@ -39,12 +39,6 @@ export interface SingleTransaction {
     price: number;
     /**
      * 
-     * @type {string}
-     * @memberof SingleTransaction
-     */
-    priceCurrency: string;
-    /**
-     * 
      * @type {number}
      * @memberof SingleTransaction
      */
@@ -83,7 +77,6 @@ export function instanceOfSingleTransaction(value: object): boolean {
     isInstance = isInstance && "date" in value;
     isInstance = isInstance && "quantityTransacted" in value;
     isInstance = isInstance && "price" in value;
-    isInstance = isInstance && "priceCurrency" in value;
     isInstance = isInstance && "fee" in value;
     isInstance = isInstance && "transactionType" in value;
     isInstance = isInstance && "numberOfCoinsSold" in value;
@@ -104,7 +97,6 @@ export function SingleTransactionFromJSONTyped(json: any, ignoreDiscriminator: b
         'date': json['date'],
         'quantityTransacted': json['quantityTransacted'],
         'price': json['price'],
-        'priceCurrency': json['priceCurrency'],
         'fee': json['fee'],
         'transactionType': json['transactionType'],
         'exchange': !exists(json, 'exchange') ? undefined : json['exchange'],
@@ -125,7 +117,6 @@ export function SingleTransactionToJSON(value?: SingleTransaction | null): any {
         'date': value.date,
         'quantityTransacted': value.quantityTransacted,
         'price': value.price,
-        'priceCurrency': value.priceCurrency,
         'fee': value.fee,
         'transactionType': value.transactionType,
         'exchange': value.exchange,

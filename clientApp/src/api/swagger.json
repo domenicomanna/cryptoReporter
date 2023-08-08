@@ -5,6 +5,45 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/FiatCurrencies": {
+      "get": {
+        "tags": [
+          "FiatCurrencies"
+        ],
+        "operationId": "getFiatCurrencies",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FiatCurrencyTypeDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FiatCurrencyTypeDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FiatCurrencyTypeDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Transactions/batch": {
       "post": {
         "tags": [
@@ -346,6 +385,7 @@
         "required": [
           "confirmedPassword",
           "email",
+          "fiatCurrencyType",
           "password"
         ],
         "type": "object",
@@ -357,6 +397,9 @@
             "type": "string"
           },
           "confirmedPassword": {
+            "type": "string"
+          },
+          "fiatCurrencyType": {
             "type": "string"
           }
         },
@@ -373,6 +416,18 @@
             "$ref": "#/components/schemas/UserDTO"
           },
           "accessToken": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FiatCurrencyTypeDTO": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
             "type": "string"
           }
         },
@@ -466,7 +521,6 @@
           "fee",
           "numberOfCoinsSold",
           "price",
-          "priceCurrency",
           "quantityTransacted",
           "transactionType"
         ],
@@ -483,9 +537,6 @@
           "price": {
             "type": "number",
             "format": "double"
-          },
-          "priceCurrency": {
-            "type": "string"
           },
           "fee": {
             "type": "number",
@@ -562,6 +613,7 @@
       "UserDTO": {
         "required": [
           "email",
+          "fiatCurrencyTypeName",
           "id"
         ],
         "type": "object",
@@ -571,6 +623,9 @@
             "format": "int32"
           },
           "email": {
+            "type": "string"
+          },
+          "fiatCurrencyTypeName": {
             "type": "string"
           }
         },

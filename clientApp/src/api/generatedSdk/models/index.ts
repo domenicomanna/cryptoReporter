@@ -3,6 +3,7 @@
 export * from './AddTransactionsRequest';
 export * from './CreateUserRequest';
 export * from './CreateUserResult';
+export * from './FiatCurrencyTypeDTO';
 export * from './LoginRequest';
 export * from './LoginResult';
 export * from './ReauthenticateWithRefreshTokenResult';

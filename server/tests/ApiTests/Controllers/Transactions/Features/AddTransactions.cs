@@ -28,27 +28,12 @@ public class AddTransactionsTests
     }
 
     [TestMethod]
-    public void ThereShouldBeAValidationErrorIfTheCurrencyIsInvalid()
-    {
-        SingleTransactionValidator validator = new SingleTransactionValidator();
-        SingleTransaction transaction = new SingleTransaction
-        {
-            Date = DateOnly.FromDateTime(DateTime.Now),
-            PriceCurrency = "xyz xyz",
-            TransactionType = TransactionTypeId.Purchase.GetDescription(),
-        };
-        var result = validator.TestValidate(transaction);
-        result.ShouldHaveValidationErrorFor(x => x.PriceCurrency);
-    }
-
-    [TestMethod]
     public void ThereShouldBeAValidationErrorIfTheTransactionTypeIsInvalid()
     {
         SingleTransactionValidator validator = new SingleTransactionValidator();
         SingleTransaction transaction = new SingleTransaction
         {
             Date = DateOnly.FromDateTime(DateTime.Now),
-            PriceCurrency = "EUR",
             TransactionType = "test 1111",
         };
         var result = validator.TestValidate(transaction);
@@ -73,7 +58,6 @@ public class AddTransactionsTests
                     Date = DateOnly.FromDateTime(DateTime.Now),
                     QuantityTransacted = 100,
                     Price = 1,
-                    PriceCurrency = "USD",
                     Fee = 0,
                     TransactionType = TransactionTypeId.Purchase.GetDescription(),
                     Exchange = "Coinbase",
@@ -85,7 +69,6 @@ public class AddTransactionsTests
                     Date = DateOnly.FromDateTime(DateTime.Now),
                     QuantityTransacted = 200,
                     Price = 1,
-                    PriceCurrency = "USD",
                     Fee = 0,
                     TransactionType = TransactionTypeId.Purchase.GetDescription(),
                     Exchange = "Coinbase",

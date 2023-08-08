@@ -1,5 +1,4 @@
 using Api.Common.Attributes;
-using Api.Common.Data;
 using Api.Common.ExtensionMethods;
 using Api.Database;
 using Api.Domain.Models;
@@ -14,7 +13,6 @@ public class SingleTransaction
     public DateOnly Date { get; set; }
     public decimal QuantityTransacted { get; set; }
     public decimal Price { get; set; }
-    public string PriceCurrency { get; set; } = string.Empty;
     public decimal Fee { get; set; }
     public string TransactionType { get; set; } = string.Empty;
     public string? Exchange { get; set; }
@@ -33,11 +31,6 @@ public class SingleTransactionValidator : AbstractValidator<SingleTransaction>
         RuleFor(x => x.Date).NotEmpty();
         RuleFor(x => x.QuantityTransacted).NotNull();
         RuleFor(x => x.Price).NotNull();
-        RuleFor(x => x.PriceCurrency)
-            .NotEmpty()
-            .Must(x => CurrencyCodes.Codes.Contains(x))
-            .WithMessage($"Price currency must be one of {string.Join(", ", CurrencyCodes.Codes.ToList())}");
-        ;
         RuleFor(x => x.Fee).NotNull();
         RuleFor(x => x.TransactionType)
             .NotEmpty()
@@ -98,7 +91,6 @@ public class AddTransactionsHandler
                         Date = x.Date,
                         QuantityTransacted = x.QuantityTransacted,
                         Price = x.Price,
-                        PriceCurrency = x.PriceCurrency,
                         Fee = x.Fee,
                         TransactionType = transactionTypes.First(
                             transactionType => transactionType.Name.ToLower() == x.TransactionType.ToLower()

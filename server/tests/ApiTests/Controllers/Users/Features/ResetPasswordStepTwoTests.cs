@@ -25,7 +25,12 @@ public class ResetPasswordStepTwoHandlerTests
     public async Task AnExceptionShouldBeThrownIfTheResetTokenIsNotFound()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
-        User user = new User { Id = 1, Email = "hello@gmail.com" };
+        User user = new User
+        {
+            Id = 1,
+            Email = "hello@gmail.com",
+            FiatCurrencyType = appDbContext.FiatCurrencyTypes.First()
+        };
         appDbContext.Users.Add(user);
         await appDbContext.SaveChangesAsync();
 
@@ -47,7 +52,12 @@ public class ResetPasswordStepTwoHandlerTests
     public async Task AnExceptionShouldBeThrownIfTheResetTokenIsExpired()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
-        User user = new User { Id = 1, Email = "hello@gmail.com" };
+        User user = new User
+        {
+            Id = 1,
+            Email = "hello@gmail.com",
+            FiatCurrencyType = appDbContext.FiatCurrencyTypes.First()
+        };
         string token = "test";
         PasswordResetToken passwordResetToken = new PasswordResetToken
         {
@@ -81,7 +91,12 @@ public class ResetPasswordStepTwoHandlerTests
     public async Task PasswordShouldBeSuccessfullyReset()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
-        User user = new User { Id = 1, Email = "hello@gmail.com" };
+        User user = new User
+        {
+            Id = 1,
+            Email = "hello@gmail.com",
+            FiatCurrencyType = appDbContext.FiatCurrencyTypes.First()
+        };
         string token = "test";
         PasswordResetToken passwordResetToken = new PasswordResetToken
         {

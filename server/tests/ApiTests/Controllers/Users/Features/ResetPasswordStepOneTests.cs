@@ -41,7 +41,7 @@ public class ResetPasswordStepOneHandlerTests
         string email = "test@gmail.com";
 
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
-        appDbContext.Users.Add(new User { Email = email });
+        appDbContext.Users.Add(new User { Email = email, FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() });
         await appDbContext.SaveChangesAsync();
 
         ResetPasswordStepOneRequest request = new ResetPasswordStepOneRequest { Email = email };

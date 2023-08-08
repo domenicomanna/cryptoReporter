@@ -1,3 +1,4 @@
+apis/FiatCurrenciesApi.ts
 apis/TransactionsApi.ts
 apis/UsersApi.ts
 apis/index.ts
@@ -5,6 +6,7 @@ index.ts
 models/AddTransactionsRequest.ts
 models/CreateUserRequest.ts
 models/CreateUserResult.ts
+models/FiatCurrencyTypeDTO.ts
 models/LoginRequest.ts
 models/LoginResult.ts
 models/ReauthenticateWithRefreshTokenResult.ts

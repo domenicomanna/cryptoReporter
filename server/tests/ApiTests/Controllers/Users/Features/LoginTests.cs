@@ -50,7 +50,7 @@ public class LoginTests
     public async Task AnExceptionShouldBeThrownIfTheUsersPasswordIsInvalid()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
-        User user = new User { Email = "test@gmail.com", };
+        User user = new User { Email = "test@gmail.com", FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
         appDbContext.SaveChanges();
 
@@ -71,7 +71,7 @@ public class LoginTests
     public async Task LoginShouldSucceed()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
-        User user = new User { Email = "test@gmail.com", };
+        User user = new User { Email = "test@gmail.com", FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
         appDbContext.SaveChanges();
 

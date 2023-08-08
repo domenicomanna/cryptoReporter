@@ -12,8 +12,6 @@ export const buildTransactions = (
     date: formatDateString(record[mappingConfig.dateColumnName ?? ''] ?? ''),
     quantityTransacted: convertToNumber(record[mappingConfig.quantityTransactedColumnName ?? '']),
     price: parseFloat(record[mappingConfig.priceColumnName ?? ''] ?? '0'),
-    // TODO: remove hardcoding of currency and store it as a field on the user's table instead of on each transaction
-    priceCurrency: 'USD',
     fee: convertToNumber(record[mappingConfig.priceColumnName ?? '']),
     transactionType: getTransactionType(record[mappingConfig.transactionTypeColumnName ?? ''] ?? ''),
     numberOfCoinsSold: convertToNumber(record[mappingConfig.numberOfCoinsSoldColumnName ?? '']),
