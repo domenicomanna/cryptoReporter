@@ -4,8 +4,10 @@ using Api.Controllers.Transactions.Common;
 using Api.Controllers.Transactions.Common.Features;
 using Api.Database;
 using Api.Domain.Models;
+using Api.Services;
 using AutoMapper;
 using FluentValidation.TestHelper;
+using Moq;
 
 namespace ApiTests.Controllers.Transactions.Features;
 
@@ -14,6 +16,7 @@ public class AddTransactionsTests
 {
     IMapper _mapper = null!;
     AppDbContextCreator _appDbContextCreator = null!;
+    Mock<ICurrentUserAccessor> _currentUserAccessorMock = null!;
 
     [TestInitialize]
     public void SetUp()
@@ -23,7 +26,7 @@ public class AddTransactionsTests
             opts.AddProfile(new TransactionsMappingProfile());
         });
         _mapper = mapperConfiguration.CreateMapper();
-
+        _currentUserAccessorMock = new Mock<ICurrentUserAccessor>();
         _appDbContextCreator = new AppDbContextCreator();
     }
 
@@ -44,10 +47,17 @@ public class AddTransactionsTests
     public async Task TheTransactionsShouldBeAddedSuccessfully()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
-        appDbContext.Transactions.Add(new Transaction { TransactionTypeId = TransactionTypeId.Purchase });
+        User user = new User() { FiatCurrencyType = appDbContext.FiatCurrencyTypes.First(), };
+        appDbContext.Users.Add(user);
         appDbContext.SaveChanges();
 
-        AddTransactionsHandler handler = new AddTransactionsHandler(_mapper, appDbContext);
+        _currentUserAccessorMock.Setup(x => x.GetCurrentUserId()).Returns(user.Id);
+
+        AddTransactionsHandler handler = new AddTransactionsHandler(
+            _mapper,
+            appDbContext,
+            _currentUserAccessorMock.Object
+        );
         AddTransactionsRequest request = new AddTransactionsRequest
         {
             DeleteExistingTransactions = true,

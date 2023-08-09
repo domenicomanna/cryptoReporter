@@ -73,6 +73,12 @@ export interface TransactionDTO {
      * @memberof TransactionDTO
      */
     notes?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof TransactionDTO
+     */
+    userId: number;
 }
 
 /**
@@ -87,6 +93,7 @@ export function instanceOfTransactionDTO(value: object): boolean {
     isInstance = isInstance && "fee" in value;
     isInstance = isInstance && "transactionType" in value;
     isInstance = isInstance && "numberOfCoinsSold" in value;
+    isInstance = isInstance && "userId" in value;
 
     return isInstance;
 }
@@ -110,6 +117,7 @@ export function TransactionDTOFromJSONTyped(json: any, ignoreDiscriminator: bool
         'exchange': !exists(json, 'exchange') ? undefined : json['exchange'],
         'numberOfCoinsSold': json['numberOfCoinsSold'],
         'notes': !exists(json, 'notes') ? undefined : json['notes'],
+        'userId': json['userId'],
     };
 }
 
@@ -131,6 +139,7 @@ export function TransactionDTOToJSON(value?: TransactionDTO | null): any {
         'exchange': value.exchange,
         'numberOfCoinsSold': value.numberOfCoinsSold,
         'notes': value.notes,
+        'userId': value.userId,
     };
 }
 

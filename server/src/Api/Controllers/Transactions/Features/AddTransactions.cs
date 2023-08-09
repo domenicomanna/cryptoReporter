@@ -2,6 +2,7 @@ using Api.Common.Attributes;
 using Api.Common.ExtensionMethods;
 using Api.Database;
 using Api.Domain.Models;
+using Api.Services;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -58,11 +59,13 @@ public class AddTransactionsHandler
 {
     IMapper _mapper;
     AppDbContext _appDbContext;
+    ICurrentUserAccessor _currentUserAccessor;
 
-    public AddTransactionsHandler(IMapper mapper, AppDbContext appDbContext)
+    public AddTransactionsHandler(IMapper mapper, AppDbContext appDbContext, ICurrentUserAccessor currentUserAccessor)
     {
         _mapper = mapper;
         _appDbContext = appDbContext;
+        _currentUserAccessor = currentUserAccessor;
     }
 
     public async Task<List<TransactionDTO>> Handle(AddTransactionsRequest request)
@@ -82,6 +85,9 @@ public class AddTransactionsHandler
 
     private async Task<List<Transaction>> CreateTransactions(AddTransactionsRequest request)
     {
+        int currentUserId = _currentUserAccessor.GetCurrentUserId();
+        User user = await _appDbContext.Users.FirstAsync(x => x.Id == currentUserId);
+
         List<TransactionType> transactionTypes = _appDbContext.TransactionTypes.ToList();
         List<Transaction> transactions = request.Transactions
             .Select(
@@ -97,7 +103,8 @@ public class AddTransactionsHandler
                         ),
                         Exchange = x.Exchange,
                         NumberOfCoinsSold = x.NumberOfCoinsSold,
-                        Notes = x.Notes
+                        Notes = x.Notes,
+                        User = user,
                     }
             )
             .ToList();

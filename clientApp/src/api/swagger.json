@@ -568,7 +568,8 @@
           "numberOfCoinsSold",
           "price",
           "quantityTransacted",
-          "transactionType"
+          "transactionType",
+          "userId"
         ],
         "type": "object",
         "properties": {
@@ -606,6 +607,10 @@
           "notes": {
             "type": "string",
             "nullable": true
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

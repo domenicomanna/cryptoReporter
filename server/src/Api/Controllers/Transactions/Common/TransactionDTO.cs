@@ -11,4 +11,5 @@ public class TransactionDTO
     public string? Exchange { get; set; }
     public decimal NumberOfCoinsSold { get; set; }
     public string? Notes { get; set; }
+    public int UserId { get; set; }
 }

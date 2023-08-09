@@ -12,4 +12,5 @@ public class Transaction
     public string? Exchange { get; set; }
     public decimal NumberOfCoinsSold { get; set; }
     public string? Notes { get; set; }
+    public User User { get; set; } = null!;
 }
