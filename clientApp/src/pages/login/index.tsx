@@ -81,6 +81,7 @@ const Login = () => {
           fullWidth
           label="Email"
           size="small"
+          required
           {...formik.getFieldProps('email')}
           helperText={formik.touched.email && formik.errors.email}
           error={formik.touched.email && Boolean(formik.errors.email)}
@@ -90,6 +91,7 @@ const Login = () => {
           label="Password"
           size="small"
           type="password"
+          required
           {...formik.getFieldProps('password')}
           helperText={formik.touched.password && formik.errors.password}
           error={formik.touched.password && Boolean(formik.errors.password)}

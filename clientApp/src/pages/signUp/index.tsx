@@ -90,6 +90,7 @@ const SignUp = () => {
           fullWidth
           label="Email"
           size="small"
+          required
           {...formik.getFieldProps('email')}
           helperText={formik.touched.email && formik.errors.email}
           error={formik.touched.email && Boolean(formik.errors.email)}
@@ -99,6 +100,7 @@ const SignUp = () => {
           label="Password"
           size="small"
           type="password"
+          required
           {...formik.getFieldProps('password')}
           helperText={formik.touched.password && formik.errors.password}
           error={formik.touched.password && Boolean(formik.errors.password)}
@@ -108,6 +110,7 @@ const SignUp = () => {
           label="Confirm Password"
           size="small"
           type="password"
+          required
           {...formik.getFieldProps('confirmPassword')}
           helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
           error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}

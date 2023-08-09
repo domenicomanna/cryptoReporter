@@ -38,10 +38,12 @@ const ChooseFileStep: FC<Props> = ({ formValues, onFormValuesChange, onNextStepC
       <Box sx={{ marginBottom: '1.5rem' }}>
         <MuiFileInput
           placeholder="Select a file"
+          label="File"
           size="small"
           fullWidth
           hideSizeText
           name="file"
+          required
           value={formik.values.file}
           onChange={(file) => onFieldValueChange('file', file)}
           onBlur={formik.handleBlur}
