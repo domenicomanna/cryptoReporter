@@ -65,6 +65,7 @@ public class CreateUserTests
         {
             Email = user.Email,
             Password = "12345",
+            ConfirmedPassword = "12345",
             FiatCurrencyType = "USD"
         };
 
@@ -93,6 +94,7 @@ public class CreateUserTests
         {
             Email = "test@gmail.com",
             Password = "test12345",
+            ConfirmedPassword = "test12345",
             FiatCurrencyType = "USD"
         };
 
