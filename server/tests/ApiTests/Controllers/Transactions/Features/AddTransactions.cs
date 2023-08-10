@@ -66,6 +66,7 @@ public class AddTransactionsTests
                 new SingleTransaction
                 {
                     Date = DateOnly.FromDateTime(DateTime.Now),
+                    CryptoTicker = "BTC",
                     QuantityTransacted = 100,
                     Price = 1,
                     Fee = 0,
@@ -77,6 +78,7 @@ public class AddTransactionsTests
                 new SingleTransaction
                 {
                     Date = DateOnly.FromDateTime(DateTime.Now),
+                    CryptoTicker = "BTC",
                     QuantityTransacted = 200,
                     Price = 1,
                     Fee = 0,

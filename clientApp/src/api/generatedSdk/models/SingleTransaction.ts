@@ -27,6 +27,12 @@ export interface SingleTransaction {
     date: string;
     /**
      * 
+     * @type {string}
+     * @memberof SingleTransaction
+     */
+    cryptoTicker: string;
+    /**
+     * 
      * @type {number}
      * @memberof SingleTransaction
      */
@@ -75,6 +81,7 @@ export interface SingleTransaction {
 export function instanceOfSingleTransaction(value: object): boolean {
     let isInstance = true;
     isInstance = isInstance && "date" in value;
+    isInstance = isInstance && "cryptoTicker" in value;
     isInstance = isInstance && "quantityTransacted" in value;
     isInstance = isInstance && "price" in value;
     isInstance = isInstance && "fee" in value;
@@ -95,6 +102,7 @@ export function SingleTransactionFromJSONTyped(json: any, ignoreDiscriminator: b
     return {
         
         'date': json['date'],
+        'cryptoTicker': json['cryptoTicker'],
         'quantityTransacted': json['quantityTransacted'],
         'price': json['price'],
         'fee': json['fee'],
@@ -115,6 +123,7 @@ export function SingleTransactionToJSON(value?: SingleTransaction | null): any {
     return {
         
         'date': value.date,
+        'cryptoTicker': value.cryptoTicker,
         'quantityTransacted': value.quantityTransacted,
         'price': value.price,
         'fee': value.fee,

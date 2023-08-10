@@ -517,6 +517,7 @@
       },
       "SingleTransaction": {
         "required": [
+          "cryptoTicker",
           "date",
           "fee",
           "numberOfCoinsSold",
@@ -529,6 +530,9 @@
           "date": {
             "type": "string",
             "format": "date"
+          },
+          "cryptoTicker": {
+            "type": "string"
           },
           "quantityTransacted": {
             "type": "number",
@@ -562,6 +566,7 @@
       },
       "TransactionDTO": {
         "required": [
+          "cryptoTicker",
           "date",
           "fee",
           "id",
@@ -576,6 +581,9 @@
           "id": {
             "type": "integer",
             "format": "int32"
+          },
+          "cryptoTicker": {
+            "type": "string"
           },
           "date": {
             "type": "string",

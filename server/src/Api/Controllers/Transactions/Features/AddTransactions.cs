@@ -12,6 +12,7 @@ namespace Api.Controllers.Transactions.Common.Features;
 public class SingleTransaction
 {
     public DateOnly Date { get; set; }
+    public string CryptoTicker { get; set; } = string.Empty;
     public decimal QuantityTransacted { get; set; }
     public decimal Price { get; set; }
     public decimal Fee { get; set; }
@@ -30,6 +31,7 @@ public class SingleTransactionValidator : AbstractValidator<SingleTransaction>
             .ToList();
 
         RuleFor(x => x.Date).NotEmpty();
+        RuleFor(x => x.CryptoTicker).NotEmpty();
         RuleFor(x => x.QuantityTransacted).NotNull();
         RuleFor(x => x.Price).NotNull();
         RuleFor(x => x.Fee).NotNull();
@@ -95,6 +97,7 @@ public class AddTransactionsHandler
                     new Transaction
                     {
                         Date = x.Date,
+                        CryptoTicker = x.CryptoTicker.ToUpper(),
                         QuantityTransacted = x.QuantityTransacted,
                         Price = x.Price,
                         Fee = x.Fee,

@@ -4,6 +4,7 @@ public class Transaction
 {
     public int Id { get; set; }
     public DateOnly Date { get; set; }
+    public string CryptoTicker { get; set; } = string.Empty;
     public decimal QuantityTransacted { get; set; }
     public decimal Price { get; set; }
     public decimal Fee { get; set; }

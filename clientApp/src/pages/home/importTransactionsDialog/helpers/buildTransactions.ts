@@ -10,6 +10,7 @@ export const buildTransactions = (
 ): SingleTransaction[] => {
   return csvRecords.map((record) => ({
     date: formatDateString(record[mappingConfig.dateColumnName ?? ''] ?? ''),
+    cryptoTicker: getCryptoTicker(record[mappingConfig.cryptoTickerColumnName ?? ''] ?? ''),
     quantityTransacted: convertToNumber(record[mappingConfig.quantityTransactedColumnName ?? '']),
     price: parseFloat(record[mappingConfig.priceColumnName ?? ''] ?? '0'),
     fee: convertToNumber(record[mappingConfig.priceColumnName ?? '']),
@@ -47,4 +48,11 @@ const getTransactionType = (transactionType: string): TransactionType => {
   if (['reward', 'staking reward', 'gift'].includes(transactionType)) return TransactionType.Reward;
 
   throw new Error(`Transaction type ${transactionType} is invalid`);
+};
+
+const getCryptoTicker = (value: string): string => {
+  if (!value.includes('/')) return value;
+  // if there is a slash in the value that represents a pair e.g "BTC/USD", let's just assume the crypto ticker
+  // is the first item
+  return value.split('/')[0] ?? '';
 };

@@ -52,6 +52,7 @@ const ImportTransactionsDialog: FC<Props> = ({ onCloseDialog, onTransactionsImpo
       ? (JSON.parse(localStorage.getItem(_mapColumnsStepStorageKey)!) as MapColumnsFormValues)
       : {
           dateColumnName: null,
+          cryptoTickerColumnName: null,
           quantityTransactedColumnName: null,
           priceColumnName: null,
           feeColumnName: null,

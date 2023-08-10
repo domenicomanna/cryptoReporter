@@ -30,6 +30,12 @@ export interface TransactionDTO {
      * @type {string}
      * @memberof TransactionDTO
      */
+    cryptoTicker: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TransactionDTO
+     */
     date: string;
     /**
      * 
@@ -87,6 +93,7 @@ export interface TransactionDTO {
 export function instanceOfTransactionDTO(value: object): boolean {
     let isInstance = true;
     isInstance = isInstance && "id" in value;
+    isInstance = isInstance && "cryptoTicker" in value;
     isInstance = isInstance && "date" in value;
     isInstance = isInstance && "quantityTransacted" in value;
     isInstance = isInstance && "price" in value;
@@ -109,6 +116,7 @@ export function TransactionDTOFromJSONTyped(json: any, ignoreDiscriminator: bool
     return {
         
         'id': json['id'],
+        'cryptoTicker': json['cryptoTicker'],
         'date': json['date'],
         'quantityTransacted': json['quantityTransacted'],
         'price': json['price'],
@@ -131,6 +139,7 @@ export function TransactionDTOToJSON(value?: TransactionDTO | null): any {
     return {
         
         'id': value.id,
+        'cryptoTicker': value.cryptoTicker,
         'date': value.date,
         'quantityTransacted': value.quantityTransacted,
         'price': value.price,
