@@ -14,6 +14,7 @@ models/ResetPasswordStepOneRequest.ts
 models/ResetPasswordStepTwoRequest.ts
 models/SingleTransaction.ts
 models/TransactionDTO.ts
+models/TransactionDTOPaginationResult.ts
 models/UserDTO.ts
 models/index.ts
 runtime.ts

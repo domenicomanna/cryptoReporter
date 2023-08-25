@@ -15,13 +15,14 @@
     "downloadSwaggerSpec:windows": "curl http://localhost:5000/swagger/v1/swagger.json --Outfile ./src/api/swagger.json"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^4.5.8",
-    "@mui/icons-material": "^5.11.16",
+    "@mui/icons-material": "^5.14.3",
     "@mui/lab": "^5.0.0-alpha.133",
-    "@mui/material": "^5.11.9",
+    "@mui/material": "^5.14.4",
     "formik": "^2.4.1",
+    "material-react-table": "^1.14.0",
     "mui-file-input": "^2.0.0",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",

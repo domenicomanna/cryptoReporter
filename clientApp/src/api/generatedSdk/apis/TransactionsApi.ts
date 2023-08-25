@@ -17,16 +17,24 @@ import * as runtime from '../runtime';
 import type {
   AddTransactionsRequest,
   TransactionDTO,
+  TransactionDTOPaginationResult,
 } from '../models';
 import {
     AddTransactionsRequestFromJSON,
     AddTransactionsRequestToJSON,
     TransactionDTOFromJSON,
     TransactionDTOToJSON,
+    TransactionDTOPaginationResultFromJSON,
+    TransactionDTOPaginationResultToJSON,
 } from '../models';
 
 export interface AddTransactionsOperationRequest {
     addTransactionsRequest?: AddTransactionsRequest;
+}
+
+export interface GetTransactionsRequest {
+    pageIndex?: number;
+    pageSize?: number;
 }
 
 /**
@@ -66,6 +74,46 @@ export class TransactionsApi extends runtime.BaseAPI {
      */
     async addTransactions(requestParameters: AddTransactionsOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<TransactionDTO>> {
         const response = await this.addTransactionsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getTransactionsRaw(requestParameters: GetTransactionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TransactionDTOPaginationResult>> {
+        const queryParameters: any = {};
+
+        if (requestParameters.pageIndex !== undefined) {
+            queryParameters['pageIndex'] = requestParameters.pageIndex;
+        }
+
+        if (requestParameters.pageSize !== undefined) {
+            queryParameters['pageSize'] = requestParameters.pageSize;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/Transactions`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TransactionDTOPaginationResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async getTransactions(requestParameters: GetTransactionsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TransactionDTOPaginationResult> {
+        const response = await this.getTransactionsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

@@ -1,6 +1,6 @@
+using Api.Common.Models;
 using Api.Controllers.Transactions.Common;
 using Api.Controllers.Transactions.Common.Features;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.Transactions;
@@ -16,5 +16,14 @@ public class TransactionsController : BaseApiController
     {
         List<TransactionDTO> transactions = await handler.Handle(request);
         return new ObjectResult(transactions) { StatusCode = 201 };
+    }
+
+    [HttpGet("")]
+    public async Task<PaginationResult<TransactionDTO>> GetTransactions(
+        [FromServices] GetTransactionsHandler handler,
+        [FromQuery] GetTransactionsRequest request
+    )
+    {
+        return await handler.Handle(request);
     }
 }

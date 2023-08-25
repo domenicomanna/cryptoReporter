@@ -11,4 +11,5 @@ export * from './ResetPasswordStepOneRequest';
 export * from './ResetPasswordStepTwoRequest';
 export * from './SingleTransaction';
 export * from './TransactionDTO';
+export * from './TransactionDTOPaginationResult';
 export * from './UserDTO';

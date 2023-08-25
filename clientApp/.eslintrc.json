@@ -23,7 +23,13 @@
   "rules": {
     "@typescript-eslint/no-floating-promises": ["error"],
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/prop-types": [
+      "error",
+      {
+        "skipUndeclared": true
+      }
+    ]
   },
   "settings": {
     "react": {
