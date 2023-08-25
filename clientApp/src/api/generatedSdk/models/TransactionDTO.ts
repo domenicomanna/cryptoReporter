@@ -57,6 +57,12 @@ export interface TransactionDTO {
     fee: number;
     /**
      * 
+     * @type {number}
+     * @memberof TransactionDTO
+     */
+    readonly coinsTransacted: number;
+    /**
+     * 
      * @type {string}
      * @memberof TransactionDTO
      */
@@ -98,6 +104,7 @@ export function instanceOfTransactionDTO(value: object): boolean {
     isInstance = isInstance && "quantityTransacted" in value;
     isInstance = isInstance && "price" in value;
     isInstance = isInstance && "fee" in value;
+    isInstance = isInstance && "coinsTransacted" in value;
     isInstance = isInstance && "transactionType" in value;
     isInstance = isInstance && "numberOfCoinsSold" in value;
     isInstance = isInstance && "userId" in value;
@@ -121,6 +128,7 @@ export function TransactionDTOFromJSONTyped(json: any, ignoreDiscriminator: bool
         'quantityTransacted': json['quantityTransacted'],
         'price': json['price'],
         'fee': json['fee'],
+        'coinsTransacted': json['coinsTransacted'],
         'transactionType': json['transactionType'],
         'exchange': !exists(json, 'exchange') ? undefined : json['exchange'],
         'numberOfCoinsSold': json['numberOfCoinsSold'],

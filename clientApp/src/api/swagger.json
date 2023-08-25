@@ -621,6 +621,7 @@
       },
       "TransactionDTO": {
         "required": [
+          "coinsTransacted",
           "cryptoTicker",
           "date",
           "fee",
@@ -655,6 +656,11 @@
           "fee": {
             "type": "number",
             "format": "double"
+          },
+          "coinsTransacted": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
           },
           "transactionType": {
             "type": "string"

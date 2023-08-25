@@ -8,6 +8,7 @@ public class TransactionDTO
     public decimal QuantityTransacted { get; set; }
     public decimal Price { get; set; }
     public decimal Fee { get; set; }
+    public decimal CoinsTransacted => (QuantityTransacted - Fee) / Price;
     public string TransactionType { get; set; } = String.Empty;
     public string? Exchange { get; set; }
     public decimal NumberOfCoinsSold { get; set; }

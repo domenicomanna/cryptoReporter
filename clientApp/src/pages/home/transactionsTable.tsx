@@ -49,6 +49,13 @@ export const TransactionsTable: FC<Props> = ({
         header: 'Fee',
       },
       {
+        accessorKey: 'coinsTransacted',
+        header: 'Coins Transacted',
+        Cell: ({ cell }) => {
+          return <span>{parseFloat(cell.getValue<number>().toFixed(4))}</span>;
+        },
+      },
+      {
         accessorKey: 'transactionType',
         header: 'Transaction Type',
       },
