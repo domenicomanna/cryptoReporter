@@ -13,7 +13,7 @@ export const buildTransactions = (
     cryptoTicker: getCryptoTicker(record[mappingConfig.cryptoTickerColumnName ?? ''] ?? ''),
     quantityTransacted: convertToNumber(record[mappingConfig.quantityTransactedColumnName ?? '']),
     price: parseFloat(record[mappingConfig.priceColumnName ?? ''] ?? '0'),
-    fee: convertToNumber(record[mappingConfig.priceColumnName ?? '']),
+    fee: convertToNumber(record[mappingConfig.feeColumnName ?? '']),
     transactionType: getTransactionType(record[mappingConfig.transactionTypeColumnName ?? ''] ?? ''),
     numberOfCoinsSold: convertToNumber(record[mappingConfig.numberOfCoinsSoldColumnName ?? '']),
     ...(mappingConfig.exchangeColumnName && {
