@@ -4,7 +4,7 @@ using Api.Common.Exceptions;
 using Api.Database;
 using Api.Domain.Models;
 using Api.Common.ExtensionMethods;
-using Api.Services;
+using Api.Utils;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 

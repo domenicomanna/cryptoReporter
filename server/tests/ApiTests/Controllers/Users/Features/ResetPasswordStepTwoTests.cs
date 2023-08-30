@@ -2,7 +2,7 @@ using Moq;
 using Api.Controllers.Users.Features;
 using Api.Database;
 using Api.Domain.Models;
-using Api.Services;
+using Api.Utils;
 using Api.Common.ExtensionMethods;
 using Api.Common.Exceptions;
 

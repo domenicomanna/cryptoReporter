@@ -2,7 +2,7 @@ using System.Net;
 using System.Security.Claims;
 using Api.Common.Exceptions;
 
-namespace Api.Services;
+namespace Api.Utils;
 
 public interface ICurrentUserAccessor
 {

@@ -1,6 +1,6 @@
 using BC = BCrypt.Net.BCrypt;
 
-namespace Api.Services;
+namespace Api.Utils;
 
 public interface IPasswordHasher
 {

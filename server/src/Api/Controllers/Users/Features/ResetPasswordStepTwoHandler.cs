@@ -2,7 +2,7 @@ using Api.Common.Attributes;
 using Api.Domain.Models;
 using Api.Database;
 using FluentValidation;
-using Api.Services;
+using Api.Utils;
 using Microsoft.EntityFrameworkCore;
 using Api.Common.ExtensionMethods;
 using Api.Common.Exceptions;

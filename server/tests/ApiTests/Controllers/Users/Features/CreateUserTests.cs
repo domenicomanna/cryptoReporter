@@ -3,7 +3,7 @@ using Api.Controllers.Users;
 using Api.Controllers.Users.Common.Features;
 using Api.Database;
 using Api.Domain.Models;
-using Api.Services;
+using Api.Utils;
 using AutoMapper;
 using FluentValidation.TestHelper;
 using Moq;

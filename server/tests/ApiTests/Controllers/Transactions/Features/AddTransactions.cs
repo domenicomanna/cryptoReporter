@@ -4,7 +4,7 @@ using Api.Controllers.Transactions.Common;
 using Api.Controllers.Transactions.Common.Features;
 using Api.Database;
 using Api.Domain.Models;
-using Api.Services;
+using Api.Utils;
 using AutoMapper;
 using FluentValidation.TestHelper;
 using Moq;

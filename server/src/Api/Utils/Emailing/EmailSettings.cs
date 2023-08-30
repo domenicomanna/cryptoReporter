@@ -1,4 +1,4 @@
-namespace Api.Services.Emailing;
+namespace Api.Utils.Emailing;
 
 public class EmailSettings
 {

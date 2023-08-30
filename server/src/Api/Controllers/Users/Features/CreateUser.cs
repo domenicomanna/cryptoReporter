@@ -5,7 +5,7 @@ using Api.Common.ExtensionMethods;
 using Api.Common.ExtensionMethods.ValidationRules;
 using Api.Database;
 using Api.Domain.Models;
-using Api.Services;
+using Api.Utils;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;

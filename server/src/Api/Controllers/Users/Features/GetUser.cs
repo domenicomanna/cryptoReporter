@@ -3,7 +3,7 @@ using Api.Common.Attributes;
 using Api.Common.Exceptions;
 using Api.Database;
 using Api.Domain.Models;
-using Api.Services;
+using Api.Utils;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 

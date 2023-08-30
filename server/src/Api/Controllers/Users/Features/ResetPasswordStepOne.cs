@@ -1,7 +1,7 @@
 using System.Text;
 using FluentValidation;
 using Api.Common.Attributes;
-using Api.Services.Emailing;
+using Api.Utils.Emailing;
 using Api.Database;
 using Api.Domain.Models;
 using System.Security.Cryptography;

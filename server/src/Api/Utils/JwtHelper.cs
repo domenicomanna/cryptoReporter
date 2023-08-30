@@ -6,7 +6,7 @@ using Api.Domain.Models;
 using Api.Common.ExtensionMethods;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Api.Services;
+namespace Api.Utils;
 
 public interface IJwtHelper
 {

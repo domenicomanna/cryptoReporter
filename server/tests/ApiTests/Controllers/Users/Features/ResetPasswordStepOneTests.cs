@@ -1,6 +1,6 @@
 using Moq;
 using Api.Controllers.Users.Features;
-using Api.Services.Emailing;
+using Api.Utils.Emailing;
 using Api.Database;
 using Api.Domain.Models;
 

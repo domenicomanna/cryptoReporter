@@ -2,7 +2,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 
-namespace Api.Services.Emailing;
+namespace Api.Utils.Emailing;
 
 public interface IEmailSender
 {

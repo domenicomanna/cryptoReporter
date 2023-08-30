@@ -3,7 +3,7 @@ using Api.Controllers.Users.Common.Features;
 using Api.Database;
 using Api.Domain.Models;
 using Api.Common.ExtensionMethods;
-using Api.Services;
+using Api.Utils;
 using Moq;
 
 namespace ApiTests.Controllers.Users.Features;
