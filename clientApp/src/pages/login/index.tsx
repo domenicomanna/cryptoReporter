@@ -52,6 +52,7 @@ const Login = () => {
         const loginResult = await usersApi.login({ loginRequest });
         const userInfo: UserInfo = {
           userId: loginResult.user.id,
+          fiatCurrency: loginResult.user.fiatCurrencyTypeName,
           token: loginResult.accessToken,
         };
         setUserInfo(userInfo);

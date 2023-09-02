@@ -9,6 +9,7 @@ import PageLoader from '../components/pageLoader';
 export type UserInfo = {
   userId: number;
   token: string;
+  fiatCurrency: string;
 };
 
 type UserContextType = {

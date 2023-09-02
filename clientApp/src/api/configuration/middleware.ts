@@ -28,9 +28,11 @@ export const middleware: Middleware[] = [
           await handleLogout();
           return context.response;
         }
+        const currentUserInfo = userStorageHelper.getCurrentUserInfo();
         const userInfo: UserInfo = {
           userId: authenticationResult.userId,
           token: authenticationResult.accessToken,
+          fiatCurrency: currentUserInfo?.fiatCurrency ?? '',
         };
         userStorageHelper.storeUserInfo(userInfo);
         return await fetch(context.url, {

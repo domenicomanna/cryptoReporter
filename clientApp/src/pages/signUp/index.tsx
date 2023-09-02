@@ -61,6 +61,7 @@ const SignUp = () => {
         const result = await usersApi.createUser({ createUserRequest });
         const userInfo: UserInfo = {
           userId: result.user.id,
+          fiatCurrency: result.user.fiatCurrencyTypeName,
           token: result.accessToken,
         };
         setUserInfo(userInfo);

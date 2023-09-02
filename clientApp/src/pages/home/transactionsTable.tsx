@@ -1,8 +1,10 @@
 import MaterialReactTable, { MRT_ColumnDef, MRT_PaginationState, MRT_SortingState } from 'material-react-table';
 import { TransactionDTO, TransactionDTOPaginationResult } from '../../api/generatedSdk';
-import { FC, useMemo } from 'react';
+import { FC, useContext, useMemo } from 'react';
 import { Updater } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
+import { formatAsCurrency } from '../../utils/formatAsCurrency';
+import { UserContext } from '../../contexts/UserContext';
 
 type Props = {
   transactionsPaginationResult: TransactionDTOPaginationResult;
@@ -21,6 +23,8 @@ export const TransactionsTable: FC<Props> = ({
   sorting,
   onSortingChange,
 }) => {
+  const { userInfo } = useContext(UserContext);
+
   const handlePaginationChange = async (updater: Updater<MRT_PaginationState>) => {
     const updatedPagination = updater instanceof Function ? updater(pagination) : updater;
     onPaginationChange(updatedPagination);
@@ -44,18 +48,26 @@ export const TransactionsTable: FC<Props> = ({
         accessorKey: 'cryptoTicker',
         header: 'Coin',
       },
-      // TODO: format price fields using the user's currency
       {
         accessorKey: 'quantityTransacted',
         header: 'Quantity Transacted',
+        Cell: ({ cell }) => {
+          return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
+        },
       },
       {
         accessorKey: 'price',
         header: 'Price',
+        Cell: ({ cell }) => {
+          return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
+        },
       },
       {
         accessorKey: 'fee',
         header: 'Fee',
+        Cell: ({ cell }) => {
+          return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
+        },
       },
       {
         accessorKey: 'coinsTransacted',
@@ -82,7 +94,7 @@ export const TransactionsTable: FC<Props> = ({
         header: 'Notes',
       },
     ],
-    []
+    [userInfo]
   );
 
   return (
