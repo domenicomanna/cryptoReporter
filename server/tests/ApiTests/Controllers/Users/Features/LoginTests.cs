@@ -91,6 +91,6 @@ public class LoginTests
         LoginRequest request = new LoginRequest { Email = user.Email, Password = "12345" };
 
         (LoginResult result, string nonHashedRefreshToken) = await handler.Handle(request);
-        Assert.AreEqual(user.Id, result.UserId);
+        Assert.AreEqual(user.Id, result.User.Id);
     }
 }

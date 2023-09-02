@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { UserDTO } from './UserDTO';
+import {
+    UserDTOFromJSON,
+    UserDTOFromJSONTyped,
+    UserDTOToJSON,
+} from './UserDTO';
+
 /**
  * 
  * @export
@@ -21,10 +28,10 @@ import { exists, mapValues } from '../runtime';
 export interface LoginResult {
     /**
      * 
-     * @type {number}
+     * @type {UserDTO}
      * @memberof LoginResult
      */
-    userId: number;
+    user: UserDTO;
     /**
      * 
      * @type {string}
@@ -38,7 +45,7 @@ export interface LoginResult {
  */
 export function instanceOfLoginResult(value: object): boolean {
     let isInstance = true;
-    isInstance = isInstance && "userId" in value;
+    isInstance = isInstance && "user" in value;
     isInstance = isInstance && "accessToken" in value;
 
     return isInstance;
@@ -54,7 +61,7 @@ export function LoginResultFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'userId': json['userId'],
+        'user': UserDTOFromJSON(json['user']),
         'accessToken': json['accessToken'],
     };
 }
@@ -68,7 +75,7 @@ export function LoginResultToJSON(value?: LoginResult | null): any {
     }
     return {
         
-        'userId': value.userId,
+        'user': UserDTOToJSON(value.user),
         'accessToken': value.accessToken,
     };
 }

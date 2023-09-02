@@ -515,13 +515,12 @@
       "LoginResult": {
         "required": [
           "accessToken",
-          "userId"
+          "user"
         ],
         "type": "object",
         "properties": {
-          "userId": {
-            "type": "integer",
-            "format": "int32"
+          "user": {
+            "$ref": "#/components/schemas/UserDTO"
           },
           "accessToken": {
             "type": "string"

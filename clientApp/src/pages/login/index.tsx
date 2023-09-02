@@ -51,7 +51,7 @@ const Login = () => {
       try {
         const loginResult = await usersApi.login({ loginRequest });
         const userInfo: UserInfo = {
-          userId: loginResult.userId,
+          userId: loginResult.user.id,
           token: loginResult.accessToken,
         };
         setUserInfo(userInfo);

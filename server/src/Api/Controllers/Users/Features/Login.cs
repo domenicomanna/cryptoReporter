@@ -27,7 +27,7 @@ public class LoginRequestValidator : AbstractValidator<LoginRequest>
 
 public class LoginResult
 {
-    public int UserId { get; set; }
+    public UserDTO User { get; set; } = null!;
     public string AccessToken { get; set; } = String.Empty;
 }
 
@@ -49,7 +49,9 @@ public class LoginHandler
 
     public async Task<(LoginResult loginResult, string nonHashedRefreshToken)> Handle(LoginRequest request)
     {
-        User? user = await _appDbContext.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
+        User? user = await _appDbContext.Users
+            .Include(x => x.FiatCurrencyType)
+            .FirstOrDefaultAsync(x => x.Email == request.Email);
         if (user is null)
         {
             throw new ApiException(HttpStatusCode.Unauthorized, "Invalid email or password");
@@ -67,7 +69,7 @@ public class LoginHandler
         _appDbContext.RefreshTokens.Add(refreshToken);
         await _appDbContext.SaveChangesAsync();
 
-        LoginResult loginResult = new LoginResult { UserId = user.Id, AccessToken = accessToken };
+        LoginResult loginResult = new LoginResult { User = _mapper.Map<UserDTO>(user), AccessToken = accessToken };
 
         return (loginResult, nonHashedRefreshToken);
     }
