@@ -1,4 +1,5 @@
 using Api.Common.Attributes;
+using Api.Common.ExtensionMethods.ValidationRules;
 using Api.Common.Models;
 using Api.Database;
 using Api.Domain.Models;
@@ -6,6 +7,7 @@ using Api.Utils;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace Api.Controllers.Transactions.Common.Features;
 
@@ -13,6 +15,15 @@ public class GetTransactionsRequest
 {
     public int PageIndex { get; set; } = 0;
     public int PageSize { get; set; } = 100;
+    public string SortBy { get; set; } = "Date asc";
+}
+
+public class GetTransactionsRequestValidator : AbstractValidator<GetTransactionsRequest>
+{
+    public GetTransactionsRequestValidator()
+    {
+        RuleFor(x => x.SortBy).SortMustBeValid(typeof(TransactionDTO));
+    }
 }
 
 [Inject]
@@ -59,6 +70,12 @@ public class GetTransactionsHandler
             .Include(x => x.User)
             .Include(x => x.TransactionType)
             .Where(x => x.User.Id == currentUserId);
+
+        if (!string.IsNullOrEmpty(request.SortBy))
+        {
+            string sortStatement = SortStatementGenerator.GenerateSortStatement(request.SortBy, typeof(TransactionDTO));
+            query = query.OrderBy(sortStatement);
+        }
 
         return query;
     }

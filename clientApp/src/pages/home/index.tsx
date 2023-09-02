@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import ImportTransactionsDialog from './importTransactionsDialog/importTransactionsDialog';
 import PageLoader from '../../components/pageLoader';
 import { transactionsApi } from '../../api';
-import { MRT_PaginationState } from 'material-react-table';
+import { MRT_PaginationState, MRT_SortingState } from 'material-react-table';
 import { TransactionDTOPaginationResult } from '../../api/generatedSdk';
 import { TransactionsTable } from './transactionsTable';
 import { toast } from 'react-toastify';
+import { buildSortByString } from '../../utils/builtSortByString';
 
 const Home = () => {
   const [showImportTransactionsDialog, setShowImportTransactionsDialog] = useState(false);
@@ -16,31 +17,43 @@ const Home = () => {
     pageIndex: 0,
     pageSize: 50,
   });
+  const [sorting, setSorting] = useState<MRT_SortingState>([
+    {
+      id: 'date',
+      desc: false,
+    },
+  ]);
   const [transactionsPaginationResult, setTransactionsPaginationResult] =
     useState<TransactionDTOPaginationResult | null>(null);
 
   useEffect(() => {
-    void handleLoadingOfTransactions(pagination);
+    void handleLoadingOfTransactions(pagination, sorting);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onTransactionsImported = async () => {
     setTransactionsAreLoading(true);
-    await handleLoadingOfTransactions(pagination);
+    await handleLoadingOfTransactions(pagination, sorting);
     setTransactionsAreLoading(false);
   };
 
   const onPaginationChange = async (pagination: MRT_PaginationState) => {
     setPagination(pagination);
-    await handleLoadingOfTransactions(pagination);
+    await handleLoadingOfTransactions(pagination, sorting);
   };
 
-  const handleLoadingOfTransactions = async (pagination: MRT_PaginationState) => {
+  const onSortingChange = async (sorting: MRT_SortingState) => {
+    setSorting(sorting);
+    await handleLoadingOfTransactions(pagination, sorting);
+  };
+
+  const handleLoadingOfTransactions = async (pagination: MRT_PaginationState, sorting: MRT_SortingState) => {
     setTransactionsAreLoading(true);
     try {
       const paginationResult = await transactionsApi.getTransactions({
         pageIndex: pagination.pageIndex,
         pageSize: pagination.pageSize,
+        ...(sorting.length > 0 && { sortBy: buildSortByString(sorting) }),
       });
       setTransactionsPaginationResult(paginationResult);
     } catch (error) {
@@ -74,6 +87,8 @@ const Home = () => {
               isLoading={transactionsAreLoading}
               pagination={pagination}
               onPaginationChange={onPaginationChange}
+              sorting={sorting}
+              onSortingChange={onSortingChange}
             />
           )}
         </>

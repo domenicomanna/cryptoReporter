@@ -35,6 +35,7 @@ export interface AddTransactionsOperationRequest {
 export interface GetTransactionsRequest {
     pageIndex?: number;
     pageSize?: number;
+    sortBy?: string;
 }
 
 /**
@@ -88,6 +89,10 @@ export class TransactionsApi extends runtime.BaseAPI {
 
         if (requestParameters.pageSize !== undefined) {
             queryParameters['pageSize'] = requestParameters.pageSize;
+        }
+
+        if (requestParameters.sortBy !== undefined) {
+            queryParameters['sortBy'] = requestParameters.sortBy;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

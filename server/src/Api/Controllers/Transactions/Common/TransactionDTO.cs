@@ -1,3 +1,5 @@
+using Api.Common.Attributes;
+
 namespace Api.Controllers.Transactions.Common;
 
 public class TransactionDTO
@@ -8,7 +10,11 @@ public class TransactionDTO
     public decimal QuantityTransacted { get; set; }
     public decimal Price { get; set; }
     public decimal Fee { get; set; }
+
+    [NotSortable]
     public decimal CoinsTransacted => (QuantityTransacted - Fee) / Price;
+
+    [SortName("TransactionType.Name")]
     public string TransactionType { get; set; } = String.Empty;
     public string? Exchange { get; set; }
     public decimal NumberOfCoinsSold { get; set; }

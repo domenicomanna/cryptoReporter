@@ -131,6 +131,14 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
