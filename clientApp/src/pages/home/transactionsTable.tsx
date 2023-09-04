@@ -162,7 +162,7 @@ export const TransactionsTable: FC<Props> = ({
       onPaginationChange={handlePaginationChange}
       onSortingChange={handleSortChange}
       onColumnFiltersChange={handleColumnsFiltersChange}
-      muiTableContainerProps={{ sx: { maxHeight: '75vh' } }}
+      muiTableContainerProps={{ sx: { maxHeight: '70vh' } }}
       initialState={{
         density: 'compact',
         showColumnFilters: true,
