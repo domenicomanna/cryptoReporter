@@ -47,9 +47,17 @@ const Home = () => {
   }, []);
 
   const onTransactionsImported = async () => {
-    setTransactionsAreLoading(true);
+    setTransactionsPaginationResult(null);
+    const pagination: MRT_PaginationState = {
+      pageIndex: 0,
+      pageSize: 50,
+    };
+    const sorting: MRT_SortingState = [];
+    const filters: MRT_ColumnFiltersState = [];
+    setPagination(pagination);
+    setSorting(sorting);
+    setFilters(filters);
     await handleLoadingOfTransactions(pagination, sorting, columnFilters);
-    setTransactionsAreLoading(false);
   };
 
   const onTableStateChange = async (
