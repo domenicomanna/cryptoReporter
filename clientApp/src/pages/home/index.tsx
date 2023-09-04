@@ -52,17 +52,12 @@ const Home = () => {
     setTransactionsAreLoading(false);
   };
 
-  const onPaginationChange = async (pagination: MRT_PaginationState) => {
-    setPagination(pagination);
-    await handleLoadingOfTransactions(pagination, sorting, columnFilters);
-  };
-
-  const onSortingChange = async (sorting: MRT_SortingState) => {
-    setSorting(sorting);
-    await handleLoadingOfTransactions(pagination, sorting, columnFilters);
-  };
-
-  const onColumnFiltersChange = async (filters: MRT_ColumnFiltersState) => {
+  const onTableStateChange = async (
+    pagination: MRT_PaginationState,
+    sorting: MRT_SortingState,
+    filters: MRT_ColumnFiltersState
+  ) => {
+    setPagination(pagination), setSorting(sorting);
     setFilters(filters);
     await handleLoadingOfTransactions(pagination, sorting, filters);
   };
@@ -117,9 +112,7 @@ const Home = () => {
               pagination={pagination}
               sorting={sorting}
               columnFilters={columnFilters}
-              onPaginationChange={onPaginationChange}
-              onSortingChange={onSortingChange}
-              onColumnFiltersChange={onColumnFiltersChange}
+              onTableStateChange={onTableStateChange}
             />
           )}
         </>

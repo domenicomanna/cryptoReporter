@@ -18,9 +18,11 @@ type Props = {
   pagination: MRT_PaginationState;
   sorting: MRT_SortingState;
   columnFilters: MRT_ColumnFiltersState;
-  onPaginationChange: (pagination: MRT_PaginationState) => void;
-  onSortingChange: (sorting: MRT_SortingState) => void;
-  onColumnFiltersChange: (filters: MRT_ColumnFiltersState) => void;
+  onTableStateChange: (
+    pagination: MRT_PaginationState,
+    sorting: MRT_SortingState,
+    filters: MRT_ColumnFiltersState
+  ) => void;
 };
 
 export const TransactionsTable: FC<Props> = ({
@@ -30,25 +32,31 @@ export const TransactionsTable: FC<Props> = ({
   pagination,
   sorting,
   columnFilters,
-  onPaginationChange,
-  onSortingChange,
-  onColumnFiltersChange,
+  onTableStateChange,
 }) => {
   const { userInfo } = useContext(UserContext);
 
   const handlePaginationChange = async (updater: Updater<MRT_PaginationState>) => {
     const updatedPagination = updater instanceof Function ? updater(pagination) : updater;
-    onPaginationChange(updatedPagination);
+    onTableStateChange(updatedPagination, sorting, columnFilters);
   };
 
   const handleSortChange = async (updater: Updater<MRT_SortingState>) => {
     const updatedSorting = updater instanceof Function ? updater(sorting) : updater;
-    onSortingChange(updatedSorting);
+    const updatedPagination: MRT_PaginationState = {
+      pageIndex: 0,
+      pageSize: pagination.pageSize,
+    };
+    onTableStateChange(updatedPagination, updatedSorting, columnFilters);
   };
 
   const handleColumnsFiltersChange = async (updater: Updater<MRT_ColumnFiltersState>) => {
     const updatedFilters = updater instanceof Function ? updater(columnFilters) : updater;
-    onColumnFiltersChange(updatedFilters);
+    const updatedPagination: MRT_PaginationState = {
+      pageIndex: 0,
+      pageSize: pagination.pageSize,
+    };
+    onTableStateChange(updatedPagination, sorting, updatedFilters);
   };
 
   const columns = useMemo<MRT_ColumnDef<TransactionDTO>[]>(
