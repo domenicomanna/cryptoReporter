@@ -133,6 +133,22 @@
             }
           },
           {
+            "name": "cryptoTickers",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "transactionTypes",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "sortBy",
             "in": "query",
             "style": "form",
@@ -158,6 +174,50 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TransactionDTOPaginationResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
+    },
+    "/api/Transactions/transactedCryptos": {
+      "get": {
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "getTransactedCryptos",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }

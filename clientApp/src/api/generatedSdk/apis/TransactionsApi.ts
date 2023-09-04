@@ -35,6 +35,8 @@ export interface AddTransactionsOperationRequest {
 export interface GetTransactionsRequest {
     pageIndex?: number;
     pageSize?: number;
+    cryptoTickers?: string;
+    transactionTypes?: string;
     sortBy?: string;
 }
 
@@ -80,6 +82,38 @@ export class TransactionsApi extends runtime.BaseAPI {
 
     /**
      */
+    async getTransactedCryptosRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<string>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/Transactions/transactedCryptos`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     */
+    async getTransactedCryptos(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<string>> {
+        const response = await this.getTransactedCryptosRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async getTransactionsRaw(requestParameters: GetTransactionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TransactionDTOPaginationResult>> {
         const queryParameters: any = {};
 
@@ -89,6 +123,14 @@ export class TransactionsApi extends runtime.BaseAPI {
 
         if (requestParameters.pageSize !== undefined) {
             queryParameters['pageSize'] = requestParameters.pageSize;
+        }
+
+        if (requestParameters.cryptoTickers !== undefined) {
+            queryParameters['cryptoTickers'] = requestParameters.cryptoTickers;
+        }
+
+        if (requestParameters.transactionTypes !== undefined) {
+            queryParameters['transactionTypes'] = requestParameters.transactionTypes;
         }
 
         if (requestParameters.sortBy !== undefined) {

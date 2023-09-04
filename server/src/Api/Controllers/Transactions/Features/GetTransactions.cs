@@ -15,6 +15,8 @@ public class GetTransactionsRequest
 {
     public int PageIndex { get; set; } = 0;
     public int PageSize { get; set; } = 100;
+    public string CryptoTickers { get; set; } = string.Empty;
+    public string TransactionTypes { get; set; } = string.Empty;
     public string SortBy { get; set; } = "Date asc";
 }
 
@@ -70,6 +72,24 @@ public class GetTransactionsHandler
             .Include(x => x.User)
             .Include(x => x.TransactionType)
             .Where(x => x.User.Id == currentUserId);
+
+        if (!string.IsNullOrEmpty(request.CryptoTickers))
+        {
+            List<string> cryptoTickers = CsvStringToListConverter.ConvertToList(
+                request.CryptoTickers,
+                LetterCase.Lower
+            );
+            query = query.Where(x => cryptoTickers.Contains(x.CryptoTicker.ToLower()));
+        }
+
+        if (!string.IsNullOrEmpty(request.TransactionTypes))
+        {
+            List<string> transactionTypes = CsvStringToListConverter.ConvertToList(
+                request.TransactionTypes,
+                LetterCase.Lower
+            );
+            query = query.Where(x => transactionTypes.Contains(x.TransactionType.Name.ToLower()));
+        }
 
         if (!string.IsNullOrEmpty(request.SortBy))
         {

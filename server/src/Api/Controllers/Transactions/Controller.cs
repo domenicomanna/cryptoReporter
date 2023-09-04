@@ -26,4 +26,10 @@ public class TransactionsController : BaseApiController
     {
         return await handler.Handle(request);
     }
+
+    [HttpGet("transactedCryptos")]
+    public async Task<List<string>> GetTransactedCryptos([FromServices] GetTransactedCryptosHandler handler)
+    {
+        return await handler.Handle();
+    }
 }

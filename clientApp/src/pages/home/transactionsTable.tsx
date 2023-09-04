@@ -1,4 +1,9 @@
-import MaterialReactTable, { MRT_ColumnDef, MRT_PaginationState, MRT_SortingState } from 'material-react-table';
+import MaterialReactTable, {
+  MRT_ColumnDef,
+  MRT_ColumnFiltersState,
+  MRT_PaginationState,
+  MRT_SortingState,
+} from 'material-react-table';
 import { TransactionDTO, TransactionDTOPaginationResult } from '../../api/generatedSdk';
 import { FC, useContext, useMemo } from 'react';
 import { Updater } from '@tanstack/react-table';
@@ -9,19 +14,25 @@ import { UserContext } from '../../contexts/UserContext';
 type Props = {
   transactionsPaginationResult: TransactionDTOPaginationResult;
   isLoading: boolean;
+  transactedCryptos: string[];
   pagination: MRT_PaginationState;
-  onPaginationChange: (pagination: MRT_PaginationState) => void;
   sorting: MRT_SortingState;
+  columnFilters: MRT_ColumnFiltersState;
+  onPaginationChange: (pagination: MRT_PaginationState) => void;
   onSortingChange: (sorting: MRT_SortingState) => void;
+  onColumnFiltersChange: (filters: MRT_ColumnFiltersState) => void;
 };
 
 export const TransactionsTable: FC<Props> = ({
   transactionsPaginationResult,
   isLoading,
+  transactedCryptos,
   pagination,
-  onPaginationChange,
   sorting,
+  columnFilters,
+  onPaginationChange,
   onSortingChange,
+  onColumnFiltersChange,
 }) => {
   const { userInfo } = useContext(UserContext);
 
@@ -35,6 +46,11 @@ export const TransactionsTable: FC<Props> = ({
     onSortingChange(updatedSorting);
   };
 
+  const handleColumnsFiltersChange = async (updater: Updater<MRT_ColumnFiltersState>) => {
+    const updatedFilters = updater instanceof Function ? updater(columnFilters) : updater;
+    onColumnFiltersChange(updatedFilters);
+  };
+
   const columns = useMemo<MRT_ColumnDef<TransactionDTO>[]>(
     () => [
       {
@@ -43,10 +59,13 @@ export const TransactionsTable: FC<Props> = ({
         Cell: ({ cell }) => {
           return <span>{DateTime.fromISO(cell.getValue<string>()).toLocaleString(DateTime.DATE_SHORT)}</span>;
         },
+        enableColumnFilter: false,
       },
       {
         accessorKey: 'cryptoTicker',
         header: 'Coin',
+        filterVariant: 'multi-select',
+        filterSelectOptions: transactedCryptos,
       },
       {
         accessorKey: 'quantityTransacted',
@@ -54,6 +73,7 @@ export const TransactionsTable: FC<Props> = ({
         Cell: ({ cell }) => {
           return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
         },
+        enableColumnFilter: false,
       },
       {
         accessorKey: 'price',
@@ -61,6 +81,7 @@ export const TransactionsTable: FC<Props> = ({
         Cell: ({ cell }) => {
           return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
         },
+        enableColumnFilter: false,
       },
       {
         accessorKey: 'fee',
@@ -68,6 +89,7 @@ export const TransactionsTable: FC<Props> = ({
         Cell: ({ cell }) => {
           return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
         },
+        enableColumnFilter: false,
       },
       {
         accessorKey: 'coinsTransacted',
@@ -76,25 +98,31 @@ export const TransactionsTable: FC<Props> = ({
           return <span>{parseFloat(cell.getValue<number>().toFixed(4))}</span>;
         },
         enableSorting: false,
+        enableColumnFilter: false,
       },
       {
         accessorKey: 'transactionType',
         header: 'Transaction Type',
+        filterVariant: 'multi-select',
+        filterSelectOptions: ['Purchase', 'Reward', 'Sale'],
       },
       {
         accessorKey: 'exchange',
         header: 'Exchange',
+        enableColumnFilter: false,
       },
       {
         accessorKey: 'numberOfCoinsSold',
         header: 'Number of Coins Sold',
+        enableColumnFilter: false,
       },
       {
         accessorKey: 'notes',
         header: 'Notes',
+        enableColumnFilter: false,
       },
     ],
-    [userInfo]
+    [userInfo, transactedCryptos]
   );
 
   return (
@@ -102,18 +130,24 @@ export const TransactionsTable: FC<Props> = ({
       columns={columns}
       data={transactionsPaginationResult.records}
       enableStickyHeader
-      enableTopToolbar={false}
+      enableGlobalFilter={false}
       enableColumnActions={false}
       manualPagination
       manualSorting
+      manualFiltering
       rowCount={transactionsPaginationResult.totalRecordCount}
       onPaginationChange={handlePaginationChange}
       onSortingChange={handleSortChange}
+      onColumnFiltersChange={handleColumnsFiltersChange}
       muiTableContainerProps={{ sx: { maxHeight: '75vh' } }}
-      state={{
+      initialState={{
         density: 'compact',
+        showColumnFilters: true,
+      }}
+      state={{
         pagination,
         sorting,
+        columnFilters,
         isLoading,
       }}
     />

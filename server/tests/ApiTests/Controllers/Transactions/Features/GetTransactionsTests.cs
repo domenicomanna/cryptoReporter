@@ -33,6 +33,7 @@ public class GetTransactionsTests
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
         User user = new User() { FiatCurrencyType = appDbContext.FiatCurrencyTypes.First(), };
         appDbContext.Users.Add(user);
+
         appDbContext.Transactions.AddRange(
             new List<Transaction>
             {
@@ -43,7 +44,9 @@ public class GetTransactionsTests
                     QuantityTransacted = 100,
                     Price = 10000,
                     Fee = 1,
-                    TransactionType = appDbContext.TransactionTypes.First(),
+                    TransactionType = appDbContext.TransactionTypes
+                        .Where(x => x.Id == TransactionTypeId.Purchase)
+                        .First(),
                     User = user,
                 },
                 new Transaction()
@@ -53,7 +56,7 @@ public class GetTransactionsTests
                     QuantityTransacted = 100,
                     Price = 1000,
                     Fee = 1,
-                    TransactionType = appDbContext.TransactionTypes.First(),
+                    TransactionType = appDbContext.TransactionTypes.Where(x => x.Id == TransactionTypeId.Sale).First(),
                     User = user,
                 },
             }
@@ -67,7 +70,12 @@ public class GetTransactionsTests
             appDbContext,
             _currentUserAccessorMock.Object
         );
-        GetTransactionsRequest request = new GetTransactionsRequest { SortBy = "Date asc, TransactionType desc" };
+        GetTransactionsRequest request = new GetTransactionsRequest
+        {
+            CryptoTickers = "BTC,ETH",
+            TransactionTypes = "purchase, sale",
+            SortBy = "Date asc, TransactionType desc"
+        };
 
         var paginationResult = await handler.Handle(request);
 
