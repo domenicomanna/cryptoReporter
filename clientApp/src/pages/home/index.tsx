@@ -6,7 +6,7 @@ import PageLoader from '../../components/pageLoader';
 import { transactionsApi } from '../../api';
 import { MRT_ColumnFiltersState, MRT_PaginationState, MRT_SortingState } from 'material-react-table';
 import { TransactionDTOPaginationResult } from '../../api/generatedSdk';
-import { TransactionsTable } from './transactionsTable';
+import { TransactionsTable, defaultPagination, defaultSorting } from './transactionsTable';
 import { toast } from 'react-toastify';
 import { buildSortByString } from '../../utils/builtSortByString';
 
@@ -15,17 +15,6 @@ const Home = () => {
   const [transactionsAreLoading, setTransactionsAreLoading] = useState(false);
   const [transactedCryptosAreLoading, setTransactedCryptosAreLoading] = useState(false);
   const [transactedCryptos, setTransactedCryptos] = useState<string[]>([]);
-  const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize: 50,
-  });
-  const [sorting, setSorting] = useState<MRT_SortingState>([
-    {
-      id: 'date',
-      desc: false,
-    },
-  ]);
-  const [columnFilters, setFilters] = useState<MRT_ColumnFiltersState>([]);
   const [transactionsPaginationResult, setTransactionsPaginationResult] =
     useState<TransactionDTOPaginationResult | null>(null);
 
@@ -41,23 +30,14 @@ const Home = () => {
         setTransactedCryptosAreLoading(false);
       }
     };
-    void handleLoadingOfTransactions(pagination, sorting, columnFilters);
+    void handleLoadingOfTransactions(defaultPagination, defaultSorting, []);
     void loadTransactedCryptos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onTransactionsImported = async () => {
     setTransactionsPaginationResult(null);
-    const pagination: MRT_PaginationState = {
-      pageIndex: 0,
-      pageSize: 50,
-    };
-    const sorting: MRT_SortingState = [];
-    const filters: MRT_ColumnFiltersState = [];
-    setPagination(pagination);
-    setSorting(sorting);
-    setFilters(filters);
-    await handleLoadingOfTransactions(pagination, sorting, columnFilters);
+    await handleLoadingOfTransactions(defaultPagination, defaultSorting, []);
   };
 
   const onTableStateChange = async (
@@ -65,8 +45,6 @@ const Home = () => {
     sorting: MRT_SortingState,
     filters: MRT_ColumnFiltersState
   ) => {
-    setPagination(pagination), setSorting(sorting);
-    setFilters(filters);
     await handleLoadingOfTransactions(pagination, sorting, filters);
   };
 
@@ -117,9 +95,6 @@ const Home = () => {
               transactionsPaginationResult={transactionsPaginationResult}
               isLoading={transactionsAreLoading}
               transactedCryptos={transactedCryptos}
-              pagination={pagination}
-              sorting={sorting}
-              columnFilters={columnFilters}
               onTableStateChange={onTableStateChange}
             />
           )}

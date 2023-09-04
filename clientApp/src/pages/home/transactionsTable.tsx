@@ -5,19 +5,28 @@ import MaterialReactTable, {
   MRT_SortingState,
 } from 'material-react-table';
 import { TransactionDTO, TransactionDTOPaginationResult } from '../../api/generatedSdk';
-import { FC, useContext, useMemo } from 'react';
+import { FC, useContext, useMemo, useState } from 'react';
 import { Updater } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { formatAsCurrency } from '../../utils/formatAsCurrency';
 import { UserContext } from '../../contexts/UserContext';
 
+export const defaultPagination: MRT_PaginationState = {
+  pageIndex: 0,
+  pageSize: 50,
+};
+
+export const defaultSorting: MRT_SortingState = [
+  {
+    id: 'date',
+    desc: false,
+  },
+];
+
 type Props = {
   transactionsPaginationResult: TransactionDTOPaginationResult;
   isLoading: boolean;
   transactedCryptos: string[];
-  pagination: MRT_PaginationState;
-  sorting: MRT_SortingState;
-  columnFilters: MRT_ColumnFiltersState;
   onTableStateChange: (
     pagination: MRT_PaginationState,
     sorting: MRT_SortingState,
@@ -29,15 +38,17 @@ export const TransactionsTable: FC<Props> = ({
   transactionsPaginationResult,
   isLoading,
   transactedCryptos,
-  pagination,
-  sorting,
-  columnFilters,
   onTableStateChange,
 }) => {
   const { userInfo } = useContext(UserContext);
 
+  const [pagination, setPagination] = useState<MRT_PaginationState>(defaultPagination);
+  const [sorting, setSorting] = useState<MRT_SortingState>(defaultSorting);
+  const [columnFilters, setFilters] = useState<MRT_ColumnFiltersState>([]);
+
   const handlePaginationChange = async (updater: Updater<MRT_PaginationState>) => {
     const updatedPagination = updater instanceof Function ? updater(pagination) : updater;
+    setPagination(updatedPagination);
     onTableStateChange(updatedPagination, sorting, columnFilters);
   };
 
@@ -47,6 +58,8 @@ export const TransactionsTable: FC<Props> = ({
       pageIndex: 0,
       pageSize: pagination.pageSize,
     };
+    setPagination(updatedPagination);
+    setSorting(updatedSorting);
     onTableStateChange(updatedPagination, updatedSorting, columnFilters);
   };
 
@@ -56,6 +69,8 @@ export const TransactionsTable: FC<Props> = ({
       pageIndex: 0,
       pageSize: pagination.pageSize,
     };
+    setPagination(updatedPagination);
+    setFilters(updatedFilters);
     onTableStateChange(updatedPagination, sorting, updatedFilters);
   };
 
