@@ -12,7 +12,7 @@ public class TransactionDTO
     public decimal Fee { get; set; }
 
     [NotSortable]
-    public decimal CoinsTransacted => (QuantityTransacted - Fee) / Price;
+    public decimal CoinsTransacted { get; set; }
 
     [SortName("TransactionType.Name")]
     public string TransactionType { get; set; } = String.Empty;
