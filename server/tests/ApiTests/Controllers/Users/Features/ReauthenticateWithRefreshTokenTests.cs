@@ -5,24 +5,25 @@ using Api.Domain.Models;
 using Api.Common.ExtensionMethods;
 using Api.Utils;
 using Moq;
+using Fixtures;
 
 namespace ApiTests.Controllers.Users.Features;
 
-public class ReauthenticateWithRefreshTokenTests
+public class ReauthenticateWithRefreshTokenTests : IClassFixture<DatabaseFixture>
 {
-    AppDbContextCreator _appDbContextCreator = null!;
     Mock<IJwtHelper> _jwtHelperMock = null!;
+    DatabaseFixture _databaseFixture;
 
-    public ReauthenticateWithRefreshTokenTests()
+    public ReauthenticateWithRefreshTokenTests(DatabaseFixture databaseFixture)
     {
-        _appDbContextCreator = new AppDbContextCreator();
         _jwtHelperMock = new Mock<IJwtHelper>();
+        _databaseFixture = databaseFixture;
     }
 
     [Fact]
     public async Task AnExceptionShouldBeThrownIfTheRefreshTokenIsNotFound()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
         ReauthenticateWithRefreshTokenHandler handler = new ReauthenticateWithRefreshTokenHandler(
             _jwtHelperMock.Object,
             appDbContext
@@ -34,7 +35,7 @@ public class ReauthenticateWithRefreshTokenTests
     [Fact]
     public async Task AnExceptionShouldBeThrownIfTheRefreshTokenIsExpired()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
         User user = new User() { FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
         appDbContext.SaveChanges();
@@ -60,7 +61,7 @@ public class ReauthenticateWithRefreshTokenTests
     [Fact]
     public async Task ReauthenticationShouldSucceed()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
         User user = new User() { FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
         appDbContext.SaveChanges();

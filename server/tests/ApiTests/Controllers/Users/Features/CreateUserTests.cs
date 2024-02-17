@@ -5,27 +5,27 @@ using Api.Database;
 using Api.Domain.Models;
 using Api.Utils;
 using AutoMapper;
+using Fixtures;
 using FluentValidation.TestHelper;
 using Moq;
 
 namespace ApiTests.Controllers.Users.Features;
 
-public class CreateUserTests
+public class CreateUserTests : IClassFixture<DatabaseFixture>
 {
     IMapper _mapper = null!;
-    AppDbContextCreator _appDbContextCreator = null!;
+    DatabaseFixture _databaseFixture;
     Mock<IPasswordHasher> _passwordHasherMock = null!;
     Mock<IJwtHelper> _jwtHelperMock = null!;
 
-    public CreateUserTests()
+    public CreateUserTests(DatabaseFixture databaseFixture)
     {
         MapperConfiguration mapperConfiguration = new MapperConfiguration(opts =>
         {
             opts.AddProfile(new UsersMappingProfile());
         });
         _mapper = mapperConfiguration.CreateMapper();
-
-        _appDbContextCreator = new AppDbContextCreator();
+        _databaseFixture = databaseFixture;
         _passwordHasherMock = new Mock<IPasswordHasher>();
         _jwtHelperMock = new Mock<IJwtHelper>();
     }
@@ -48,7 +48,7 @@ public class CreateUserTests
     [Fact]
     public async Task AnExceptionShouldBeThrownIfTheEmailIsTaken()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
         User user = new User { Email = "test@gmail.com", FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
         appDbContext.SaveChanges();
@@ -73,7 +73,7 @@ public class CreateUserTests
     [Fact]
     public async Task TheUserShouldBeCreatedSuccessfully()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
 
         _jwtHelperMock.Setup(x => x.CreateAccessToken(It.IsAny<User>())).Returns("token");
         _jwtHelperMock

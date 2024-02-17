@@ -4,17 +4,18 @@ using Api.Database;
 using Api.Domain.Models;
 using Api.Utils;
 using AutoMapper;
+using Fixtures;
 using Moq;
 
 namespace ApiTests.Controllers.Transactions.Features;
 
-public class GetTransactionsTests
+public class GetTransactionsTests : IClassFixture<DatabaseFixture>
 {
     IMapper _mapper = null!;
-    AppDbContextCreator _appDbContextCreator = null!;
     Mock<ICurrentUserAccessor> _currentUserAccessorMock = null!;
+    DatabaseFixture _databaseFixture;
 
-    public GetTransactionsTests()
+    public GetTransactionsTests(DatabaseFixture databaseFixture)
     {
         MapperConfiguration mapperConfiguration = new MapperConfiguration(opts =>
         {
@@ -22,13 +23,13 @@ public class GetTransactionsTests
         });
         _mapper = mapperConfiguration.CreateMapper();
         _currentUserAccessorMock = new Mock<ICurrentUserAccessor>();
-        _appDbContextCreator = new AppDbContextCreator();
+        _databaseFixture = databaseFixture;
     }
 
     [Fact]
     public async Task TransactionsShouldBeSuccessfullyRetrieved()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
         User user = new User() { FiatCurrencyType = appDbContext.FiatCurrencyTypes.First(), };
         appDbContext.Users.Add(user);
 

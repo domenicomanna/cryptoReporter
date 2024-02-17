@@ -5,24 +5,25 @@ using Api.Domain.Models;
 using Api.Utils;
 using Api.Common.ExtensionMethods;
 using Api.Common.Exceptions;
+using Fixtures;
 
 namespace ApiTests.Controllers.Features.Users;
 
-public class ResetPasswordStepTwoHandlerTests
+public class ResetPasswordStepTwoHandlerTests : IClassFixture<DatabaseFixture>
 {
-    AppDbContextCreator _appDbContextCreator = null!;
+    DatabaseFixture _databaseFixture;
     Mock<IPasswordHasher> _passwordHasherMock = null!;
 
-    public ResetPasswordStepTwoHandlerTests()
+    public ResetPasswordStepTwoHandlerTests(DatabaseFixture databaseFixture)
     {
-        _appDbContextCreator = new AppDbContextCreator();
+        _databaseFixture = databaseFixture;
         _passwordHasherMock = new Mock<IPasswordHasher>();
     }
 
     [Fact]
     public async Task AnExceptionShouldBeThrownIfTheResetTokenIsNotFound()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
         User user = new User
         {
             Id = 1,
@@ -49,7 +50,7 @@ public class ResetPasswordStepTwoHandlerTests
     [Fact]
     public async Task AnExceptionShouldBeThrownIfTheResetTokenIsExpired()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
         User user = new User
         {
             Id = 1,
@@ -88,7 +89,7 @@ public class ResetPasswordStepTwoHandlerTests
     [Fact]
     public async Task PasswordShouldBeSuccessfullyReset()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
         User user = new User
         {
             Id = 1,

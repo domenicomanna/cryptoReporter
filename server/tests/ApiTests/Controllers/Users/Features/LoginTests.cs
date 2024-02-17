@@ -5,26 +5,26 @@ using Api.Database;
 using Api.Domain.Models;
 using Api.Utils;
 using AutoMapper;
+using Fixtures;
 using Moq;
 
 namespace ApiTests.Controllers.Users.Features;
 
-public class LoginTests
+public class LoginTests : IClassFixture<DatabaseFixture>
 {
     IMapper _mapper = null!;
-    AppDbContextCreator _appDbContextCreator = null!;
+    DatabaseFixture _databaseFixture;
     Mock<IPasswordHasher> _passwordHasherMock = null!;
     Mock<IJwtHelper> _jwtHelperMock = null!;
 
-    public LoginTests()
+    public LoginTests(DatabaseFixture databaseFixture)
     {
         MapperConfiguration mapperConfiguration = new MapperConfiguration(opts =>
         {
             opts.AddProfile(new UsersMappingProfile());
         });
         _mapper = mapperConfiguration.CreateMapper();
-
-        _appDbContextCreator = new AppDbContextCreator();
+        _databaseFixture = databaseFixture;
         _passwordHasherMock = new Mock<IPasswordHasher>();
         _jwtHelperMock = new Mock<IJwtHelper>();
     }
@@ -32,7 +32,7 @@ public class LoginTests
     [Fact]
     public async Task AnExceptionShouldBeThrownIfTheUserIsNotFound()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
         LoginHandler handler = new LoginHandler(
             _passwordHasherMock.Object,
             _mapper,
@@ -47,7 +47,7 @@ public class LoginTests
     [Fact]
     public async Task AnExceptionShouldBeThrownIfTheUsersPasswordIsInvalid()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
         User user = new User { Email = "test@gmail.com", FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
         appDbContext.SaveChanges();
@@ -68,7 +68,7 @@ public class LoginTests
     [Fact]
     public async Task LoginShouldSucceed()
     {
-        AppDbContext appDbContext = _appDbContextCreator.CreateContext();
+        AppDbContext appDbContext = await _databaseFixture.CreateContext();
         User user = new User { Email = "test@gmail.com", FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
         appDbContext.SaveChanges();
