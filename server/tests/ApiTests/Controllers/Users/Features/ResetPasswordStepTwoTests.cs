@@ -8,20 +8,18 @@ using Api.Common.Exceptions;
 
 namespace ApiTests.Controllers.Features.Users;
 
-[TestClass]
 public class ResetPasswordStepTwoHandlerTests
 {
     AppDbContextCreator _appDbContextCreator = null!;
     Mock<IPasswordHasher> _passwordHasherMock = null!;
 
-    [TestInitialize]
-    public void SetUp()
+    public ResetPasswordStepTwoHandlerTests()
     {
         _appDbContextCreator = new AppDbContextCreator();
         _passwordHasherMock = new Mock<IPasswordHasher>();
     }
 
-    [TestMethod]
+    [Fact]
     public async Task AnExceptionShouldBeThrownIfTheResetTokenIsNotFound()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -45,10 +43,10 @@ public class ResetPasswordStepTwoHandlerTests
 
         ResetPasswordStepTwoHandler handler = new ResetPasswordStepTwoHandler(appDbContext, _passwordHasherMock.Object);
 
-        await Assert.ThrowsExceptionAsync<ApiException>(async () => await handler.Handle(request));
+        await Assert.ThrowsAsync<ApiException>(async () => await handler.Handle(request));
     }
 
-    [TestMethod]
+    [Fact]
     public async Task AnExceptionShouldBeThrownIfTheResetTokenIsExpired()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -84,10 +82,10 @@ public class ResetPasswordStepTwoHandlerTests
 
         ResetPasswordStepTwoHandler handler = new ResetPasswordStepTwoHandler(appDbContext, _passwordHasherMock.Object);
 
-        await Assert.ThrowsExceptionAsync<ApiException>(async () => await handler.Handle(request));
+        await Assert.ThrowsAsync<ApiException>(async () => await handler.Handle(request));
     }
 
-    [TestMethod]
+    [Fact]
     public async Task PasswordShouldBeSuccessfullyReset()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -124,6 +122,6 @@ public class ResetPasswordStepTwoHandlerTests
         ResetPasswordStepTwoHandler handler = new ResetPasswordStepTwoHandler(appDbContext, _passwordHasherMock.Object);
         await handler.Handle(request);
 
-        Assert.AreEqual(newHashedPassword, appDbContext.Users.First(x => x.Id == user.Id).Password);
+        Assert.Equal(newHashedPassword, appDbContext.Users.First(x => x.Id == user.Id).Password);
     }
 }

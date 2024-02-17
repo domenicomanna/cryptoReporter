@@ -8,15 +8,13 @@ using Moq;
 
 namespace ApiTests.Controllers.Transactions.Features;
 
-[TestClass]
 public class GetTransactionsTests
 {
     IMapper _mapper = null!;
     AppDbContextCreator _appDbContextCreator = null!;
     Mock<ICurrentUserAccessor> _currentUserAccessorMock = null!;
 
-    [TestInitialize]
-    public void SetUp()
+    public GetTransactionsTests()
     {
         MapperConfiguration mapperConfiguration = new MapperConfiguration(opts =>
         {
@@ -27,7 +25,7 @@ public class GetTransactionsTests
         _appDbContextCreator = new AppDbContextCreator();
     }
 
-    [TestMethod]
+    [Fact]
     public async Task TransactionsShouldBeSuccessfullyRetrieved()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -79,6 +77,6 @@ public class GetTransactionsTests
 
         var paginationResult = await handler.Handle(request);
 
-        Assert.AreEqual(2, paginationResult.Records.Count);
+        Assert.Equal(2, paginationResult.Records.Count);
     }
 }

@@ -8,20 +8,18 @@ using Moq;
 
 namespace ApiTests.Controllers.Users.Features;
 
-[TestClass]
 public class ReauthenticateWithRefreshTokenTests
 {
     AppDbContextCreator _appDbContextCreator = null!;
     Mock<IJwtHelper> _jwtHelperMock = null!;
 
-    [TestInitialize]
-    public void SetUp()
+    public ReauthenticateWithRefreshTokenTests()
     {
         _appDbContextCreator = new AppDbContextCreator();
         _jwtHelperMock = new Mock<IJwtHelper>();
     }
 
-    [TestMethod]
+    [Fact]
     public async Task AnExceptionShouldBeThrownIfTheRefreshTokenIsNotFound()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -30,10 +28,10 @@ public class ReauthenticateWithRefreshTokenTests
             appDbContext
         );
 
-        await Assert.ThrowsExceptionAsync<ApiException>(async () => await handler.Handle("refreshToken"));
+        await Assert.ThrowsAsync<ApiException>(async () => await handler.Handle("refreshToken"));
     }
 
-    [TestMethod]
+    [Fact]
     public async Task AnExceptionShouldBeThrownIfTheRefreshTokenIsExpired()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -56,10 +54,10 @@ public class ReauthenticateWithRefreshTokenTests
             appDbContext
         );
 
-        await Assert.ThrowsExceptionAsync<ApiException>(async () => await handler.Handle(nonHashedRefreshToken));
+        await Assert.ThrowsAsync<ApiException>(async () => await handler.Handle(nonHashedRefreshToken));
     }
 
-    [TestMethod]
+    [Fact]
     public async Task ReauthenticationShouldSucceed()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -90,9 +88,9 @@ public class ReauthenticateWithRefreshTokenTests
         (ReauthenticateWithRefreshTokenResult result, string newNonHashedRefreshToken) = await handler.Handle(
             nonHashedRefreshToken
         );
-        Assert.AreEqual(user.Id, result.UserId);
+        Assert.Equal(user.Id, result.UserId);
         // ensure the refresh token gets deleted
-        Assert.IsTrue(
+        Assert.True(
             appDbContext.RefreshTokens.FirstOrDefault(x => x.Token == nonHashedRefreshToken.ToSHA512()) is null
         );
     }

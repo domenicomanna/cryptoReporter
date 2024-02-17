@@ -6,14 +6,12 @@ using Api.Domain.Models;
 
 namespace ApiTests.Controllers.Features.Users;
 
-[TestClass]
 public class ResetPasswordStepOneHandlerTests
 {
     AppDbContextCreator _appDbContextCreator = null!;
     IEmailSender _emailSender = null!;
 
-    [TestInitialize]
-    public void SetUp()
+    public ResetPasswordStepOneHandlerTests()
     {
         _appDbContextCreator = new AppDbContextCreator();
 
@@ -23,7 +21,7 @@ public class ResetPasswordStepOneHandlerTests
         _emailSender = emailSenderMock.Object;
     }
 
-    [TestMethod]
+    [Fact]
     public async Task NothingShouldHappenIfTheEmailIsNotFound()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -32,10 +30,10 @@ public class ResetPasswordStepOneHandlerTests
         ResetPasswordStepOneHandler handler = new ResetPasswordStepOneHandler(appDbContext, _emailSender);
         await handler.Handle(request);
 
-        Assert.AreEqual(0, appDbContext.PasswordResetTokens.Count());
+        Assert.Equal(0, appDbContext.PasswordResetTokens.Count());
     }
 
-    [TestMethod]
+    [Fact]
     public async Task IfTheEmailIsFoundAPasswordResetTokenShouldBeCreated()
     {
         string email = "test@gmail.com";
@@ -49,6 +47,6 @@ public class ResetPasswordStepOneHandlerTests
         ResetPasswordStepOneHandler handler = new ResetPasswordStepOneHandler(appDbContext, _emailSender);
         await handler.Handle(request);
 
-        Assert.AreEqual(1, appDbContext.PasswordResetTokens.Count());
+        Assert.Equal(1, appDbContext.PasswordResetTokens.Count());
     }
 }

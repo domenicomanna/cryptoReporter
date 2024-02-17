@@ -9,7 +9,6 @@ using Moq;
 
 namespace ApiTests.Controllers.Users.Features;
 
-[TestClass]
 public class LoginTests
 {
     IMapper _mapper = null!;
@@ -17,8 +16,7 @@ public class LoginTests
     Mock<IPasswordHasher> _passwordHasherMock = null!;
     Mock<IJwtHelper> _jwtHelperMock = null!;
 
-    [TestInitialize]
-    public void SetUp()
+    public LoginTests()
     {
         MapperConfiguration mapperConfiguration = new MapperConfiguration(opts =>
         {
@@ -31,7 +29,7 @@ public class LoginTests
         _jwtHelperMock = new Mock<IJwtHelper>();
     }
 
-    [TestMethod]
+    [Fact]
     public async Task AnExceptionShouldBeThrownIfTheUserIsNotFound()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -43,10 +41,10 @@ public class LoginTests
         );
         LoginRequest request = new LoginRequest { Email = "test@gmail.com", Password = "12345" };
 
-        await Assert.ThrowsExceptionAsync<ApiException>(async () => await handler.Handle(request));
+        await Assert.ThrowsAsync<ApiException>(async () => await handler.Handle(request));
     }
 
-    [TestMethod]
+    [Fact]
     public async Task AnExceptionShouldBeThrownIfTheUsersPasswordIsInvalid()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -64,10 +62,10 @@ public class LoginTests
         );
         LoginRequest request = new LoginRequest { Email = user.Email, Password = "12345" };
 
-        await Assert.ThrowsExceptionAsync<ApiException>(async () => await handler.Handle(request));
+        await Assert.ThrowsAsync<ApiException>(async () => await handler.Handle(request));
     }
 
-    [TestMethod]
+    [Fact]
     public async Task LoginShouldSucceed()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -91,6 +89,6 @@ public class LoginTests
         LoginRequest request = new LoginRequest { Email = user.Email, Password = "12345" };
 
         (LoginResult result, string nonHashedRefreshToken) = await handler.Handle(request);
-        Assert.AreEqual(user.Id, result.User.Id);
+        Assert.Equal(user.Id, result.User.Id);
     }
 }

@@ -10,7 +10,6 @@ using Moq;
 
 namespace ApiTests.Controllers.Users.Features;
 
-[TestClass]
 public class CreateUserTests
 {
     IMapper _mapper = null!;
@@ -18,8 +17,7 @@ public class CreateUserTests
     Mock<IPasswordHasher> _passwordHasherMock = null!;
     Mock<IJwtHelper> _jwtHelperMock = null!;
 
-    [TestInitialize]
-    public void SetUp()
+    public CreateUserTests()
     {
         MapperConfiguration mapperConfiguration = new MapperConfiguration(opts =>
         {
@@ -32,7 +30,7 @@ public class CreateUserTests
         _jwtHelperMock = new Mock<IJwtHelper>();
     }
 
-    [TestMethod]
+    [Fact]
     public void ThereShouldBeAValidationErrorIfTheCurrencyIsInvalid()
     {
         CreateUserRequestValidator validator = new CreateUserRequestValidator();
@@ -47,7 +45,7 @@ public class CreateUserTests
         result.ShouldHaveValidationErrorFor(x => x.FiatCurrencyType);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task AnExceptionShouldBeThrownIfTheEmailIsTaken()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -69,10 +67,10 @@ public class CreateUserTests
             FiatCurrencyType = "USD"
         };
 
-        await Assert.ThrowsExceptionAsync<ApiException>(async () => await handler.Handle(request));
+        await Assert.ThrowsAsync<ApiException>(async () => await handler.Handle(request));
     }
 
-    [TestMethod]
+    [Fact]
     public async Task TheUserShouldBeCreatedSuccessfully()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -99,6 +97,6 @@ public class CreateUserTests
         };
 
         (CreateUserResult result, string nonHashedRefreshToken) = await handler.Handle(request);
-        Assert.AreEqual(request.Email, result.User.Email);
+        Assert.Equal(request.Email, result.User.Email);
     }
 }

@@ -11,15 +11,13 @@ using Moq;
 
 namespace ApiTests.Controllers.Transactions.Features;
 
-[TestClass]
 public class AddTransactionsTests
 {
     IMapper _mapper = null!;
     AppDbContextCreator _appDbContextCreator = null!;
     Mock<ICurrentUserAccessor> _currentUserAccessorMock = null!;
 
-    [TestInitialize]
-    public void SetUp()
+    public AddTransactionsTests()
     {
         MapperConfiguration mapperConfiguration = new MapperConfiguration(opts =>
         {
@@ -30,7 +28,7 @@ public class AddTransactionsTests
         _appDbContextCreator = new AppDbContextCreator();
     }
 
-    [TestMethod]
+    [Fact]
     public void ThereShouldBeAValidationErrorIfTheTransactionTypeIsInvalid()
     {
         SingleTransactionValidator validator = new SingleTransactionValidator();
@@ -43,7 +41,7 @@ public class AddTransactionsTests
         result.ShouldHaveValidationErrorFor(x => x.TransactionType);
     }
 
-    [TestMethod]
+    [Fact]
     public async Task TheTransactionsShouldBeAddedSuccessfully()
     {
         AppDbContext appDbContext = _appDbContextCreator.CreateContext();
@@ -91,7 +89,7 @@ public class AddTransactionsTests
         };
 
         List<TransactionDTO> createdTransactions = await handler.Handle(request);
-        Assert.AreEqual(request.Transactions.Count, createdTransactions.Count);
-        Assert.AreEqual(request.Transactions.Count, appDbContext.Transactions.Count());
+        Assert.Equal(request.Transactions.Count, createdTransactions.Count);
+        Assert.Equal(request.Transactions.Count, appDbContext.Transactions.Count());
     }
 }

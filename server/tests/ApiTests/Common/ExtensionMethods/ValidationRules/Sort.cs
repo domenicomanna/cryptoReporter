@@ -26,10 +26,9 @@ public class GetHousesRequestValidator : AbstractValidator<GetHousesRequest>
     }
 }
 
-[TestClass]
 public class SortStatementValidatorTests
 {
-    [TestMethod]
+    [Fact]
     public void ThereShouldBeAValidationErrorIfTheSortIsInvalid()
     {
         GetHousesRequestValidator validator = new GetHousesRequestValidator();
@@ -38,7 +37,7 @@ public class SortStatementValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.SortBy);
     }
 
-    [TestMethod]
+    [Fact]
     public void ThereShouldNotBeAValidationErrorIfTheSortIsValid()
     {
         GetHousesRequestValidator validator = new GetHousesRequestValidator();

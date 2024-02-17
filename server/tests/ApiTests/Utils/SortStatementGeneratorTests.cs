@@ -15,34 +15,33 @@ public class Car
     public decimal Mileage { get; set; }
 }
 
-[TestClass]
 public class SortStatementGeneratorTests
 {
-    [TestMethod]
+    [Fact]
     public void AnExceptionShouldBeThrownIfTheSortStatementIsEmpty()
     {
-        Assert.ThrowsException<InvalidSortStatementException>(
+        Assert.Throws<InvalidSortStatementException>(
             () => SortStatementGenerator.GenerateSortStatement("", typeof(Car))
         );
     }
 
-    [TestMethod]
+    [Fact]
     public void AnExceptionShouldBeThrownIfThePropertyIsInvalid()
     {
-        Assert.ThrowsException<InvalidSortStatementException>(
+        Assert.Throws<InvalidSortStatementException>(
             () => SortStatementGenerator.GenerateSortStatement("Xyz", typeof(Car))
         );
     }
 
-    [TestMethod]
+    [Fact]
     public void AnExceptionShouldBeThrownIfThePropertyIsNotSortable()
     {
-        Assert.ThrowsException<InvalidSortStatementException>(
+        Assert.Throws<InvalidSortStatementException>(
             () => SortStatementGenerator.GenerateSortStatement("Mileage", typeof(Car))
         );
     }
 
-    [TestMethod]
+    [Fact]
     public void SortingShouldWorkCorrectly()
     {
         var cars = new List<Car>
@@ -55,7 +54,7 @@ public class SortStatementGeneratorTests
         string sortStatement = SortStatementGenerator.GenerateSortStatement("make asc, modelName desc", typeof(Car));
 
         List<Car> sortedCars = cars.OrderBy(sortStatement).ToList();
-        Assert.IsTrue(sortedCars[0].Make == "Honda");
-        Assert.IsTrue(sortedCars[2].Make == "Mazda" && sortedCars[2].ModelName == "CX5");
+        Assert.True(sortedCars[0].Make == "Honda");
+        Assert.True(sortedCars[2].Make == "Mazda" && sortedCars[2].ModelName == "CX5");
     }
 }
