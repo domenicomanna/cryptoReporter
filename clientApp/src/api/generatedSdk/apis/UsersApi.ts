@@ -22,7 +22,7 @@ import type {
   ReauthenticateWithRefreshTokenResult,
   ResetPasswordStepOneRequest,
   ResetPasswordStepTwoRequest,
-  UserDTO,
+  User,
 } from '../models';
 import {
     CreateUserRequestFromJSON,
@@ -39,8 +39,8 @@ import {
     ResetPasswordStepOneRequestToJSON,
     ResetPasswordStepTwoRequestFromJSON,
     ResetPasswordStepTwoRequestToJSON,
-    UserDTOFromJSON,
-    UserDTOToJSON,
+    UserFromJSON,
+    UserToJSON,
 } from '../models';
 
 export interface CreateUserOperationRequest {
@@ -97,7 +97,7 @@ export class UsersApi extends runtime.BaseAPI {
 
     /**
      */
-    async getUserRaw(requestParameters: GetUserRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserDTO>> {
+    async getUserRaw(requestParameters: GetUserRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<User>> {
         if (requestParameters.userId === null || requestParameters.userId === undefined) {
             throw new runtime.RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling getUser.');
         }
@@ -121,12 +121,12 @@ export class UsersApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => UserDTOFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserFromJSON(jsonValue));
     }
 
     /**
      */
-    async getUser(requestParameters: GetUserRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserDTO> {
+    async getUser(requestParameters: GetUserRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
         const response = await this.getUserRaw(requestParameters, initOverrides);
         return await response.value();
     }

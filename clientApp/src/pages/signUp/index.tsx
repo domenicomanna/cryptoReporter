@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { routePaths } from '../../constants/routePaths';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { CreateUserRequest, FiatCurrencyTypeDTO, ResponseError } from '../../api/generatedSdk';
+import { CreateUserRequest, FiatCurrencyType, ResponseError } from '../../api/generatedSdk';
 import { fiatCurrenciesApi, usersApi } from '../../api';
 import { UserContext, UserInfo } from '../../contexts/UserContext';
 import { Box, TextField, Link as MuiLink, Autocomplete, CircularProgress } from '@mui/material';
@@ -18,7 +18,7 @@ const SignUp = () => {
   const { setUserInfo } = useContext(UserContext);
   const [userHasBeenCreated, setUserHasBeenCreated] = useState(false);
   const [fiatCurrencyOptionsAreLoading, setFiatCurrencyOptionsAreLoading] = useState(true);
-  const [fiatCurrencyTypes, setFiatCurrencyTypes] = useState<FiatCurrencyTypeDTO[]>([]);
+  const [fiatCurrencyTypes, setFiatCurrencyTypes] = useState<FiatCurrencyType[]>([]);
 
   useEffect(() => {
     const loadFiatCurrencyTypes = async () => {

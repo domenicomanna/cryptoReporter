@@ -16,32 +16,32 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface FiatCurrencyTypeDTO
+ * @interface FiatCurrencyType
  */
-export interface FiatCurrencyTypeDTO {
+export interface FiatCurrencyType {
     /**
      * 
      * @type {string}
-     * @memberof FiatCurrencyTypeDTO
+     * @memberof FiatCurrencyType
      */
     name: string;
 }
 
 /**
- * Check if a given object implements the FiatCurrencyTypeDTO interface.
+ * Check if a given object implements the FiatCurrencyType interface.
  */
-export function instanceOfFiatCurrencyTypeDTO(value: object): boolean {
+export function instanceOfFiatCurrencyType(value: object): boolean {
     let isInstance = true;
     isInstance = isInstance && "name" in value;
 
     return isInstance;
 }
 
-export function FiatCurrencyTypeDTOFromJSON(json: any): FiatCurrencyTypeDTO {
-    return FiatCurrencyTypeDTOFromJSONTyped(json, false);
+export function FiatCurrencyTypeFromJSON(json: any): FiatCurrencyType {
+    return FiatCurrencyTypeFromJSONTyped(json, false);
 }
 
-export function FiatCurrencyTypeDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): FiatCurrencyTypeDTO {
+export function FiatCurrencyTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): FiatCurrencyType {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -51,7 +51,7 @@ export function FiatCurrencyTypeDTOFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function FiatCurrencyTypeDTOToJSON(value?: FiatCurrencyTypeDTO | null): any {
+export function FiatCurrencyTypeToJSON(value?: FiatCurrencyType | null): any {
     if (value === undefined) {
         return undefined;
     }

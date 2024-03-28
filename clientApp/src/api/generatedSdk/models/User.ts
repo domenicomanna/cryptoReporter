@@ -16,33 +16,33 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface UserDTO
+ * @interface User
  */
-export interface UserDTO {
+export interface User {
     /**
      * 
      * @type {number}
-     * @memberof UserDTO
+     * @memberof User
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof UserDTO
+     * @memberof User
      */
     email: string;
     /**
      * 
      * @type {string}
-     * @memberof UserDTO
+     * @memberof User
      */
     fiatCurrencyTypeName: string;
 }
 
 /**
- * Check if a given object implements the UserDTO interface.
+ * Check if a given object implements the User interface.
  */
-export function instanceOfUserDTO(value: object): boolean {
+export function instanceOfUser(value: object): boolean {
     let isInstance = true;
     isInstance = isInstance && "id" in value;
     isInstance = isInstance && "email" in value;
@@ -51,11 +51,11 @@ export function instanceOfUserDTO(value: object): boolean {
     return isInstance;
 }
 
-export function UserDTOFromJSON(json: any): UserDTO {
-    return UserDTOFromJSONTyped(json, false);
+export function UserFromJSON(json: any): User {
+    return UserFromJSONTyped(json, false);
 }
 
-export function UserDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserDTO {
+export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -67,7 +67,7 @@ export function UserDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): U
     };
 }
 
-export function UserDTOToJSON(value?: UserDTO | null): any {
+export function UserToJSON(value?: User | null): any {
     if (value === undefined) {
         return undefined;
     }

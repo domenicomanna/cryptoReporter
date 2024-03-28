@@ -13,67 +13,67 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { TransactionDTO } from './TransactionDTO';
+import type { Transaction } from './Transaction';
 import {
-    TransactionDTOFromJSON,
-    TransactionDTOFromJSONTyped,
-    TransactionDTOToJSON,
-} from './TransactionDTO';
+    TransactionFromJSON,
+    TransactionFromJSONTyped,
+    TransactionToJSON,
+} from './Transaction';
 
 /**
  * 
  * @export
- * @interface TransactionDTOPaginationResult
+ * @interface TransactionPaginationResult
  */
-export interface TransactionDTOPaginationResult {
+export interface TransactionPaginationResult {
     /**
      * 
-     * @type {Array<TransactionDTO>}
-     * @memberof TransactionDTOPaginationResult
+     * @type {Array<Transaction>}
+     * @memberof TransactionPaginationResult
      */
-    records: Array<TransactionDTO>;
+    records: Array<Transaction>;
     /**
      * 
      * @type {number}
-     * @memberof TransactionDTOPaginationResult
+     * @memberof TransactionPaginationResult
      */
     totalRecordCount: number;
     /**
      * 
      * @type {number}
-     * @memberof TransactionDTOPaginationResult
+     * @memberof TransactionPaginationResult
      */
     currentPageIndex: number;
     /**
      * 
      * @type {number}
-     * @memberof TransactionDTOPaginationResult
+     * @memberof TransactionPaginationResult
      */
     pageSize: number;
     /**
      * 
      * @type {number}
-     * @memberof TransactionDTOPaginationResult
+     * @memberof TransactionPaginationResult
      */
     readonly totalPages: number;
     /**
      * 
      * @type {boolean}
-     * @memberof TransactionDTOPaginationResult
+     * @memberof TransactionPaginationResult
      */
     readonly hasPreviousPage: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof TransactionDTOPaginationResult
+     * @memberof TransactionPaginationResult
      */
     readonly hasNextPage: boolean;
 }
 
 /**
- * Check if a given object implements the TransactionDTOPaginationResult interface.
+ * Check if a given object implements the TransactionPaginationResult interface.
  */
-export function instanceOfTransactionDTOPaginationResult(value: object): boolean {
+export function instanceOfTransactionPaginationResult(value: object): boolean {
     let isInstance = true;
     isInstance = isInstance && "records" in value;
     isInstance = isInstance && "totalRecordCount" in value;
@@ -86,17 +86,17 @@ export function instanceOfTransactionDTOPaginationResult(value: object): boolean
     return isInstance;
 }
 
-export function TransactionDTOPaginationResultFromJSON(json: any): TransactionDTOPaginationResult {
-    return TransactionDTOPaginationResultFromJSONTyped(json, false);
+export function TransactionPaginationResultFromJSON(json: any): TransactionPaginationResult {
+    return TransactionPaginationResultFromJSONTyped(json, false);
 }
 
-export function TransactionDTOPaginationResultFromJSONTyped(json: any, ignoreDiscriminator: boolean): TransactionDTOPaginationResult {
+export function TransactionPaginationResultFromJSONTyped(json: any, ignoreDiscriminator: boolean): TransactionPaginationResult {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'records': ((json['records'] as Array<any>).map(TransactionDTOFromJSON)),
+        'records': ((json['records'] as Array<any>).map(TransactionFromJSON)),
         'totalRecordCount': json['totalRecordCount'],
         'currentPageIndex': json['currentPageIndex'],
         'pageSize': json['pageSize'],
@@ -106,7 +106,7 @@ export function TransactionDTOPaginationResultFromJSONTyped(json: any, ignoreDis
     };
 }
 
-export function TransactionDTOPaginationResultToJSON(value?: TransactionDTOPaginationResult | null): any {
+export function TransactionPaginationResultToJSON(value?: TransactionPaginationResult | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -115,7 +115,7 @@ export function TransactionDTOPaginationResultToJSON(value?: TransactionDTOPagin
     }
     return {
         
-        'records': ((value.records as Array<any>).map(TransactionDTOToJSON)),
+        'records': ((value.records as Array<any>).map(TransactionToJSON)),
         'totalRecordCount': value.totalRecordCount,
         'currentPageIndex': value.currentPageIndex,
         'pageSize': value.pageSize,

@@ -15,11 +15,11 @@
 
 import * as runtime from '../runtime';
 import type {
-  FiatCurrencyTypeDTO,
+  FiatCurrencyType,
 } from '../models';
 import {
-    FiatCurrencyTypeDTOFromJSON,
-    FiatCurrencyTypeDTOToJSON,
+    FiatCurrencyTypeFromJSON,
+    FiatCurrencyTypeToJSON,
 } from '../models';
 
 /**
@@ -29,7 +29,7 @@ export class FiatCurrenciesApi extends runtime.BaseAPI {
 
     /**
      */
-    async getFiatCurrenciesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<FiatCurrencyTypeDTO>>> {
+    async getFiatCurrenciesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<FiatCurrencyType>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -41,12 +41,12 @@ export class FiatCurrenciesApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(FiatCurrencyTypeDTOFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(FiatCurrencyTypeFromJSON));
     }
 
     /**
      */
-    async getFiatCurrencies(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<FiatCurrencyTypeDTO>> {
+    async getFiatCurrencies(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<FiatCurrencyType>> {
         const response = await this.getFiatCurrenciesRaw(initOverrides);
         return await response.value();
     }

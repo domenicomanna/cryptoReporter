@@ -5,7 +5,7 @@ import ImportTransactionsDialog from './importTransactionsDialog/importTransacti
 import PageLoader from '../../components/pageLoader';
 import { transactionsApi } from '../../api';
 import { MRT_ColumnFiltersState, MRT_PaginationState, MRT_SortingState } from 'material-react-table';
-import { TransactionDTOPaginationResult } from '../../api/generatedSdk';
+import { TransactionPaginationResult } from '../../api/generatedSdk';
 import { TransactionsTable, defaultPagination, defaultSorting } from './transactionsTable';
 import { toast } from 'react-toastify';
 import { buildSortByString } from '../../utils/builtSortByString';
@@ -15,8 +15,9 @@ const Home = () => {
   const [transactionsAreLoading, setTransactionsAreLoading] = useState(false);
   const [transactedCryptosAreLoading, setTransactedCryptosAreLoading] = useState(false);
   const [transactedCryptos, setTransactedCryptos] = useState<string[]>([]);
-  const [transactionsPaginationResult, setTransactionsPaginationResult] =
-    useState<TransactionDTOPaginationResult | null>(null);
+  const [transactionsPaginationResult, setTransactionsPaginationResult] = useState<TransactionPaginationResult | null>(
+    null
+  );
 
   useEffect(() => {
     const loadTransactedCryptos = async () => {

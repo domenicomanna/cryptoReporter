@@ -16,16 +16,16 @@
 import * as runtime from '../runtime';
 import type {
   AddTransactionsRequest,
-  TransactionDTO,
-  TransactionDTOPaginationResult,
+  Transaction,
+  TransactionPaginationResult,
 } from '../models';
 import {
     AddTransactionsRequestFromJSON,
     AddTransactionsRequestToJSON,
-    TransactionDTOFromJSON,
-    TransactionDTOToJSON,
-    TransactionDTOPaginationResultFromJSON,
-    TransactionDTOPaginationResultToJSON,
+    TransactionFromJSON,
+    TransactionToJSON,
+    TransactionPaginationResultFromJSON,
+    TransactionPaginationResultToJSON,
 } from '../models';
 
 export interface AddTransactionsOperationRequest {
@@ -47,7 +47,7 @@ export class TransactionsApi extends runtime.BaseAPI {
 
     /**
      */
-    async addTransactionsRaw(requestParameters: AddTransactionsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<TransactionDTO>>> {
+    async addTransactionsRaw(requestParameters: AddTransactionsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Transaction>>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -70,12 +70,12 @@ export class TransactionsApi extends runtime.BaseAPI {
             body: AddTransactionsRequestToJSON(requestParameters.addTransactionsRequest),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TransactionDTOFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(TransactionFromJSON));
     }
 
     /**
      */
-    async addTransactions(requestParameters: AddTransactionsOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<TransactionDTO>> {
+    async addTransactions(requestParameters: AddTransactionsOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Transaction>> {
         const response = await this.addTransactionsRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -114,7 +114,7 @@ export class TransactionsApi extends runtime.BaseAPI {
 
     /**
      */
-    async getTransactionsRaw(requestParameters: GetTransactionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TransactionDTOPaginationResult>> {
+    async getTransactionsRaw(requestParameters: GetTransactionsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TransactionPaginationResult>> {
         const queryParameters: any = {};
 
         if (requestParameters.pageIndex !== undefined) {
@@ -154,12 +154,12 @@ export class TransactionsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => TransactionDTOPaginationResultFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => TransactionPaginationResultFromJSON(jsonValue));
     }
 
     /**
      */
-    async getTransactions(requestParameters: GetTransactionsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TransactionDTOPaginationResult> {
+    async getTransactions(requestParameters: GetTransactionsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TransactionPaginationResult> {
         const response = await this.getTransactionsRaw(requestParameters, initOverrides);
         return await response.value();
     }

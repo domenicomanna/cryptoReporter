@@ -19,7 +19,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FiatCurrencyTypeDTO"
+                    "$ref": "#/components/schemas/FiatCurrencyType"
                   }
                 }
               },
@@ -27,7 +27,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FiatCurrencyTypeDTO"
+                    "$ref": "#/components/schemas/FiatCurrencyType"
                   }
                 }
               },
@@ -35,7 +35,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FiatCurrencyTypeDTO"
+                    "$ref": "#/components/schemas/FiatCurrencyType"
                   }
                 }
               }
@@ -77,7 +77,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TransactionDTO"
+                    "$ref": "#/components/schemas/Transaction"
                   }
                 }
               },
@@ -85,7 +85,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TransactionDTO"
+                    "$ref": "#/components/schemas/Transaction"
                   }
                 }
               },
@@ -93,7 +93,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TransactionDTO"
+                    "$ref": "#/components/schemas/Transaction"
                   }
                 }
               }
@@ -163,17 +163,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TransactionDTOPaginationResult"
+                  "$ref": "#/components/schemas/TransactionPaginationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TransactionDTOPaginationResult"
+                  "$ref": "#/components/schemas/TransactionPaginationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TransactionDTOPaginationResult"
+                  "$ref": "#/components/schemas/TransactionPaginationResult"
                 }
               }
             }
@@ -395,17 +395,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDTO"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDTO"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDTO"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -536,7 +536,7 @@
         "type": "object",
         "properties": {
           "user": {
-            "$ref": "#/components/schemas/UserDTO"
+            "$ref": "#/components/schemas/User"
           },
           "accessToken": {
             "type": "string"
@@ -544,7 +544,7 @@
         },
         "additionalProperties": false
       },
-      "FiatCurrencyTypeDTO": {
+      "FiatCurrencyType": {
         "required": [
           "name"
         ],
@@ -580,7 +580,7 @@
         "type": "object",
         "properties": {
           "user": {
-            "$ref": "#/components/schemas/UserDTO"
+            "$ref": "#/components/schemas/User"
           },
           "accessToken": {
             "type": "string"
@@ -686,7 +686,7 @@
         },
         "additionalProperties": false
       },
-      "TransactionDTO": {
+      "Transaction": {
         "required": [
           "coinsTransacted",
           "cryptoTicker",
@@ -726,8 +726,7 @@
           },
           "coinsTransacted": {
             "type": "number",
-            "format": "double",
-            "readOnly": true
+            "format": "double"
           },
           "transactionType": {
             "type": "string"
@@ -751,7 +750,7 @@
         },
         "additionalProperties": false
       },
-      "TransactionDTOPaginationResult": {
+      "TransactionPaginationResult": {
         "required": [
           "currentPageIndex",
           "hasNextPage",
@@ -766,7 +765,7 @@
           "records": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TransactionDTO"
+              "$ref": "#/components/schemas/Transaction"
             }
           },
           "totalRecordCount": {
@@ -797,7 +796,7 @@
         },
         "additionalProperties": false
       },
-      "UserDTO": {
+      "User": {
         "required": [
           "email",
           "fiatCurrencyTypeName",

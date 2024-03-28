@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { UserDTO } from './UserDTO';
+import type { User } from './User';
 import {
-    UserDTOFromJSON,
-    UserDTOFromJSONTyped,
-    UserDTOToJSON,
-} from './UserDTO';
+    UserFromJSON,
+    UserFromJSONTyped,
+    UserToJSON,
+} from './User';
 
 /**
  * 
@@ -28,10 +28,10 @@ import {
 export interface CreateUserResult {
     /**
      * 
-     * @type {UserDTO}
+     * @type {User}
      * @memberof CreateUserResult
      */
-    user: UserDTO;
+    user: User;
     /**
      * 
      * @type {string}
@@ -61,7 +61,7 @@ export function CreateUserResultFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'user': UserDTOFromJSON(json['user']),
+        'user': UserFromJSON(json['user']),
         'accessToken': json['accessToken'],
     };
 }
@@ -75,7 +75,7 @@ export function CreateUserResultToJSON(value?: CreateUserResult | null): any {
     }
     return {
         
-        'user': UserDTOToJSON(value.user),
+        'user': UserToJSON(value.user),
         'accessToken': value.accessToken,
     };
 }

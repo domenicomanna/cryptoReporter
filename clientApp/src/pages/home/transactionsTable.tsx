@@ -7,7 +7,7 @@ import {
   MRT_SortingState,
   useMaterialReactTable,
 } from 'material-react-table';
-import { TransactionDTO, TransactionDTOPaginationResult } from '../../api/generatedSdk';
+import { Transaction, TransactionPaginationResult } from '../../api/generatedSdk';
 import { FC, useContext, useState } from 'react';
 import { Updater } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
@@ -27,7 +27,7 @@ export const defaultSorting: MRT_SortingState = [
 ];
 
 type Props = {
-  transactionsPaginationResult: TransactionDTOPaginationResult;
+  transactionsPaginationResult: TransactionPaginationResult;
   isLoading: boolean;
   transactedCryptos: string[];
   onTableStateChange: (
@@ -77,9 +77,9 @@ export const TransactionsTable: FC<Props> = ({
     onTableStateChange(updatedPagination, sorting, updatedFilters);
   };
 
-  const columnHelper = createMRTColumnHelper<TransactionDTO>(); //TS now knows the shape of your data
+  const columnHelper = createMRTColumnHelper<Transaction>(); //TS now knows the shape of your data
 
-  const columns: MRT_ColumnDef<TransactionDTO, any>[] = [
+  const columns: MRT_ColumnDef<Transaction, any>[] = [
     columnHelper.accessor('date', {
       header: 'Date',
       Cell: ({ cell }) => {

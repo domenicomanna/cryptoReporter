@@ -16,87 +16,87 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface TransactionDTO
+ * @interface Transaction
  */
-export interface TransactionDTO {
+export interface Transaction {
     /**
      * 
      * @type {number}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
     cryptoTicker: string;
     /**
      * 
      * @type {string}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
     date: string;
     /**
      * 
      * @type {number}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
     quantityTransacted: number;
     /**
      * 
      * @type {number}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
     price: number;
     /**
      * 
      * @type {number}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
     fee: number;
     /**
      * 
      * @type {number}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
-    readonly coinsTransacted: number;
+    coinsTransacted: number;
     /**
      * 
      * @type {string}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
     transactionType: string;
     /**
      * 
      * @type {string}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
     exchange?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
     numberOfCoinsSold: number;
     /**
      * 
      * @type {string}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
     notes?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof TransactionDTO
+     * @memberof Transaction
      */
     userId: number;
 }
 
 /**
- * Check if a given object implements the TransactionDTO interface.
+ * Check if a given object implements the Transaction interface.
  */
-export function instanceOfTransactionDTO(value: object): boolean {
+export function instanceOfTransaction(value: object): boolean {
     let isInstance = true;
     isInstance = isInstance && "id" in value;
     isInstance = isInstance && "cryptoTicker" in value;
@@ -112,11 +112,11 @@ export function instanceOfTransactionDTO(value: object): boolean {
     return isInstance;
 }
 
-export function TransactionDTOFromJSON(json: any): TransactionDTO {
-    return TransactionDTOFromJSONTyped(json, false);
+export function TransactionFromJSON(json: any): Transaction {
+    return TransactionFromJSONTyped(json, false);
 }
 
-export function TransactionDTOFromJSONTyped(json: any, ignoreDiscriminator: boolean): TransactionDTO {
+export function TransactionFromJSONTyped(json: any, ignoreDiscriminator: boolean): Transaction {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -137,7 +137,7 @@ export function TransactionDTOFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function TransactionDTOToJSON(value?: TransactionDTO | null): any {
+export function TransactionToJSON(value?: Transaction | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -152,6 +152,7 @@ export function TransactionDTOToJSON(value?: TransactionDTO | null): any {
         'quantityTransacted': value.quantityTransacted,
         'price': value.price,
         'fee': value.fee,
+        'coinsTransacted': value.coinsTransacted,
         'transactionType': value.transactionType,
         'exchange': value.exchange,
         'numberOfCoinsSold': value.numberOfCoinsSold,
