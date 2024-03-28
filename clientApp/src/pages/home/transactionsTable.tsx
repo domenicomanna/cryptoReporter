@@ -1,12 +1,14 @@
 import {
+  createMRTColumnHelper,
   MaterialReactTable,
   MRT_ColumnDef,
   MRT_ColumnFiltersState,
   MRT_PaginationState,
   MRT_SortingState,
+  useMaterialReactTable,
 } from 'material-react-table';
 import { TransactionDTO, TransactionDTOPaginationResult } from '../../api/generatedSdk';
-import { FC, useContext, useMemo, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { Updater } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { formatAsCurrency } from '../../utils/formatAsCurrency';
@@ -75,105 +77,98 @@ export const TransactionsTable: FC<Props> = ({
     onTableStateChange(updatedPagination, sorting, updatedFilters);
   };
 
-  const columns = useMemo<MRT_ColumnDef<TransactionDTO>[]>(
-    () => [
-      {
-        accessorKey: 'date',
-        header: 'Date',
-        Cell: ({ cell }) => {
-          return <span>{DateTime.fromISO(cell.getValue<string>()).toLocaleString(DateTime.DATE_SHORT)}</span>;
-        },
-        enableColumnFilter: false,
-      },
-      {
-        accessorKey: 'cryptoTicker',
-        header: 'Coin',
-        filterVariant: 'multi-select',
-        filterSelectOptions: transactedCryptos,
-      },
-      {
-        accessorKey: 'quantityTransacted',
-        header: 'Quantity Transacted',
-        Cell: ({ cell }) => {
-          return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
-        },
-        enableColumnFilter: false,
-      },
-      {
-        accessorKey: 'price',
-        header: 'Price',
-        Cell: ({ cell }) => {
-          return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
-        },
-        enableColumnFilter: false,
-      },
-      {
-        accessorKey: 'fee',
-        header: 'Fee',
-        Cell: ({ cell }) => {
-          return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
-        },
-        enableColumnFilter: false,
-      },
-      {
-        accessorKey: 'coinsTransacted',
-        header: 'Coins Transacted',
-        Cell: ({ cell }) => {
-          return <span>{parseFloat(cell.getValue<number>().toFixed(4))}</span>;
-        },
-        enableSorting: false,
-        enableColumnFilter: false,
-      },
-      {
-        accessorKey: 'transactionType',
-        header: 'Transaction Type',
-        filterVariant: 'multi-select',
-        filterSelectOptions: ['Purchase', 'Reward', 'Sale'],
-      },
-      {
-        accessorKey: 'exchange',
-        header: 'Exchange',
-        enableColumnFilter: false,
-      },
-      {
-        accessorKey: 'numberOfCoinsSold',
-        header: 'Number of Coins Sold',
-        enableColumnFilter: false,
-      },
-      {
-        accessorKey: 'notes',
-        header: 'Notes',
-        enableColumnFilter: false,
-      },
-    ],
-    [userInfo, transactedCryptos]
-  );
+  const columnHelper = createMRTColumnHelper<TransactionDTO>(); //TS now knows the shape of your data
 
-  return (
-    <MaterialReactTable
-      columns={columns}
-      data={transactionsPaginationResult.records}
-      enableStickyHeader
-      enableGlobalFilter={false}
-      enableColumnActions={false}
-      manualPagination
-      manualSorting
-      manualFiltering
-      rowCount={transactionsPaginationResult.totalRecordCount}
-      onPaginationChange={handlePaginationChange}
-      onSortingChange={handleSortChange}
-      onColumnFiltersChange={handleColumnsFiltersChange}
-      muiTableContainerProps={{ sx: { maxHeight: '70vh' } }}
-      initialState={{
-        density: 'compact',
-        showColumnFilters: true,
-      }}
-      state={{
-        pagination,
-        sorting,
-        columnFilters,
-        isLoading,
-      }}
-    />
-  );
+  const columns: MRT_ColumnDef<TransactionDTO, any>[] = [
+    columnHelper.accessor('date', {
+      header: 'Date',
+      Cell: ({ cell }) => {
+        return <span>{DateTime.fromISO(cell.getValue<string>()).toLocaleString(DateTime.DATE_SHORT)}</span>;
+      },
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('cryptoTicker', {
+      header: 'Coin',
+      filterVariant: 'multi-select',
+      filterSelectOptions: transactedCryptos,
+    }),
+    columnHelper.accessor('quantityTransacted', {
+      header: 'Quantity Transacted',
+      Cell: ({ cell }) => {
+        return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
+      },
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('price', {
+      header: 'Price',
+      Cell: ({ cell }) => {
+        return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
+      },
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('fee', {
+      header: 'Fee',
+      Cell: ({ cell }) => {
+        return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
+      },
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('coinsTransacted', {
+      header: 'Coins Transacted',
+      Cell: ({ cell }) => {
+        return <span>{parseFloat(cell.getValue<number>().toFixed(4))}</span>;
+      },
+      enableSorting: false,
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('transactionType', {
+      header: 'Transaction Type',
+      filterVariant: 'multi-select',
+      filterSelectOptions: ['Purchase', 'Reward', 'Sale'],
+    }),
+    columnHelper.accessor('exchange', {
+      header: 'Exchange',
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('numberOfCoinsSold', {
+      header: 'Number of Coins Sold',
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('notes', {
+      header: 'Notes',
+      enableColumnFilter: false,
+    }),
+  ];
+
+  const table = useMaterialReactTable({
+    columns,
+    data: transactionsPaginationResult.records,
+    enableStickyHeader: true,
+    enableGlobalFilter: false,
+    enableColumnActions: false,
+    manualPagination: true,
+    manualSorting: true,
+    manualFiltering: true,
+    rowCount: transactionsPaginationResult.totalRecordCount,
+    onPaginationChange: handlePaginationChange,
+    onSortingChange: handleSortChange,
+    onColumnFiltersChange: handleColumnsFiltersChange,
+    muiTableContainerProps: {
+      sx: {
+        maxHeight: '70vh',
+      },
+    },
+    initialState: {
+      density: 'compact',
+      showColumnFilters: true,
+    },
+    state: {
+      pagination,
+      sorting,
+      columnFilters,
+      isLoading,
+    },
+  });
+
+  return <MaterialReactTable table={table} />;
 };
