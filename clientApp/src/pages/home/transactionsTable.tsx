@@ -1,4 +1,5 @@
-import MaterialReactTable, {
+import {
+  MaterialReactTable,
   MRT_ColumnDef,
   MRT_ColumnFiltersState,
   MRT_PaginationState,
