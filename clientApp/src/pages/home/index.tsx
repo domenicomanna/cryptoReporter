@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import ImportTransactionsDialog from './importTransactionsDialog/importTransactionsDialog';
 import PageLoader from '../../components/pageLoader';
 import { transactionsApi } from '../../api';
-import { MRT_ColumnFiltersState, MRT_PaginationState, MRT_SortingState } from 'material-react-table';
 import { TransactionPaginationResult } from '../../api/generatedSdk';
 import { TransactionsTable, defaultPagination, defaultSorting } from './transactionsTable';
 import { toast } from 'react-toastify';
@@ -31,39 +30,25 @@ const Home = () => {
         setTransactedCryptosAreLoading(false);
       }
     };
-    void handleLoadingOfTransactions(defaultPagination, defaultSorting, []);
     void loadTransactedCryptos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onTransactionsImported = async () => {
     setTransactionsPaginationResult(null);
-    await handleLoadingOfTransactions(defaultPagination, defaultSorting, []);
+    await loadTransactions();
   };
 
-  const onTableStateChange = async (
-    pagination: MRT_PaginationState,
-    sorting: MRT_SortingState,
-    filters: MRT_ColumnFiltersState
-  ) => {
-    await handleLoadingOfTransactions(pagination, sorting, filters);
-  };
+  useEffect(() => {
+    void loadTransactions();
+  }, []);
 
-  const handleLoadingOfTransactions = async (
-    pagination: MRT_PaginationState,
-    sorting: MRT_SortingState,
-    filters: MRT_ColumnFiltersState
-  ) => {
-    setTransactionsAreLoading(true);
+  const loadTransactions = async () => {
     try {
-      const transactionTypesFilter = filters.find((x) => x.id === 'transactionType')?.value as string[] | undefined;
-      const cryptoTickersFilter = filters.find((x) => x.id === 'cryptoTicker')?.value as string[] | undefined;
+      setTransactionsAreLoading(true);
       const paginationResult = await transactionsApi.getTransactions({
-        pageIndex: pagination.pageIndex,
-        pageSize: pagination.pageSize,
-        ...(sorting.length > 0 && { sortBy: buildSortByString(sorting) }),
-        ...(transactionTypesFilter && { transactionTypes: transactionTypesFilter.join(',') }),
-        ...(cryptoTickersFilter && { cryptoTickers: cryptoTickersFilter.join(',') }),
+        pageIndex: defaultPagination.pageIndex,
+        pageSize: defaultPagination.pageSize,
+        sortBy: buildSortByString(defaultSorting),
       });
       setTransactionsPaginationResult(paginationResult);
     } catch (error) {
@@ -87,16 +72,14 @@ const Home = () => {
           />
         )}
       </Box>
-      {transactedCryptosAreLoading || (transactionsAreLoading && !transactionsPaginationResult) ? (
+      {transactedCryptosAreLoading || transactionsAreLoading ? (
         <PageLoader />
       ) : (
         <>
           {transactionsPaginationResult && (
             <TransactionsTable
               transactionsPaginationResult={transactionsPaginationResult}
-              isLoading={transactionsAreLoading}
               transactedCryptos={transactedCryptos}
-              onTableStateChange={onTableStateChange}
             />
           )}
         </>
