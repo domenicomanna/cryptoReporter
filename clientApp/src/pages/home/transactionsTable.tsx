@@ -77,7 +77,7 @@ export const TransactionsTable: FC<Props> = ({
     onTableStateChange(updatedPagination, sorting, updatedFilters);
   };
 
-  const columnHelper = createMRTColumnHelper<Transaction>(); //TS now knows the shape of your data
+  const columnHelper = createMRTColumnHelper<Transaction>();
 
   const columns: MRT_ColumnDef<Transaction, any>[] = [
     columnHelper.accessor('date', {
