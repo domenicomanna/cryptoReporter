@@ -8,7 +8,7 @@ import {
   useMaterialReactTable,
 } from 'material-react-table';
 import { Transaction, TransactionPaginationResult } from '../../api/generatedSdk';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useRef, useState } from 'react';
 import { Updater } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { formatAsCurrency } from '../../utils/formatAsCurrency';
@@ -46,6 +46,7 @@ export const TransactionsTable: FC<Props> = ({
   const [pagination, setPagination] = useState<MRT_PaginationState>(defaultPagination);
   const [sorting, setSorting] = useState<MRT_SortingState>(defaultSorting);
   const [columnFilters, setFilters] = useState<MRT_ColumnFiltersState>([]);
+  const tableContainerRef = useRef<HTMLDivElement>(null);
 
   const handlePaginationChange = async (updater: Updater<MRT_PaginationState>) => {
     const updatedPagination = updater instanceof Function ? updater(pagination) : updater;
@@ -92,6 +93,7 @@ export const TransactionsTable: FC<Props> = ({
         ...(cryptoTickersFilter && { cryptoTickers: cryptoTickersFilter.join(',') }),
       });
       setTransactionsPaginationResult(paginationResult);
+      tableContainerRef.current!.scrollTop = 0;
     } catch (error) {
       toast.error('Transactions could not be loaded');
     } finally {
@@ -179,6 +181,7 @@ export const TransactionsTable: FC<Props> = ({
       sx: {
         maxHeight: '70vh',
       },
+      ref: tableContainerRef,
     },
     initialState: {
       density: 'compact',
