@@ -1,10 +1,10 @@
 import { createContext, useState, useEffect, FC, ReactElement } from 'react';
 import { userStorageHelper } from '../utils/userStorageHelper';
-import { router } from '..';
 import { routePaths } from '../constants/routePaths';
 import { RouterState as LoginPageRouterState } from '../pages/login';
 import { usersApi } from '../api';
 import PageLoader from '../components/pageLoader';
+import { router } from '../router';
 
 export type UserInfo = {
   userId: number;

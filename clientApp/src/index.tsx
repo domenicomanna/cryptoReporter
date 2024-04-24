@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+// import App from './App';
 import reportWebVitals from './reportWebVitals';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -9,19 +9,13 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import UserContextProvider from './contexts/UserContext';
 import { theme } from './constants/theme';
+import { router } from './router';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-
-export const router = createBrowserRouter([
-  {
-    path: '*',
-    element: <App />,
-  },
-]);
 
 root.render(
   <React.StrictMode>

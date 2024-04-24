@@ -1,7 +1,7 @@
-import { router } from '../..';
 import { routePaths } from '../../constants/routePaths';
 import { UserInfo } from '../../contexts/UserContext';
 import { RouterState as LoginPageRouterState } from '../../pages/login';
+import { router } from '../../router';
 import { userStorageHelper } from '../../utils/userStorageHelper';
 import { Middleware, ReauthenticateWithRefreshTokenResult, RequestContext, ResponseContext } from '../generatedSdk';
 import { refreshToken } from './refreshToken';
