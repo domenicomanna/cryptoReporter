@@ -9,16 +9,22 @@ import { LoadingButton } from '@mui/lab';
 import { ResetPasswordStepTwoRequest } from '../../api/generatedSdk';
 import { passwordSchema } from '../../validationSchemas/password';
 import { usersApi } from '../../api';
+import { useMutation } from '@tanstack/react-query';
 
 export type RouterState = {
   errorMessage?: string;
+};
+
+type FormValues = {
+  password: string;
+  confirmNewPassword: string;
 };
 
 const ResetPasswordStepTwo = () => {
   const navigate = useNavigate();
   const { token } = useParams();
 
-  const formik = useFormik({
+  const formik = useFormik<FormValues>({
     initialValues: {
       password: '',
       confirmNewPassword: '',
@@ -28,20 +34,27 @@ const ResetPasswordStepTwo = () => {
       confirmNewPassword: Yup.string().required('Required'),
     }),
     onSubmit: async (values) => {
-      try {
-        const request: ResetPasswordStepTwoRequest = {
-          resetPasswordToken: token ?? '',
-          newPassword: values.password,
-          confirmedNewPassword: values.confirmNewPassword,
-        };
-        await usersApi.resetPasswordStepTwo({
-          resetPasswordStepTwoRequest: request,
-        });
-        toast.success('Password reset!');
-        navigate(routePaths.login);
-      } catch (error) {
-        toast.error('Password could not be reset');
-      }
+      await resetPasswordStepTwoMutation.mutateAsync(values);
+    },
+  });
+
+  const resetPasswordStepTwoMutation = useMutation({
+    mutationFn: async (values: FormValues) => {
+      const request: ResetPasswordStepTwoRequest = {
+        resetPasswordToken: token ?? '',
+        newPassword: values.password,
+        confirmedNewPassword: values.confirmNewPassword,
+      };
+      await usersApi.resetPasswordStepTwo({
+        resetPasswordStepTwoRequest: request,
+      });
+    },
+    onSuccess: () => {
+      toast.success('Password reset!');
+      navigate(routePaths.login);
+    },
+    onError: () => {
+      toast.error('Password could not be reset');
     },
   });
 
@@ -77,7 +90,7 @@ const ResetPasswordStepTwo = () => {
           variant="contained"
           fullWidth
           type="submit"
-          loading={formik.isSubmitting}
+          loading={resetPasswordStepTwoMutation.isPending}
           disabled={!formik.isValid || !formik.dirty}
         >
           Reset Password

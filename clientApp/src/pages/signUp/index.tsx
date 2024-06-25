@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link as ReactRouterLink, Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { routePaths } from '../../constants/routePaths';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { CreateUserRequest, FiatCurrencyType, ResponseError } from '../../api/generatedSdk';
+import { CreateUserRequest, ResponseError } from '../../api/generatedSdk';
 import { fiatCurrenciesApi, usersApi } from '../../api';
 import { UserContext, UserInfo } from '../../contexts/UserContext';
 import { Box, TextField, Link as MuiLink, Autocomplete, CircularProgress } from '@mui/material';
@@ -13,29 +13,28 @@ import { LoadingButton } from '@mui/lab';
 import { passwordSchema } from '../../validationSchemas/password';
 import { ProblemDetails } from '../../api/types';
 import { ArrowDropDown } from '@mui/icons-material';
+import { useQuery, useMutation } from '@tanstack/react-query';
+
+type FormValues = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  fiatCurrency: string;
+};
 
 const SignUp = () => {
   const { setUserInfo } = useContext(UserContext);
   const [userHasBeenCreated, setUserHasBeenCreated] = useState(false);
-  const [fiatCurrencyOptionsAreLoading, setFiatCurrencyOptionsAreLoading] = useState(true);
-  const [fiatCurrencyTypes, setFiatCurrencyTypes] = useState<FiatCurrencyType[]>([]);
 
-  useEffect(() => {
-    const loadFiatCurrencyTypes = async () => {
-      setFiatCurrencyOptionsAreLoading(true);
-      try {
-        const fiatCurrencyTypes = await fiatCurrenciesApi.getFiatCurrencies();
-        setFiatCurrencyTypes(fiatCurrencyTypes);
-      } catch (error) {
-        toast.error('Currencies could not be loaded');
-      } finally {
-        setFiatCurrencyOptionsAreLoading(false);
-      }
-    };
-    void loadFiatCurrencyTypes();
-  }, []);
+  const fiatCurrenciesQuery = useQuery({
+    queryKey: ['fiatCurrencies'],
+    queryFn: () => fiatCurrenciesApi.getFiatCurrencies(),
+    meta: {
+      errorMessage: 'Currencies could not be loaded',
+    },
+  });
 
-  const formik = useFormik({
+  const formik = useFormik<FormValues>({
     initialValues: {
       email: '',
       password: '',
@@ -51,26 +50,31 @@ const SignUp = () => {
       fiatCurrency: Yup.string().required('Required'),
     }),
     onSubmit: async (values) => {
+      await signUpMutation.mutateAsync(values);
+    },
+  });
+
+  const signUpMutation = useMutation({
+    mutationFn: async (values: FormValues) => {
       const createUserRequest: CreateUserRequest = {
         email: values.email,
         password: values.password,
         confirmedPassword: values.confirmPassword,
         fiatCurrencyType: values.fiatCurrency,
       };
-      try {
-        const result = await usersApi.createUser({ createUserRequest });
-        const userInfo: UserInfo = {
-          userId: result.user.id,
-          fiatCurrency: result.user.fiatCurrencyTypeName,
-          token: result.accessToken,
-        };
-        setUserInfo(userInfo);
-        setUserHasBeenCreated(true);
-      } catch (error) {
-        const errorDetails = error instanceof ResponseError ? ((await error.response.json()) as ProblemDetails) : null;
-        const errorMessage = errorDetails?.detail ?? errorDetails?.title ?? 'Account could not be created';
-        toast.error(errorMessage);
-      }
+      const result = await usersApi.createUser({ createUserRequest });
+      const userInfo: UserInfo = {
+        userId: result.user.id,
+        fiatCurrency: result.user.fiatCurrencyTypeName,
+        token: result.accessToken,
+      };
+      setUserInfo(userInfo);
+      setUserHasBeenCreated(true);
+    },
+    onError: async (error) => {
+      const errorDetails = error instanceof ResponseError ? ((await error.response.json()) as ProblemDetails) : null;
+      const errorMessage = errorDetails?.detail ?? errorDetails?.title ?? 'Account could not be created';
+      toast.error(errorMessage);
     },
   });
 
@@ -117,9 +121,9 @@ const SignUp = () => {
           error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
         />
         <Autocomplete
-          options={fiatCurrencyTypes.map((x) => x.name)}
+          options={(fiatCurrenciesQuery.data ?? []).map((x) => x.name)}
           fullWidth
-          disabled={fiatCurrencyOptionsAreLoading}
+          disabled={fiatCurrenciesQuery.isPending}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -134,13 +138,13 @@ const SignUp = () => {
           value={formik.values.fiatCurrency}
           onChange={(event, value) => formik.setFieldValue('fiatCurrency', value)}
           onBlur={formik.handleBlur}
-          popupIcon={fiatCurrencyOptionsAreLoading ? <CircularProgress size={16} /> : <ArrowDropDown />}
+          popupIcon={fiatCurrenciesQuery.isPending ? <CircularProgress size={16} /> : <ArrowDropDown />}
         />
         <LoadingButton
           variant="contained"
           fullWidth
           type="submit"
-          loading={formik.isSubmitting}
+          loading={signUpMutation.isPending}
           disabled={!formik.isValid || !formik.dirty}
         >
           Create Account

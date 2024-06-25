@@ -7,84 +7,45 @@ import {
   MRT_SortingState,
   useMaterialReactTable,
 } from 'material-react-table';
-import { Transaction, TransactionPaginationResult } from '../../api/generatedSdk';
+import { Transaction } from '../../api/generatedSdk';
 import { FC, useContext, useRef, useState } from 'react';
-import { Updater } from '@tanstack/react-table';
 import { DateTime } from 'luxon';
 import { formatAsCurrency } from '../../utils/formatAsCurrency';
 import { UserContext } from '../../contexts/UserContext';
 import { transactionsApi } from '../../api';
 import { buildSortByString } from '../../utils/builtSortByString';
-import { toast } from 'react-toastify';
-
-export const defaultPagination: MRT_PaginationState = {
-  pageIndex: 0,
-  pageSize: 50,
-};
-
-export const defaultSorting: MRT_SortingState = [
-  {
-    id: 'date',
-    desc: false,
-  },
-];
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 type Props = {
-  transactionsPaginationResult: TransactionPaginationResult;
   transactedCryptos: string[];
 };
 
-export const TransactionsTable: FC<Props> = ({
-  transactionsPaginationResult: initialTransactionsPaginationResult,
-  transactedCryptos,
-}) => {
+export const transactionsQueryKey = 'transactions-table-data';
+
+export const TransactionsTable: FC<Props> = ({ transactedCryptos }) => {
   const { userInfo } = useContext(UserContext);
-  const [isLoading, setIsLoading] = useState(false);
-  const [transactionsPaginationResult, setTransactionsPaginationResult] = useState<TransactionPaginationResult>(
-    initialTransactionsPaginationResult
-  );
-  const [pagination, setPagination] = useState<MRT_PaginationState>(defaultPagination);
-  const [sorting, setSorting] = useState<MRT_SortingState>(defaultSorting);
+
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 50,
+  });
+
+  const [sorting, setSorting] = useState<MRT_SortingState>([
+    {
+      id: 'date',
+      desc: false,
+    },
+  ]);
   const [columnFilters, setFilters] = useState<MRT_ColumnFiltersState>([]);
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
-  const handlePaginationChange = async (updater: Updater<MRT_PaginationState>) => {
-    const updatedPagination = updater instanceof Function ? updater(pagination) : updater;
-    setPagination(updatedPagination);
-    await onTableStateChange(updatedPagination, sorting, columnFilters);
-  };
-
-  const handleSortChange = async (updater: Updater<MRT_SortingState>) => {
-    const updatedSorting = updater instanceof Function ? updater(sorting) : updater;
-    const updatedPagination: MRT_PaginationState = {
-      pageIndex: 0,
-      pageSize: pagination.pageSize,
-    };
-    setPagination(updatedPagination);
-    setSorting(updatedSorting);
-    await onTableStateChange(updatedPagination, updatedSorting, columnFilters);
-  };
-
-  const handleColumnsFiltersChange = async (updater: Updater<MRT_ColumnFiltersState>) => {
-    const updatedFilters = updater instanceof Function ? updater(columnFilters) : updater;
-    const updatedPagination: MRT_PaginationState = {
-      pageIndex: 0,
-      pageSize: pagination.pageSize,
-    };
-    setPagination(updatedPagination);
-    setFilters(updatedFilters);
-    await onTableStateChange(updatedPagination, sorting, updatedFilters);
-  };
-
-  const onTableStateChange = async (
-    pagination: MRT_PaginationState,
-    sorting: MRT_SortingState,
-    filters: MRT_ColumnFiltersState
-  ) => {
-    setIsLoading(true);
-    try {
-      const transactionTypesFilter = filters.find((x) => x.id === 'transactionType')?.value as string[] | undefined;
-      const cryptoTickersFilter = filters.find((x) => x.id === 'cryptoTicker')?.value as string[] | undefined;
+  const transactionsQuery = useQuery({
+    queryKey: [transactionsQueryKey, pagination, sorting, columnFilters],
+    queryFn: async () => {
+      const transactionTypesFilter = columnFilters.find((x) => x.id === 'transactionType')?.value as
+        | string[]
+        | undefined;
+      const cryptoTickersFilter = columnFilters.find((x) => x.id === 'cryptoTicker')?.value as string[] | undefined;
       const paginationResult = await transactionsApi.getTransactions({
         pageIndex: pagination.pageIndex,
         pageSize: pagination.pageSize,
@@ -92,14 +53,13 @@ export const TransactionsTable: FC<Props> = ({
         ...(transactionTypesFilter && { transactionTypes: transactionTypesFilter.join(',') }),
         ...(cryptoTickersFilter && { cryptoTickers: cryptoTickersFilter.join(',') }),
       });
-      setTransactionsPaginationResult(paginationResult);
-      tableContainerRef.current!.scrollTop = 0;
-    } catch (error) {
-      toast.error('Transactions could not be loaded');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      return paginationResult;
+    },
+    meta: {
+      errorMessage: 'Transactions could not be loaded',
+    },
+    placeholderData: keepPreviousData,
+  });
 
   const columnHelper = createMRTColumnHelper<Transaction>();
 
@@ -166,17 +126,17 @@ export const TransactionsTable: FC<Props> = ({
 
   const table = useMaterialReactTable({
     columns,
-    data: transactionsPaginationResult.records,
+    data: transactionsQuery.data?.records ?? [],
     enableStickyHeader: true,
     enableGlobalFilter: false,
     enableColumnActions: false,
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
-    rowCount: transactionsPaginationResult.totalRecordCount,
-    onPaginationChange: handlePaginationChange,
-    onSortingChange: handleSortChange,
-    onColumnFiltersChange: handleColumnsFiltersChange,
+    rowCount: transactionsQuery.data?.totalRecordCount ?? 0,
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setFilters,
     muiTableContainerProps: {
       sx: {
         maxHeight: '70vh',
@@ -191,7 +151,8 @@ export const TransactionsTable: FC<Props> = ({
       pagination,
       sorting,
       columnFilters,
-      isLoading,
+      isLoading: transactionsQuery.isLoading,
+      showProgressBars: transactionsQuery.isRefetching,
     },
   });
 

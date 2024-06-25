@@ -8,15 +8,20 @@ import { usersApi } from '../../api';
 import { Box, TextField } from '@mui/material';
 import { PageTitle } from '../../components/pageTitle';
 import { LoadingButton } from '@mui/lab';
+import { useMutation } from '@tanstack/react-query';
 
 export type RouterState = {
   errorMessage?: string;
 };
 
+type FormValues = {
+  email: string;
+};
+
 const ResetPasswordStepOne = () => {
   const navigate = useNavigate();
 
-  const formik = useFormik({
+  const formik = useFormik<FormValues>({
     initialValues: {
       email: '',
     },
@@ -24,17 +29,24 @@ const ResetPasswordStepOne = () => {
       email: Yup.string().email('Email must be a valid email').required('Required'),
     }),
     onSubmit: async (values) => {
-      try {
-        const request: ResetPasswordStepOneRequest = {
-          email: values.email,
-        };
-        await usersApi.resetPasswordStepOne({
-          resetPasswordStepOneRequest: request,
-        });
-        navigate(routePaths.resetPasswordStepOneSuccess);
-      } catch (error) {
-        toast.error('Password could not be reset');
-      }
+      await resetPasswordStepOneMutation.mutateAsync(values);
+    },
+  });
+
+  const resetPasswordStepOneMutation = useMutation({
+    mutationFn: async (values: FormValues) => {
+      const request: ResetPasswordStepOneRequest = {
+        email: values.email,
+      };
+      await usersApi.resetPasswordStepOne({
+        resetPasswordStepOneRequest: request,
+      });
+    },
+    onSuccess: () => {
+      navigate(routePaths.resetPasswordStepOneSuccess);
+    },
+    onError: () => {
+      toast.error('Password could not be reset');
     },
   });
 
@@ -60,7 +72,7 @@ const ResetPasswordStepOne = () => {
           variant="contained"
           fullWidth
           type="submit"
-          loading={formik.isSubmitting}
+          loading={resetPasswordStepOneMutation.isPending}
           disabled={!formik.isValid || !formik.dirty}
         >
           Find Account

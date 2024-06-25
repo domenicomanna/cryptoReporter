@@ -8,6 +8,7 @@ import { CsvRecord, parseCsvFile } from './helpers/parseCsvFile';
 import { transactionsApi } from '../../../api';
 import { AddTransactionsRequest } from '../../../api/generatedSdk';
 import { buildTransactions } from './helpers/buildTransactions';
+import { useMutation } from '@tanstack/react-query';
 
 enum StepName {
   ChooseFile = 'Choose File',
@@ -86,7 +87,7 @@ const ImportTransactionsDialog: FC<Props> = ({ onCloseDialog, onTransactionsImpo
       return (
         <MapColumnsStep
           formValues={formValues.mapColumnsStep}
-          onNextStepClick={handleNextStepClickOnMapColumnsStep}
+          onNextStepClick={async () => await importTransactionsMutation.mutateAsync()}
           onPreviousStepClick={() => setActiveStepNumber((step) => step - 1)}
           onFormValuesChange={(mapColumnsFormValues) => {
             setFormValues({
@@ -111,22 +112,24 @@ const ImportTransactionsDialog: FC<Props> = ({ onCloseDialog, onTransactionsImpo
     }
   };
 
-  const handleNextStepClickOnMapColumnsStep = async () => {
-    localStorage.setItem(_mapColumnsStepStorageKey, JSON.stringify(formValues.mapColumnsStep));
-    try {
+  const importTransactionsMutation = useMutation({
+    mutationFn: async () => {
+      localStorage.setItem(_mapColumnsStepStorageKey, JSON.stringify(formValues.mapColumnsStep));
       const addTransactionsRequest: AddTransactionsRequest = {
         deleteExistingTransactions: formValues.mapColumnsStep.deleteExistingTransactions,
         transactions: buildTransactions(csvRecords, formValues.mapColumnsStep),
       };
       await transactionsApi.addTransactions({ addTransactionsRequest });
+    },
+    onSuccess: () => {
       onTransactionsImported();
       toast.success('Transactions imported!');
       onCloseDialog();
-    } catch (error) {
-      console.error(error);
+    },
+    onError: () => {
       toast.error('Transactions could not be imported');
-    }
-  };
+    },
+  });
 
   return (
     <Dialog
