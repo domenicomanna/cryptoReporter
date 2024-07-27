@@ -46,7 +46,7 @@ public class JwtHelper : IJwtHelper
         {
             UserId = user.Id,
             Token = hashedToken,
-            Expires = DateTime.UtcNow.AddDays(7)
+            Expires = DateTime.UtcNow.AddMonths(1)
         };
 
         return (refreshToken, token);
