@@ -22,6 +22,9 @@ const Header = () => {
           <MuiLink component={ReactRouterLink} to={routePaths.home} sx={{ color: '#fff' }}>
             Home
           </MuiLink>
+          <MuiLink component={ReactRouterLink} to={routePaths.portfolio} sx={{ color: '#fff' }}>
+            Portfolio
+          </MuiLink>
           <MuiLink component={ReactRouterLink} to={routePaths.login} sx={{ color: '#fff' }} onClick={handleLogout}>
             Logout
           </MuiLink>

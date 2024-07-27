@@ -9,6 +9,7 @@ import ResetPasswordStepOne from './pages/resetPasswordStepOne';
 import ResetPasswordStepTwo from './pages/resetPasswordStepTwo';
 import ResetPasswordStepOneSuccess from './pages/resetPasswordStepOneSuccess';
 import UnauthenticatedLayout from './components/unauthenticatedLayout/unauthenticatedLayout';
+import Portfolio from './pages/portfolio/portfolio';
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
       <Route element={<ProtectedRoute />}>
         <Route element={<AuthenticatedLayout />}>
           <Route path={routePaths.home} element={<Home />} />
+          <Route path={routePaths.portfolio} element={<Portfolio />} />
         </Route>
       </Route>
       <Route element={<UnauthenticatedLayout />}>

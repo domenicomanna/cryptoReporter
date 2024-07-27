@@ -481,6 +481,53 @@
           }
         }
       }
+    },
+    "/api/Users/{userId}/portfolio": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "operationId": "getPortfolio",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Portfolio"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Portfolio"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Portfolio"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -500,6 +547,48 @@
           },
           "deleteExistingTransactions": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AggregatedAsset": {
+        "required": [
+          "costBasis",
+          "cryptoTicker",
+          "portfolioPercentage",
+          "totalCoinsOwned",
+          "totalInvestedIncludingFees"
+        ],
+        "type": "object",
+        "properties": {
+          "cryptoTicker": {
+            "type": "string"
+          },
+          "currentPrice": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "totalCoinsOwned": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalInvestedIncludingFees": {
+            "type": "number",
+            "format": "double"
+          },
+          "currentValue": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "portfolioPercentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "costBasis": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -584,6 +673,31 @@
           },
           "accessToken": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Portfolio": {
+        "required": [
+          "currentValue",
+          "holdings",
+          "totalInvested"
+        ],
+        "type": "object",
+        "properties": {
+          "holdings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AggregatedAsset"
+            }
+          },
+          "totalInvested": {
+            "type": "number",
+            "format": "double"
+          },
+          "currentValue": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false

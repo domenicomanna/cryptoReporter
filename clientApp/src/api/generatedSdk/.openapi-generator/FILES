@@ -4,11 +4,13 @@ apis/UsersApi.ts
 apis/index.ts
 index.ts
 models/AddTransactionsRequest.ts
+models/AggregatedAsset.ts
 models/CreateUserRequest.ts
 models/CreateUserResult.ts
 models/FiatCurrencyType.ts
 models/LoginRequest.ts
 models/LoginResult.ts
+models/Portfolio.ts
 models/ReauthenticateWithRefreshTokenResult.ts
 models/ResetPasswordStepOneRequest.ts
 models/ResetPasswordStepTwoRequest.ts

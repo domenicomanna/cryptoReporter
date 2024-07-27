@@ -1,11 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from './AddTransactionsRequest';
+export * from './AggregatedAsset';
 export * from './CreateUserRequest';
 export * from './CreateUserResult';
 export * from './FiatCurrencyType';
 export * from './LoginRequest';
 export * from './LoginResult';
+export * from './Portfolio';
 export * from './ReauthenticateWithRefreshTokenResult';
 export * from './ResetPasswordStepOneRequest';
 export * from './ResetPasswordStepTwoRequest';

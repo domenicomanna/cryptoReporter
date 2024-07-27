@@ -19,6 +19,7 @@ import type {
   CreateUserResult,
   LoginRequest,
   LoginResult,
+  Portfolio,
   ReauthenticateWithRefreshTokenResult,
   ResetPasswordStepOneRequest,
   ResetPasswordStepTwoRequest,
@@ -33,6 +34,8 @@ import {
     LoginRequestToJSON,
     LoginResultFromJSON,
     LoginResultToJSON,
+    PortfolioFromJSON,
+    PortfolioToJSON,
     ReauthenticateWithRefreshTokenResultFromJSON,
     ReauthenticateWithRefreshTokenResultToJSON,
     ResetPasswordStepOneRequestFromJSON,
@@ -45,6 +48,10 @@ import {
 
 export interface CreateUserOperationRequest {
     createUserRequest?: CreateUserRequest;
+}
+
+export interface GetPortfolioRequest {
+    userId: number;
 }
 
 export interface GetUserRequest {
@@ -92,6 +99,42 @@ export class UsersApi extends runtime.BaseAPI {
      */
     async createUser(requestParameters: CreateUserOperationRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateUserResult> {
         const response = await this.createUserRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getPortfolioRaw(requestParameters: GetPortfolioRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Portfolio>> {
+        if (requestParameters.userId === null || requestParameters.userId === undefined) {
+            throw new runtime.RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling getPortfolio.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/Users/{userId}/portfolio`.replace(`{${"userId"}}`, encodeURIComponent(String(requestParameters.userId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PortfolioFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async getPortfolio(requestParameters: GetPortfolioRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Portfolio> {
+        const response = await this.getPortfolioRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

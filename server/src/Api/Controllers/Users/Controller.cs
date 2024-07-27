@@ -89,4 +89,10 @@ public class UsersController : BaseApiController
     {
         await handler.Handle(resetPasswordStepTwoRequest);
     }
+
+    [HttpGet("{userId}/portfolio")]
+    public async Task<Portfolio> GetPortfolio([FromServices] GetPortfolioHandler handler, int userId)
+    {
+        return await handler.Handle(userId);
+    }
 }

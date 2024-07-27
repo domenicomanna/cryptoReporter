@@ -1,4 +1,5 @@
 using System.Text;
+using Api.Apis.CoinMarketCap;
 using Api.Common.Attributes;
 using Api.Database;
 using Api.Swagger;
@@ -8,6 +9,9 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Polly;
+using Polly.Extensions.Http;
+using Scrutor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,13 +59,24 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services
+    .AddHttpClient<ICoinMarketCapHttpClient, CoinMarketCapHttpClient>(
+        (client, serviceProvider) =>
+        {
+            return new CoinMarketCapHttpClient(client, DotNetEnv.Env.GetString("COIN_MARKET_CAP_API_KEY"));
+        }
+    )
+    .AddPolicyHandler(GetRetryPolicy());
+
 builder.Services.Scan(
     scan =>
         scan.FromCallingAssembly()
             .AddClasses(c => c.WithAttribute<Inject>())
+            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
             .AsSelf()
             .WithScopedLifetime()
             .AddClasses()
+            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
             .AsImplementedInterfaces()
             .WithScopedLifetime()
 );
@@ -83,3 +98,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+{
+    return HttpPolicyExtensions
+        .HandleTransientHttpError()
+        .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+}

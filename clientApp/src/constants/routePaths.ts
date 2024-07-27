@@ -1,5 +1,6 @@
 export const routePaths = {
   home: '/',
+  portfolio: '/portfolio',
   login: '/login',
   signUp: '/sign-up',
   resetPasswordStepOne: '/reset-password-step-one',
