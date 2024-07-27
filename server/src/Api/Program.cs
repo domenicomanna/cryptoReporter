@@ -23,9 +23,17 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwagger();
 
-builder.Services.AddDbContext<AppDbContext>(
-    options => options.UseNpgsql(DotNetEnv.Env.GetString("DATABASE_CONNECTION"))
-);
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    string[] connectionStringParts =
+    {
+        $"Host={DotNetEnv.Env.GetString("POSTGRES_HOST")}",
+        $"Username={DotNetEnv.Env.GetString("POSTGRES_USER")}",
+        $"Password={DotNetEnv.Env.GetString("POSTGRES_PASSWORD")}",
+        $"Database={DotNetEnv.Env.GetString("POSTGRES_DB")}",
+    };
+    options.UseNpgsql(string.Join(";", connectionStringParts));
+});
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -87,6 +95,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var dataContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dataContext.Database.Migrate();
 }
 
 app.UseExceptionHandler(

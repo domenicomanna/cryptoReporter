@@ -1,0 +1,40 @@
+services:
+  api:
+    container_name: "crypto-reporter-api"
+    build: ./src/Api
+    image: crypto-reporter-api
+    restart: "unless-stopped"
+    env_file:
+      - .env
+    networks:
+      - crypto-reporter-api
+    ports:
+      - 5000:5000
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    container_name: "crypto-reporter-db"
+    image: postgres
+    restart: "unless-stopped"
+    env_file:
+      - .env
+    networks:
+      - crypto-reporter-api
+    ports:
+      - 5440:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - crypto-reporter-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "${POSTGRES_DB}"]
+
+volumes:
+  crypto-reporter-db:
+
+networks:
+  crypto-reporter-api:
