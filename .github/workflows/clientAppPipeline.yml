@@ -1,0 +1,45 @@
+name: Client App Pipeline
+on:
+  push:
+    paths:
+      - "clientApp/**"
+      - ".github/workflows/clientAppPipeline.yml"
+jobs:
+  build-code:
+    name: "Build Code"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./clientApp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: yarn install --frozen-lockfile
+
+  build-docker-image:
+    name: "Build Docker Image"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - working-directory: ./clientApp
+        run: DOCKER_BUILDKIT=1 docker build --output ./build .
+
+  deploy-app:
+    name: "Deploy App"
+    needs: [build-code, build-docker-image]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            cd programming/cryptoReporter
+            git pull
+            cd clientApp
+            DOCKER_BUILDKIT=1 docker build --output ./build .
+            cp -r build/* /var/www/cryptoReporterClient/html
