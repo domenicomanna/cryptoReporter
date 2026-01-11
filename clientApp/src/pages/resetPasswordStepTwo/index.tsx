@@ -3,9 +3,8 @@ import { toast } from 'react-toastify';
 import { routePaths } from '../../constants/routePaths';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Box, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { PageTitle } from '../../components/pageTitle';
-import { LoadingButton } from '@mui/lab';
 import { ResetPasswordStepTwoRequest } from '../../api/generatedSdk';
 import { passwordSchema } from '../../validationSchemas/password';
 import { usersApi } from '../../api';
@@ -51,7 +50,7 @@ const ResetPasswordStepTwo = () => {
     },
     onSuccess: () => {
       toast.success('Password reset!');
-      navigate(routePaths.login);
+      void navigate(routePaths.login);
     },
     onError: () => {
       toast.error('Password could not be reset');
@@ -86,7 +85,7 @@ const ResetPasswordStepTwo = () => {
           helperText={formik.touched.confirmNewPassword && formik.errors.confirmNewPassword}
           error={formik.touched.confirmNewPassword && Boolean(formik.errors.confirmNewPassword)}
         />
-        <LoadingButton
+        <Button
           variant="contained"
           fullWidth
           type="submit"
@@ -94,7 +93,7 @@ const ResetPasswordStepTwo = () => {
           disabled={!formik.isValid || !formik.dirty}
         >
           Reset Password
-        </LoadingButton>
+        </Button>
       </Box>
     </Box>
   );

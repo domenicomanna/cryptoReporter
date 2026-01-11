@@ -7,9 +7,8 @@ import * as Yup from 'yup';
 import { LoginRequest } from '../../api/generatedSdk';
 import { usersApi } from '../../api';
 import { UserContext, UserInfo } from '../../contexts/UserContext';
-import { Box, TextField, Link as MuiLink } from '@mui/material';
+import { Box, TextField, Link as MuiLink, Button } from '@mui/material';
 import { PageTitle } from '../../components/pageTitle';
-import { LoadingButton } from '@mui/lab';
 import { useMutation } from '@tanstack/react-query';
 
 export type RouterState = {
@@ -36,7 +35,7 @@ const Login = () => {
 
   useEffect(() => {
     // clear the state
-    navigate(routePaths.login, { replace: true });
+    void navigate(routePaths.login, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -108,7 +107,7 @@ const Login = () => {
           helperText={formik.touched.password && formik.errors.password}
           error={formik.touched.password && Boolean(formik.errors.password)}
         />
-        <LoadingButton
+        <Button
           variant="contained"
           fullWidth
           type="submit"
@@ -116,7 +115,7 @@ const Login = () => {
           disabled={!formik.isValid || !formik.dirty}
         >
           Sign In
-        </LoadingButton>
+        </Button>
         <MuiLink component={ReactRouterLink} to={routePaths.signUp}>
           Need an account? Sign up
         </MuiLink>

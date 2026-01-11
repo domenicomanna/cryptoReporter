@@ -107,7 +107,7 @@ const ImportTransactionsDialog: FC<Props> = ({ onCloseDialog, onTransactionsImpo
       const csvRecords: CsvRecord[] = await parseCsvFile(formValues.chooseFileStep.file!);
       setCsvRecords(csvRecords);
       setActiveStepNumber((activeStep) => activeStep + 1);
-    } catch (error) {
+    } catch {
       toast.error('Could not parse csv file');
     }
   };

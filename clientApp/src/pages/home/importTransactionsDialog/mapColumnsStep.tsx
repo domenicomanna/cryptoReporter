@@ -122,16 +122,16 @@ const MapColumnsStep: FC<Props> = ({
   return (
     <Box component="form" onSubmit={formik.handleSubmit}>
       <Grid container rowSpacing={1.5} columnSpacing={3} alignItems={'center'} sx={{ marginBottom: '1rem' }}>
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Typography fontWeight={500}>Source Column</Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Typography fontWeight={500}>Target Column</Typography>
         </Grid>
 
         {formFields.map((field) => (
           <Fragment key={field.sourceFieldName}>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <Autocomplete
                 options={csvFileColumnNames}
                 fullWidth
@@ -151,17 +151,17 @@ const MapColumnsStep: FC<Props> = ({
                 onBlur={formik.handleBlur}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <Typography>{field.targetColumnName}</Typography>
             </Grid>
           </Fragment>
         ))}
 
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Divider sx={{ marginTop: '1rem' }} />
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={12}>
           <FormControlLabel
             control={
               <Checkbox

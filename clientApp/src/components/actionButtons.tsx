@@ -1,4 +1,3 @@
-import { LoadingButton } from '@mui/lab';
 import { Button, Grid } from '@mui/material';
 import { FC } from 'react';
 
@@ -23,7 +22,7 @@ const ActionButtons: FC<Props> = ({
 }) => {
   return (
     <Grid container spacing={1}>
-      <Grid item xs={6}>
+      <Grid size={6}>
         <Button
           variant="outlined"
           color="info"
@@ -34,8 +33,8 @@ const ActionButtons: FC<Props> = ({
           {denyActionLabel}
         </Button>
       </Grid>
-      <Grid item xs={6}>
-        <LoadingButton
+      <Grid size={6}>
+        <Button
           variant="outlined"
           type="submit"
           disabled={confirmButtonShouldBeDisabled || !onConfirmActionClick}
@@ -44,7 +43,7 @@ const ActionButtons: FC<Props> = ({
           fullWidth
         >
           {confirmActionLabel}
-        </LoadingButton>
+        </Button>
       </Grid>
     </Grid>
   );

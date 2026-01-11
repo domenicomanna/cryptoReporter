@@ -7,9 +7,8 @@ import * as Yup from 'yup';
 import { CreateUserRequest, ResponseError } from '../../api/generatedSdk';
 import { fiatCurrenciesApi, usersApi } from '../../api';
 import { UserContext, UserInfo } from '../../contexts/UserContext';
-import { Box, TextField, Link as MuiLink, Autocomplete, CircularProgress } from '@mui/material';
+import { Box, TextField, Link as MuiLink, Autocomplete, CircularProgress, Button } from '@mui/material';
 import { PageTitle } from '../../components/pageTitle';
-import { LoadingButton } from '@mui/lab';
 import { passwordSchema } from '../../validationSchemas/password';
 import { ProblemDetails } from '../../api/types';
 import { ArrowDropDown } from '@mui/icons-material';
@@ -140,7 +139,7 @@ const SignUp = () => {
           onBlur={formik.handleBlur}
           popupIcon={fiatCurrenciesQuery.isPending ? <CircularProgress size={16} /> : <ArrowDropDown />}
         />
-        <LoadingButton
+        <Button
           variant="contained"
           fullWidth
           type="submit"
@@ -148,7 +147,7 @@ const SignUp = () => {
           disabled={!formik.isValid || !formik.dirty}
         >
           Create Account
-        </LoadingButton>
+        </Button>
         <MuiLink component={ReactRouterLink} to={routePaths.login}>
           Already have an account? Log in
         </MuiLink>

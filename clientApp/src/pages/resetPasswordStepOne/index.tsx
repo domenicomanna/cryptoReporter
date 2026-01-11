@@ -5,9 +5,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ResetPasswordStepOneRequest } from '../../api/generatedSdk';
 import { usersApi } from '../../api';
-import { Box, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { PageTitle } from '../../components/pageTitle';
-import { LoadingButton } from '@mui/lab';
 import { useMutation } from '@tanstack/react-query';
 
 export type RouterState = {
@@ -43,7 +42,7 @@ const ResetPasswordStepOne = () => {
       });
     },
     onSuccess: () => {
-      navigate(routePaths.resetPasswordStepOneSuccess);
+      void navigate(routePaths.resetPasswordStepOneSuccess);
     },
     onError: () => {
       toast.error('Password could not be reset');
@@ -68,7 +67,7 @@ const ResetPasswordStepOne = () => {
           helperText={formik.touched.email && formik.errors.email}
           error={formik.touched.email && Boolean(formik.errors.email)}
         />
-        <LoadingButton
+        <Button
           variant="contained"
           fullWidth
           type="submit"
@@ -76,7 +75,7 @@ const ResetPasswordStepOne = () => {
           disabled={!formik.isValid || !formik.dirty}
         >
           Find Account
-        </LoadingButton>
+        </Button>
       </Box>
     </Box>
   );
