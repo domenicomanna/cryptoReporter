@@ -78,7 +78,7 @@ builder.Services
 
 builder.Services.Scan(
     scan =>
-        scan.FromCallingAssembly()
+        scan.FromAssemblyOf<Program>()
             .AddClasses(c => c.WithAttribute<Inject>())
             .UsingRegistrationStrategy(RegistrationStrategy.Skip)
             .AsSelf()

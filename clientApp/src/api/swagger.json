@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.4",
   "info": {
     "title": "Api",
     "version": "1.0"
@@ -13,7 +13,7 @@
         "operationId": "getFiatCurrencies",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -117,7 +117,6 @@
           {
             "name": "pageIndex",
             "in": "query",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -126,7 +125,6 @@
           {
             "name": "pageSize",
             "in": "query",
-            "style": "form",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -135,7 +133,6 @@
           {
             "name": "cryptoTickers",
             "in": "query",
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -143,7 +140,6 @@
           {
             "name": "transactionTypes",
             "in": "query",
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -151,7 +147,6 @@
           {
             "name": "sortBy",
             "in": "query",
-            "style": "form",
             "schema": {
               "type": "string"
             }
@@ -159,7 +154,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -194,7 +189,7 @@
         "operationId": "getTransactedCryptos",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -257,7 +252,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -306,7 +301,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -336,7 +331,7 @@
         "operationId": "logout",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -349,7 +344,7 @@
         "operationId": "reauthenticateWithRefreshToken",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -382,7 +377,6 @@
             "name": "userId",
             "in": "path",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -391,7 +385,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -445,7 +439,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -477,7 +471,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "OK"
           }
         }
       }
@@ -493,7 +487,6 @@
             "name": "userId",
             "in": "path",
             "required": true,
-            "style": "simple",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -502,7 +495,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -940,5 +933,16 @@
         "bearerFormat": "JWT"
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "FiatCurrencies"
+    },
+    {
+      "name": "Transactions"
+    },
+    {
+      "name": "Users"
+    }
+  ]
 }

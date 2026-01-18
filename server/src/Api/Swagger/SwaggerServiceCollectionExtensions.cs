@@ -1,6 +1,4 @@
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.IdentityModel.Protocols;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace Api.Swagger;
 
@@ -13,7 +11,7 @@ public static class SwaggerServiceCollectionExtensions
             options.SupportNonNullableReferenceTypes();
             options.DescribeAllParametersInCamelCase();
             options.OperationFilter<AuthOperationFilter>();
-            options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
+            options.NonNullableReferenceTypesAsRequired();
             options.AddSecurityDefinition(
                 "Bearer",
                 new OpenApiSecurityScheme
@@ -22,7 +20,7 @@ public static class SwaggerServiceCollectionExtensions
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
                     Scheme = "bearer",
-                    Description = "Enter JWT token"
+                    Description = "Enter JWT token",
                 }
             );
 

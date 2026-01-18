@@ -10,7 +10,7 @@ namespace Fixtures;
 
 public class DatabaseFixture : IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _container = new PostgreSqlBuilder().Build();
+    private readonly PostgreSqlContainer _container = new PostgreSqlBuilder("postgres:18").Build();
 
     public Task InitializeAsync() => _container.StartAsync();
 
