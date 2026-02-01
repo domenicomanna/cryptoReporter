@@ -9,7 +9,7 @@ services:
     networks:
       - crypto-reporter-api
     ports:
-      - 5000:5000
+      - 5180:5180
     depends_on:
       db:
         condition: service_healthy
