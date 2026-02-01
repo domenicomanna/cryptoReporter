@@ -32,7 +32,7 @@ const UserContextProvider: FC<Props> = ({ children }) => {
     const fetchUser = async (userId: number) => {
       try {
         await usersApi.getUser({ userId });
-      } catch (error) {
+      } catch {
         const loginPageRouterState: LoginPageRouterState = {
           errorMessage: 'Session expired. Please sign in again',
         };
