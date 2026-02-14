@@ -60,7 +60,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(options =>
     {
         options
-            .WithOrigins(DotNetEnv.Env.GetString("ClientAppUrl"))
+            .WithOrigins(DotNetEnv.Env.GetString("CLIENT_APP_URL"))
             .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod();

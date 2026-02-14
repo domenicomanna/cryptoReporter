@@ -66,7 +66,7 @@ public class ResetPasswordStepOneHandler
             To = new List<string> { user.Email },
         };
         StringBuilder htmlBody = new StringBuilder();
-        string clientAppUrl = DotNetEnv.Env.GetString("ClientAppUrl");
+        string clientAppUrl = DotNetEnv.Env.GetString("CLIENT_APP_URL");
         htmlBody.Append("<p>Hi, a request was received to reset your password.<p>");
         htmlBody.Append(
             $"<p>Please follow <a href='{clientAppUrl}/reset-password-step-two/{resetToken}' target='_blank'>this link</a> to reset your password."
