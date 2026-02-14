@@ -28,10 +28,10 @@ export const buildTransactions = (
 /** Returns the date in YYYY-MM-DD format . If the given date is not valid then an error will be thrown */
 const formatDateString = (date: string): string => {
   const dateFromISOFormat = DateTime.fromISO(date);
-  if (dateFromISOFormat.isValid) return dateFromISOFormat.toISODate()!;
+  if (dateFromISOFormat.isValid) return dateFromISOFormat.toISODate();
 
   const dateFromMonthDayYearFormat = DateTime.fromFormat(date, 'MM/dd/yyyy');
-  if (dateFromMonthDayYearFormat.isValid) return dateFromMonthDayYearFormat.toISODate()!;
+  if (dateFromMonthDayYearFormat.isValid) return dateFromMonthDayYearFormat.toISODate();
 
   throw new Error(`Date ${date} could not be parsed`);
 };

@@ -25,7 +25,7 @@ const ChooseFileStep: FC<Props> = ({ formValues, onFormValuesChange, onNextStepC
     validateOnMount: true,
   });
 
-  const onFieldValueChange = (fieldName: keyof ChooseFileFormValues, fieldValue: any) => {
+  const onFieldValueChange = (fieldName: keyof ChooseFileFormValues, fieldValue: File | null) => {
     void formik.setFieldValue(fieldName, fieldValue);
     onFormValuesChange({
       ...formValues,

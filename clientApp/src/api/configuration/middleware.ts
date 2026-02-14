@@ -10,6 +10,7 @@ let _refreshTokenPromise: Promise<ReauthenticateWithRefreshTokenResult> | null =
 
 export const middleware: Middleware[] = [
   {
+    // eslint-disable-next-line @typescript-eslint/require-await
     pre: async (context: RequestContext) => {
       const userInfo = userStorageHelper.getCurrentUserInfo();
       if (!userInfo) return;

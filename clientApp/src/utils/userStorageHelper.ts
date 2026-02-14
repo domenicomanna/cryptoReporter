@@ -9,7 +9,7 @@ export const userStorageHelper = {
   getCurrentUserInfo: (): UserInfo | null => {
     const userInfo = localStorage.getItem(_storageKey);
     if (!userInfo) return null;
-    return JSON.parse(userInfo);
+    return JSON.parse(userInfo) as UserInfo;
   },
   removeCurrentUserInfo: () => {
     localStorage.removeItem(_storageKey);
