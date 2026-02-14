@@ -1,12 +1,12 @@
-using Moq;
-using Api.Database;
-using Api.Utils;
 using Api.Apis.CoinMarketCap;
-using Api.Domain.Models;
-using Api.Controllers.Users.Common.Features;
 using Api.Apis.CoinMarketCap.QuotesLatest.Models;
-using Fixtures;
 using Api.Common.ExtensionMethods;
+using Api.Controllers.Users.Common.Features;
+using Api.Database;
+using Api.Domain.Models;
+using Api.Utils;
+using Fixtures;
+using Moq;
 
 namespace ApiTests.Controllers.Features.Users;
 
@@ -27,13 +27,12 @@ public class GetPortfolioTests : IClassFixture<DatabaseFixture>
     public async Task PortfolioHoldingsShouldBeCorrect()
     {
         AppDbContext appDbContext = await _databaseFixture.CreateContext();
-        User user =
-            new()
-            {
-                FiatCurrencyType = appDbContext.FiatCurrencyTypes
-                    .Where(x => x.Name == FiatCurrencyTypeId.USD.GetDescription())
-                    .First(),
-            };
+        User user = new()
+        {
+            FiatCurrencyType = appDbContext
+                .FiatCurrencyTypes.Where(x => x.Name == FiatCurrencyTypeId.USD.GetDescription())
+                .First(),
+        };
         appDbContext.Users.Add(user);
 
         appDbContext.Transactions.AddRange(
@@ -46,11 +45,11 @@ public class GetPortfolioTests : IClassFixture<DatabaseFixture>
                     QuantityTransacted = 1000,
                     Price = 10000,
                     Fee = 10,
-                    TransactionType = appDbContext.TransactionTypes
-                        .Where(x => x.Id == TransactionTypeId.Purchase)
+                    TransactionType = appDbContext
+                        .TransactionTypes.Where(x => x.Id == TransactionTypeId.Purchase)
                         .First(),
                     User = user,
-                    NumberOfCoinsSold = .02m
+                    NumberOfCoinsSold = .02m,
                 },
                 new()
                 {
@@ -59,11 +58,11 @@ public class GetPortfolioTests : IClassFixture<DatabaseFixture>
                     QuantityTransacted = 1000,
                     Price = 20000,
                     Fee = 10,
-                    TransactionType = appDbContext.TransactionTypes
-                        .Where(x => x.Id == TransactionTypeId.Purchase)
+                    TransactionType = appDbContext
+                        .TransactionTypes.Where(x => x.Id == TransactionTypeId.Purchase)
                         .First(),
                     User = user,
-                    NumberOfCoinsSold = .01m
+                    NumberOfCoinsSold = .01m,
                 },
                 new()
                 {
@@ -72,11 +71,11 @@ public class GetPortfolioTests : IClassFixture<DatabaseFixture>
                     QuantityTransacted = 500,
                     Price = 1000,
                     Fee = 5,
-                    TransactionType = appDbContext.TransactionTypes
-                        .Where(x => x.Id == TransactionTypeId.Purchase)
+                    TransactionType = appDbContext
+                        .TransactionTypes.Where(x => x.Id == TransactionTypeId.Purchase)
                         .First(),
                     User = user,
-                    NumberOfCoinsSold = .2m
+                    NumberOfCoinsSold = .2m,
                 },
                 new()
                 {
@@ -85,11 +84,11 @@ public class GetPortfolioTests : IClassFixture<DatabaseFixture>
                     QuantityTransacted = 1000,
                     Price = 1000,
                     Fee = 10,
-                    TransactionType = appDbContext.TransactionTypes
-                        .Where(x => x.Id == TransactionTypeId.Purchase)
+                    TransactionType = appDbContext
+                        .TransactionTypes.Where(x => x.Id == TransactionTypeId.Purchase)
                         .First(),
                     User = user,
-                    NumberOfCoinsSold = .1m
+                    NumberOfCoinsSold = .1m,
                 },
             }
         );
@@ -116,12 +115,12 @@ public class GetPortfolioTests : IClassFixture<DatabaseFixture>
                                         {
                                             user.FiatCurrencyType.Name,
                                             new() { Price = bitcoinCurrentUsdPrice }
-                                        }
-                                    }
-                                }
+                                        },
+                                    },
+                                },
                             }
                         },
-                    }
+                    },
                 }
             );
 

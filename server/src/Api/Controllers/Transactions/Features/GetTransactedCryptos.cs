@@ -1,8 +1,8 @@
+using System.Linq.Dynamic.Core;
 using Api.Common.Attributes;
 using Api.Database;
 using Api.Utils;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Dynamic.Core;
 
 namespace Api.Controllers.Transactions.Common.Features;
 
@@ -22,8 +22,8 @@ public class GetTransactedCryptosHandler
     {
         int currentUserId = _currentUserAccessor.GetCurrentUserId();
 
-        List<string> transactedCryptos = await _appDbContext.Transactions
-            .Where(x => x.User.Id == currentUserId)
+        List<string> transactedCryptos = await _appDbContext
+            .Transactions.Where(x => x.User.Id == currentUserId)
             .Select(x => x.CryptoTicker)
             .Distinct()
             .OrderBy(cryptoTicker => cryptoTicker)

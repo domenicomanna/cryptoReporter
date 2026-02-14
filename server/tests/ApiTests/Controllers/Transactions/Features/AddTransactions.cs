@@ -46,7 +46,7 @@ public class AddTransactionsTests : IClassFixture<DatabaseFixture>
     public async Task TheTransactionsShouldBeAddedSuccessfully()
     {
         AppDbContext appDbContext = await _databaseFixture.CreateContext();
-        User user = new User() { FiatCurrencyType = appDbContext.FiatCurrencyTypes.First(), };
+        User user = new User() { FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
         appDbContext.SaveChanges();
 
@@ -72,7 +72,7 @@ public class AddTransactionsTests : IClassFixture<DatabaseFixture>
                     TransactionType = TransactionTypeId.Purchase.GetDescription(),
                     Exchange = "Coinbase",
                     NumberOfCoinsSold = 0,
-                    Notes = "First purchase"
+                    Notes = "First purchase",
                 },
                 new SingleTransaction
                 {
@@ -84,7 +84,7 @@ public class AddTransactionsTests : IClassFixture<DatabaseFixture>
                     TransactionType = TransactionTypeId.Purchase.GetDescription(),
                     Exchange = "Coinbase",
                     NumberOfCoinsSold = 0,
-                    Notes = "First purchase"
+                    Notes = "First purchase",
                 },
             },
         };

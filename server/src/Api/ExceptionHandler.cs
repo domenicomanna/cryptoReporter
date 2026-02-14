@@ -33,7 +33,7 @@ public class ExceptionHandler
             return new ProblemDetails
             {
                 Status = (int)(apiException?.HttpStatusCode ?? HttpStatusCode.InternalServerError),
-                Title = apiException?.ErrorMessage ?? ""
+                Title = apiException?.ErrorMessage ?? "",
             };
         }
 
@@ -43,10 +43,10 @@ public class ExceptionHandler
             {
                 Status = (int)HttpStatusCode.InternalServerError,
                 Title = $"An excpetion occurred: {exception.Message}",
-                Detail = exception.ToString()
+                Detail = exception.ToString(),
             };
         }
 
-        return new ProblemDetails { Status = (int)HttpStatusCode.InternalServerError, Title = "An error occurred", };
+        return new ProblemDetails { Status = (int)HttpStatusCode.InternalServerError, Title = "An error occurred" };
     }
 }

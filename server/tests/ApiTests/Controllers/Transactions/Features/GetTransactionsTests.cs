@@ -30,7 +30,7 @@ public class GetTransactionsTests : IClassFixture<DatabaseFixture>
     public async Task TransactionsShouldBeSuccessfullyRetrieved()
     {
         AppDbContext appDbContext = await _databaseFixture.CreateContext();
-        User user = new User() { FiatCurrencyType = appDbContext.FiatCurrencyTypes.First(), };
+        User user = new User() { FiatCurrencyType = appDbContext.FiatCurrencyTypes.First() };
         appDbContext.Users.Add(user);
 
         appDbContext.Transactions.AddRange(
@@ -43,8 +43,8 @@ public class GetTransactionsTests : IClassFixture<DatabaseFixture>
                     QuantityTransacted = 100,
                     Price = 10000,
                     Fee = 1,
-                    TransactionType = appDbContext.TransactionTypes
-                        .Where(x => x.Id == TransactionTypeId.Purchase)
+                    TransactionType = appDbContext
+                        .TransactionTypes.Where(x => x.Id == TransactionTypeId.Purchase)
                         .First(),
                     User = user,
                 },
@@ -73,7 +73,7 @@ public class GetTransactionsTests : IClassFixture<DatabaseFixture>
         {
             CryptoTickers = "BTC,ETH",
             TransactionTypes = "purchase, sale",
-            SortBy = "Date asc, TransactionType desc"
+            SortBy = "Date asc, TransactionType desc",
         };
 
         var paginationResult = await handler.Handle(request);

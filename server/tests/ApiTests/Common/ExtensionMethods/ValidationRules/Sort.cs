@@ -1,6 +1,6 @@
 using Api.Common.Attributes;
-using FluentValidation;
 using Api.Common.ExtensionMethods.ValidationRules;
+using FluentValidation;
 using FluentValidation.TestHelper;
 
 namespace ApiTests.Common.ExtensionMethods.ValidationRules;

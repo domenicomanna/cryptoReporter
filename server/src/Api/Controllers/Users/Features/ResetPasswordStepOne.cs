@@ -1,11 +1,11 @@
+using System.Security.Cryptography;
 using System.Text;
-using FluentValidation;
 using Api.Common.Attributes;
-using Api.Utils.Emailing;
+using Api.Common.ExtensionMethods;
 using Api.Database;
 using Api.Domain.Models;
-using System.Security.Cryptography;
-using Api.Common.ExtensionMethods;
+using Api.Utils.Emailing;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers.Users.Features;
@@ -48,7 +48,7 @@ public class ResetPasswordStepOneHandler
         {
             UserId = user.Id,
             Expiration = expiration,
-            Token = resetToken.ToSHA512()
+            Token = resetToken.ToSHA512(),
         };
 
         _appDbContext.PasswordResetTokens.Add(passwordReset);
@@ -63,7 +63,7 @@ public class ResetPasswordStepOneHandler
         EmailMessage emailMessage = new EmailMessage
         {
             Subject = "Reset Your Password",
-            To = new List<string> { user.Email }
+            To = new List<string> { user.Email },
         };
         StringBuilder htmlBody = new StringBuilder();
         string clientAppUrl = DotNetEnv.Env.GetString("ClientAppUrl");

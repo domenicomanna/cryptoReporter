@@ -14,18 +14,17 @@ namespace Api.Database.Migrations
         {
             migrationBuilder.CreateTable(
                 name: "Users",
-                columns: table =>
-                    new
-                    {
-                        Id = table
-                            .Column<int>(type: "integer", nullable: false)
-                            .Annotation(
-                                "Npgsql:ValueGenerationStrategy",
-                                NpgsqlValueGenerationStrategy.IdentityByDefaultColumn
-                            ),
-                        Email = table.Column<string>(type: "text", nullable: false),
-                        Password = table.Column<string>(type: "text", nullable: false)
-                    },
+                columns: table => new
+                {
+                    Id = table
+                        .Column<int>(type: "integer", nullable: false)
+                        .Annotation(
+                            "Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityByDefaultColumn
+                        ),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: false),
+                },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
@@ -34,19 +33,18 @@ namespace Api.Database.Migrations
 
             migrationBuilder.CreateTable(
                 name: "RefreshTokens",
-                columns: table =>
-                    new
-                    {
-                        Id = table
-                            .Column<int>(type: "integer", nullable: false)
-                            .Annotation(
-                                "Npgsql:ValueGenerationStrategy",
-                                NpgsqlValueGenerationStrategy.IdentityByDefaultColumn
-                            ),
-                        Token = table.Column<string>(type: "text", nullable: false),
-                        Expires = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                        UserId = table.Column<int>(type: "integer", nullable: false)
-                    },
+                columns: table => new
+                {
+                    Id = table
+                        .Column<int>(type: "integer", nullable: false)
+                        .Annotation(
+                            "Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityByDefaultColumn
+                        ),
+                    Token = table.Column<string>(type: "text", nullable: false),
+                    Expires = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RefreshTokens", x => x.Id);

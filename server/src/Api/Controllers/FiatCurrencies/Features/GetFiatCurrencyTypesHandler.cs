@@ -20,8 +20,8 @@ public class GetFiatCurrencyTypesHandler
 
     public async Task<List<FiatCurrencyTypeDTO>> Handle()
     {
-        List<FiatCurrencyType> fiatCurrencyTypes = await _appDbContext.FiatCurrencyTypes
-            .OrderBy(x => x.Name.ToLower())
+        List<FiatCurrencyType> fiatCurrencyTypes = await _appDbContext
+            .FiatCurrencyTypes.OrderBy(x => x.Name.ToLower())
             .ToListAsync();
 
         return _mapper.Map<List<FiatCurrencyTypeDTO>>(fiatCurrencyTypes);

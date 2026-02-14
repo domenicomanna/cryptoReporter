@@ -1,9 +1,9 @@
 using System.Net;
 using Api.Common.Attributes;
 using Api.Common.Exceptions;
+using Api.Common.ExtensionMethods;
 using Api.Database;
 using Api.Domain.Models;
-using Api.Common.ExtensionMethods;
 using Api.Utils;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -35,8 +35,8 @@ public class ReauthenticateWithRefreshTokenHandler
     {
         string hashedRefreshToken = nonHashedRefreshToken.ToSHA512();
 
-        RefreshToken? currentRefreshToken = await _appDbContext.RefreshTokens
-            .Include(x => x.User)
+        RefreshToken? currentRefreshToken = await _appDbContext
+            .RefreshTokens.Include(x => x.User)
             .FirstOrDefaultAsync(X => X.Token == hashedRefreshToken);
         if (currentRefreshToken is null)
         {
@@ -65,8 +65,8 @@ public class ReauthenticateWithRefreshTokenHandler
 
     public async Task DeleteExpiredRefreshTokens(User user)
     {
-        await _appDbContext.RefreshTokens
-            .Where(x => x.Id == user.Id && x.Expires <= DateTime.UtcNow)
+        await _appDbContext
+            .RefreshTokens.Where(x => x.Id == user.Id && x.Expires <= DateTime.UtcNow)
             .ExecuteDeleteAsync();
     }
 }

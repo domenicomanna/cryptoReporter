@@ -1,12 +1,12 @@
 using Api.Common.Attributes;
-using Api.Domain.Models;
-using Api.Database;
-using FluentValidation;
-using Api.Utils;
-using Microsoft.EntityFrameworkCore;
-using Api.Common.ExtensionMethods;
 using Api.Common.Exceptions;
+using Api.Common.ExtensionMethods;
 using Api.Common.ExtensionMethods.ValidationRules;
+using Api.Database;
+using Api.Domain.Models;
+using Api.Utils;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers.Users.Features;
 
@@ -41,8 +41,8 @@ public class ResetPasswordStepTwoHandler
 
     public async Task Handle(ResetPasswordStepTwoRequest resetPasswordStepTwoRequest)
     {
-        PasswordResetToken? passwordResetToken = await _appDbcontext.PasswordResetTokens
-            .Include(x => x.User)
+        PasswordResetToken? passwordResetToken = await _appDbcontext
+            .PasswordResetTokens.Include(x => x.User)
             .FirstOrDefaultAsync(x => x.Token == resetPasswordStepTwoRequest.ResetPasswordToken.ToSHA512());
         if (passwordResetToken is null)
             throw new ApiException { HttpStatusCode = System.Net.HttpStatusCode.Unauthorized };

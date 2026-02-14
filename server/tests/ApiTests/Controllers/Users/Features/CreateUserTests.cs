@@ -39,7 +39,7 @@ public class CreateUserTests : IClassFixture<DatabaseFixture>
             Email = "test@gmail.com",
             Password = "test12345",
             ConfirmedPassword = "test12345",
-            FiatCurrencyType = "xyz123"
+            FiatCurrencyType = "xyz123",
         };
         var result = validator.TestValidate(request);
         result.ShouldHaveValidationErrorFor(x => x.FiatCurrencyType);
@@ -64,7 +64,7 @@ public class CreateUserTests : IClassFixture<DatabaseFixture>
             Email = user.Email,
             Password = "12345",
             ConfirmedPassword = "12345",
-            FiatCurrencyType = "USD"
+            FiatCurrencyType = "USD",
         };
 
         await Assert.ThrowsAsync<ApiException>(async () => await handler.Handle(request));
@@ -93,7 +93,7 @@ public class CreateUserTests : IClassFixture<DatabaseFixture>
             Email = "test@gmail.com",
             Password = "test12345",
             ConfirmedPassword = "test12345",
-            FiatCurrencyType = "USD"
+            FiatCurrencyType = "USD",
         };
 
         (CreateUserResult result, string nonHashedRefreshToken) = await handler.Handle(request);

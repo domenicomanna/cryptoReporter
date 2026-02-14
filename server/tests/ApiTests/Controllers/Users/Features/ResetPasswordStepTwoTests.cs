@@ -1,11 +1,11 @@
-using Moq;
+using Api.Common.Exceptions;
+using Api.Common.ExtensionMethods;
 using Api.Controllers.Users.Features;
 using Api.Database;
 using Api.Domain.Models;
 using Api.Utils;
-using Api.Common.ExtensionMethods;
-using Api.Common.Exceptions;
 using Fixtures;
+using Moq;
 
 namespace ApiTests.Controllers.Features.Users;
 
@@ -28,7 +28,7 @@ public class ResetPasswordStepTwoHandlerTests : IClassFixture<DatabaseFixture>
         {
             Id = 1,
             Email = "hello@gmail.com",
-            FiatCurrencyType = appDbContext.FiatCurrencyTypes.First()
+            FiatCurrencyType = appDbContext.FiatCurrencyTypes.First(),
         };
         appDbContext.Users.Add(user);
         await appDbContext.SaveChangesAsync();
@@ -39,7 +39,7 @@ public class ResetPasswordStepTwoHandlerTests : IClassFixture<DatabaseFixture>
         {
             ResetPasswordToken = "test",
             NewPassword = newPassword,
-            ConfirmedNewPassword = newPassword
+            ConfirmedNewPassword = newPassword,
         };
 
         ResetPasswordStepTwoHandler handler = new ResetPasswordStepTwoHandler(appDbContext, _passwordHasherMock.Object);
@@ -55,14 +55,14 @@ public class ResetPasswordStepTwoHandlerTests : IClassFixture<DatabaseFixture>
         {
             Id = 1,
             Email = "hello@gmail.com",
-            FiatCurrencyType = appDbContext.FiatCurrencyTypes.First()
+            FiatCurrencyType = appDbContext.FiatCurrencyTypes.First(),
         };
         string token = "test";
         PasswordResetToken passwordResetToken = new PasswordResetToken
         {
             UserId = user.Id,
             Token = token.ToSHA512(),
-            Expiration = DateTime.UtcNow.AddHours(-1)
+            Expiration = DateTime.UtcNow.AddHours(-1),
         };
 
         appDbContext.Users.Add(user);
@@ -78,7 +78,7 @@ public class ResetPasswordStepTwoHandlerTests : IClassFixture<DatabaseFixture>
         {
             ResetPasswordToken = token,
             NewPassword = newPassword,
-            ConfirmedNewPassword = newPassword
+            ConfirmedNewPassword = newPassword,
         };
 
         ResetPasswordStepTwoHandler handler = new ResetPasswordStepTwoHandler(appDbContext, _passwordHasherMock.Object);
@@ -94,14 +94,14 @@ public class ResetPasswordStepTwoHandlerTests : IClassFixture<DatabaseFixture>
         {
             Id = 1,
             Email = "hello@gmail.com",
-            FiatCurrencyType = appDbContext.FiatCurrencyTypes.First()
+            FiatCurrencyType = appDbContext.FiatCurrencyTypes.First(),
         };
         string token = "test";
         PasswordResetToken passwordResetToken = new PasswordResetToken
         {
             UserId = user.Id,
             Token = token.ToSHA512(),
-            Expiration = DateTime.UtcNow.AddHours(1)
+            Expiration = DateTime.UtcNow.AddHours(1),
         };
 
         appDbContext.Users.Add(user);
@@ -117,7 +117,7 @@ public class ResetPasswordStepTwoHandlerTests : IClassFixture<DatabaseFixture>
         {
             ResetPasswordToken = token,
             NewPassword = newPassword,
-            ConfirmedNewPassword = newPassword
+            ConfirmedNewPassword = newPassword,
         };
 
         ResetPasswordStepTwoHandler handler = new ResetPasswordStepTwoHandler(appDbContext, _passwordHasherMock.Object);

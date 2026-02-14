@@ -19,7 +19,7 @@ public enum SortDirection
     Ascending,
 
     [Description("desc")]
-    Descending
+    Descending,
 }
 
 public class SortItem
@@ -47,8 +47,8 @@ public class SortStatementGenerator
         List<string> sortValues = sortItems
             .Select(sortItem =>
             {
-                SortableProperty? sortableProperty = sortableProperties.FirstOrDefault(
-                    x => x.PropertyName.ToLower() == sortItem.PropertyName.ToLower()
+                SortableProperty? sortableProperty = sortableProperties.FirstOrDefault(x =>
+                    x.PropertyName.ToLower() == sortItem.PropertyName.ToLower()
                 );
                 if (sortableProperty is null)
                 {
@@ -108,7 +108,7 @@ public class SortStatementGenerator
                 return new SortableProperty
                 {
                     PropertyName = property.Name,
-                    SortName = sortNameAttribute is null ? property.Name : sortNameAttribute.Name
+                    SortName = sortNameAttribute is null ? property.Name : sortNameAttribute.Name,
                 };
             })
             .ToList();

@@ -1,11 +1,11 @@
 using Api.Common.Exceptions;
+using Api.Common.ExtensionMethods;
 using Api.Controllers.Users.Common.Features;
 using Api.Database;
 using Api.Domain.Models;
-using Api.Common.ExtensionMethods;
 using Api.Utils;
-using Moq;
 using Fixtures;
+using Moq;
 
 namespace ApiTests.Controllers.Users.Features;
 
@@ -45,7 +45,7 @@ public class ReauthenticateWithRefreshTokenTests : IClassFixture<DatabaseFixture
         {
             UserId = user.Id,
             Token = nonHashedRefreshToken.ToSHA512(),
-            Expires = DateTime.UtcNow.AddMinutes(-10)
+            Expires = DateTime.UtcNow.AddMinutes(-10),
         };
         appDbContext.RefreshTokens.Add(token);
         appDbContext.SaveChanges();
@@ -71,7 +71,7 @@ public class ReauthenticateWithRefreshTokenTests : IClassFixture<DatabaseFixture
         {
             UserId = user.Id,
             Token = nonHashedRefreshToken.ToSHA512(),
-            Expires = DateTime.UtcNow.AddHours(1)
+            Expires = DateTime.UtcNow.AddHours(1),
         };
         appDbContext.RefreshTokens.Add(refreshToken);
         appDbContext.SaveChanges();

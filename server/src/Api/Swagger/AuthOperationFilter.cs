@@ -25,13 +25,7 @@ public class AuthOperationFilter : IOperationFilter
         {
             var scheme = new OpenApiSecuritySchemeReference("Bearer", context.Document);
 
-            operation.Security =
-            [
-                new OpenApiSecurityRequirement
-                {
-                    [scheme] = []
-                }
-            ];
+            operation.Security = [new OpenApiSecurityRequirement { [scheme] = [] }];
         }
     }
 }

@@ -14,15 +14,14 @@ namespace Api.Database.Migrations
                 name: "CryptoTicker",
                 table: "Transactions",
                 type: "text",
-                nullable: false);
+                nullable: false
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "CryptoTicker",
-                table: "Transactions");
+            migrationBuilder.DropColumn(name: "CryptoTicker", table: "Transactions");
         }
     }
 }

@@ -1,9 +1,9 @@
-using Moq;
 using Api.Controllers.Users.Features;
-using Api.Utils.Emailing;
 using Api.Database;
 using Api.Domain.Models;
+using Api.Utils.Emailing;
 using Fixtures;
+using Moq;
 
 namespace ApiTests.Controllers.Features.Users;
 

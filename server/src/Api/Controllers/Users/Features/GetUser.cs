@@ -31,8 +31,8 @@ public class GetUserHandler
             throw new ApiException(HttpStatusCode.Forbidden);
         }
 
-        User? user = await _appDbContext.Users
-            .Include(x => x.FiatCurrencyType)
+        User? user = await _appDbContext
+            .Users.Include(x => x.FiatCurrencyType)
             .FirstOrDefaultAsync(x => x.Id == currentUserId);
         if (user is null)
         {

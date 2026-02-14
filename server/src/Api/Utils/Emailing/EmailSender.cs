@@ -21,7 +21,7 @@ public class EmailSender : IEmailSender
             UserName = DotNetEnv.Env.GetString("EmailAddress"),
             Password = DotNetEnv.Env.GetString("EmailPassword"),
             SmtpServer = DotNetEnv.Env.GetString("EmailSmtpServer"),
-            Port = DotNetEnv.Env.GetInt("EmailPort")
+            Port = DotNetEnv.Env.GetInt("EmailPort"),
         };
     }
 

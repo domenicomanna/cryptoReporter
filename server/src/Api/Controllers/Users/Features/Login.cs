@@ -49,8 +49,8 @@ public class LoginHandler
 
     public async Task<(LoginResult loginResult, string nonHashedRefreshToken)> Handle(LoginRequest request)
     {
-        User? user = await _appDbContext.Users
-            .Include(x => x.FiatCurrencyType)
+        User? user = await _appDbContext
+            .Users.Include(x => x.FiatCurrencyType)
             .FirstOrDefaultAsync(x => x.Email == request.Email);
         if (user is null)
         {

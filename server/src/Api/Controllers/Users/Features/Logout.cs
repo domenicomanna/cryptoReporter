@@ -1,6 +1,6 @@
 using Api.Common.Attributes;
-using Api.Database;
 using Api.Common.ExtensionMethods;
+using Api.Database;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 

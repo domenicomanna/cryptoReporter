@@ -2,8 +2,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Api.Domain.Models;
 using Api.Common.ExtensionMethods;
+using Api.Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Api.Utils;
@@ -28,8 +28,8 @@ public class JwtHelper : IJwtHelper
         SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
         {
             Expires = DateTime.UtcNow.AddMinutes(15),
-            Subject = new ClaimsIdentity(new List<Claim> { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), }),
-            SigningCredentials = signingCredentials
+            Subject = new ClaimsIdentity(new List<Claim> { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) }),
+            SigningCredentials = signingCredentials,
         };
 
         JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
@@ -46,7 +46,7 @@ public class JwtHelper : IJwtHelper
         {
             UserId = user.Id,
             Token = hashedToken,
-            Expires = DateTime.UtcNow.AddMonths(1)
+            Expires = DateTime.UtcNow.AddMonths(1),
         };
 
         return (refreshToken, token);

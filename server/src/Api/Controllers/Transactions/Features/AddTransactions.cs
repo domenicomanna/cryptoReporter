@@ -91,25 +91,22 @@ public class AddTransactionsHandler
         User user = await _appDbContext.Users.FirstAsync(x => x.Id == currentUserId);
 
         List<TransactionType> transactionTypes = _appDbContext.TransactionTypes.ToList();
-        List<Transaction> transactions = request.Transactions
-            .Select(
-                x =>
-                    new Transaction
-                    {
-                        Date = x.Date,
-                        CryptoTicker = x.CryptoTicker.ToUpper(),
-                        QuantityTransacted = x.QuantityTransacted,
-                        Price = x.Price,
-                        Fee = x.Fee,
-                        TransactionType = transactionTypes.First(
-                            transactionType => transactionType.Name.ToLower() == x.TransactionType.ToLower()
-                        ),
-                        Exchange = x.Exchange,
-                        NumberOfCoinsSold = x.NumberOfCoinsSold,
-                        Notes = x.Notes,
-                        User = user,
-                    }
-            )
+        List<Transaction> transactions = request
+            .Transactions.Select(x => new Transaction
+            {
+                Date = x.Date,
+                CryptoTicker = x.CryptoTicker.ToUpper(),
+                QuantityTransacted = x.QuantityTransacted,
+                Price = x.Price,
+                Fee = x.Fee,
+                TransactionType = transactionTypes.First(transactionType =>
+                    transactionType.Name.ToLower() == x.TransactionType.ToLower()
+                ),
+                Exchange = x.Exchange,
+                NumberOfCoinsSold = x.NumberOfCoinsSold,
+                Notes = x.Notes,
+                User = user,
+            })
             .ToList();
         _appDbContext.Transactions.AddRange(transactions);
         await _appDbContext.SaveChangesAsync();

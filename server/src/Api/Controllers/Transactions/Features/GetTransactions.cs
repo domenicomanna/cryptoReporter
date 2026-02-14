@@ -1,3 +1,4 @@
+using System.Linq.Dynamic.Core;
 using Api.Common.Attributes;
 using Api.Common.ExtensionMethods.ValidationRules;
 using Api.Common.Models;
@@ -7,7 +8,6 @@ using Api.Utils;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Dynamic.Core;
 
 namespace Api.Controllers.Transactions.Common.Features;
 
@@ -68,8 +68,8 @@ public class GetTransactionsHandler
     {
         int currentUserId = _currentUserAccessor.GetCurrentUserId();
 
-        IQueryable<Transaction> query = _appDbContext.Transactions
-            .Include(x => x.User)
+        IQueryable<Transaction> query = _appDbContext
+            .Transactions.Include(x => x.User)
             .Include(x => x.TransactionType)
             .Where(x => x.User.Id == currentUserId);
 

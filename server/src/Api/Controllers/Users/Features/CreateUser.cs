@@ -86,7 +86,7 @@ public class CreateUserHandler
         CreateUserResult createUserResult = new CreateUserResult
         {
             User = _mapper.Map<UserDTO>(user),
-            AccessToken = accessToken
+            AccessToken = accessToken,
         };
 
         return (createUserResult, nonHashedRefreshToken);
@@ -99,8 +99,8 @@ public class CreateUserHandler
         {
             Email = request.Email,
             Password = _passwordHasher.HashPassword(request.Password),
-            FiatCurrencyType = fiatCurrencyTypes.First(
-                fiatCurrencyType => fiatCurrencyType.Name.ToLower() == request.FiatCurrencyType.ToLower()
+            FiatCurrencyType = fiatCurrencyTypes.First(fiatCurrencyType =>
+                fiatCurrencyType.Name.ToLower() == request.FiatCurrencyType.ToLower()
             ),
         };
         _appDbContext.Users.Add(user);

@@ -1,6 +1,6 @@
+using System.Linq.Dynamic.Core;
 using Api.Common.Attributes;
 using Api.Utils;
-using System.Linq.Dynamic.Core;
 
 namespace ApiTests.Sorting;
 
@@ -20,24 +20,24 @@ public class SortStatementGeneratorTests
     [Fact]
     public void AnExceptionShouldBeThrownIfTheSortStatementIsEmpty()
     {
-        Assert.Throws<InvalidSortStatementException>(
-            () => SortStatementGenerator.GenerateSortStatement("", typeof(Car))
+        Assert.Throws<InvalidSortStatementException>(() =>
+            SortStatementGenerator.GenerateSortStatement("", typeof(Car))
         );
     }
 
     [Fact]
     public void AnExceptionShouldBeThrownIfThePropertyIsInvalid()
     {
-        Assert.Throws<InvalidSortStatementException>(
-            () => SortStatementGenerator.GenerateSortStatement("Xyz", typeof(Car))
+        Assert.Throws<InvalidSortStatementException>(() =>
+            SortStatementGenerator.GenerateSortStatement("Xyz", typeof(Car))
         );
     }
 
     [Fact]
     public void AnExceptionShouldBeThrownIfThePropertyIsNotSortable()
     {
-        Assert.Throws<InvalidSortStatementException>(
-            () => SortStatementGenerator.GenerateSortStatement("Mileage", typeof(Car))
+        Assert.Throws<InvalidSortStatementException>(() =>
+            SortStatementGenerator.GenerateSortStatement("Mileage", typeof(Car))
         );
     }
 
@@ -46,9 +46,9 @@ public class SortStatementGeneratorTests
     {
         var cars = new List<Car>
         {
-            new Car { Make = "Honda", ModelName = "Civic", },
-            new Car { Make = "Mazda", ModelName = "CX5", },
-            new Car { Make = "Mazda", ModelName = "CX7", },
+            new Car { Make = "Honda", ModelName = "Civic" },
+            new Car { Make = "Mazda", ModelName = "CX5" },
+            new Car { Make = "Mazda", ModelName = "CX7" },
         }.AsQueryable();
 
         string sortStatement = SortStatementGenerator.GenerateSortStatement("make asc, modelName desc", typeof(Car));

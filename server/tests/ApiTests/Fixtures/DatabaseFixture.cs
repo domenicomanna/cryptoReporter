@@ -40,10 +40,10 @@ public class DatabaseFixture : IAsyncLifetime
                 TablesToIgnore = new Table[]
                 {
                     context.Model.FindEntityType(typeof(FiatCurrencyType))?.GetTableName() ?? "",
-                    context.Model.FindEntityType(typeof(TransactionType))?.GetTableName() ?? ""
+                    context.Model.FindEntityType(typeof(TransactionType))?.GetTableName() ?? "",
                 },
                 SchemasToInclude = new[] { "public" },
-                DbAdapter = DbAdapter.Postgres
+                DbAdapter = DbAdapter.Postgres,
             }
         );
         await respawner.ResetAsync(connection);

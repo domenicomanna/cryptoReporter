@@ -1,13 +1,13 @@
-using Api.Common.Attributes;
-using Api.Database;
-using Api.Utils;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
-using Api.Domain.Models;
-using Api.Common.Exceptions;
 using System.Net;
 using Api.Apis.CoinMarketCap;
 using Api.Apis.CoinMarketCap.QuotesLatest.Models;
+using Api.Common.Attributes;
+using Api.Common.Exceptions;
+using Api.Database;
+using Api.Domain.Models;
+using Api.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers.Users.Common.Features;
 
@@ -74,8 +74,8 @@ public class GetPortfolioHandler
         List<AggregatedAsset> holdings = aggregatedAssets
             .Select(x =>
             {
-                CryptoCurrency? crypto = quotesResponse.Data
-                    .GetValueOrDefault(x.CryptoTicker.ToUpper())
+                CryptoCurrency? crypto = quotesResponse
+                    .Data.GetValueOrDefault(x.CryptoTicker.ToUpper())
                     ?.FirstOrDefault();
                 QuoteInfo? quote = crypto?.Quote?.GetValueOrDefault(user.FiatCurrencyType.Name);
 
@@ -87,7 +87,7 @@ public class GetPortfolioHandler
                     TotalInvestedIncludingFees = x.InvestmentAmountIncludingFee,
                     CostBasis = x.InvestmentAmountIncludingFee / x.CoinsOwned,
                     PortfolioPercentage = x.InvestmentAmountIncludingFee / totalInvested,
-                    CurrentValue = quote is null || quote.Price is null ? null : (decimal)quote.Price * x.CoinsOwned
+                    CurrentValue = quote is null || quote.Price is null ? null : (decimal)quote.Price * x.CoinsOwned,
                 };
             })
             .OrderByDescending(x => x.PortfolioPercentage)
@@ -97,55 +97,49 @@ public class GetPortfolioHandler
         {
             TotalInvested = totalInvested,
             CurrentValue = holdings.Sum(x => x.CurrentValue ?? 0),
-            Holdings = holdings
+            Holdings = holdings,
         };
     }
 
     public async Task<List<InitialAggregatedAsset>> AggregateAssets(int userId)
     {
-        return await _appDbContext.Transactions
-            .Include(x => x.TransactionType)
-            .Where(
-                x =>
-                    x.User.Id == userId
-                    && (
-                        x.TransactionType.Id == TransactionTypeId.Purchase
-                        || x.TransactionType.Id == TransactionTypeId.Reward
-                    )
+        return await _appDbContext
+            .Transactions.Include(x => x.TransactionType)
+            .Where(x =>
+                x.User.Id == userId
+                && (
+                    x.TransactionType.Id == TransactionTypeId.Purchase
+                    || x.TransactionType.Id == TransactionTypeId.Reward
+                )
             )
             .GroupBy(x => x.CryptoTicker)
-            .Select(
-                group =>
-                    new InitialAggregatedAsset()
-                    {
-                        CryptoTicker = group.Key,
-                        // round to ensure the calculated values don't exceed the maximum number of digits allowed in a decimal
-                        CoinsOwned = Math.Round(
-                            group.Sum(
-                                transaction =>
-                                    ((transaction.QuantityTransacted - transaction.Fee) / transaction.Price) // coins acquired from this transaction
-                                    - transaction.NumberOfCoinsSold
-                            ),
-                            6
-                        ),
-                        InvestmentAmountIncludingFee = Math.Round(
-                            group.Sum(
-                                transaction =>
-                                    transaction.QuantityTransacted
-                                    - (
-                                        transaction.NumberOfCoinsSold
-                                        *
-                                        // price per coin
-                                        (
-                                            transaction.QuantityTransacted
-                                            / ((transaction.QuantityTransacted - transaction.Fee) / transaction.Price)
-                                        )
-                                    )
-                            ),
-                            6
+            .Select(group => new InitialAggregatedAsset()
+            {
+                CryptoTicker = group.Key,
+                // round to ensure the calculated values don't exceed the maximum number of digits allowed in a decimal
+                CoinsOwned = Math.Round(
+                    group.Sum(transaction =>
+                        ((transaction.QuantityTransacted - transaction.Fee) / transaction.Price) // coins acquired from this transaction
+                        - transaction.NumberOfCoinsSold
+                    ),
+                    6
+                ),
+                InvestmentAmountIncludingFee = Math.Round(
+                    group.Sum(transaction =>
+                        transaction.QuantityTransacted
+                        - (
+                            transaction.NumberOfCoinsSold
+                            *
+                            // price per coin
+                            (
+                                transaction.QuantityTransacted
+                                / ((transaction.QuantityTransacted - transaction.Fee) / transaction.Price)
+                            )
                         )
-                    }
-            )
+                    ),
+                    6
+                ),
+            })
             .ToListAsync();
     }
 }

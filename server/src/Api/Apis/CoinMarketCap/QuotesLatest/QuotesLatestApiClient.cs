@@ -18,15 +18,14 @@ public class QuotesLatestApiClient : IQuotesLatestApiClient
 
     public async Task<QuotesLatestResponse> GetQuotes(List<string> cryptoTickers, string currency)
     {
-        HttpRequestMessage httpRequest =
-            new()
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri(
-                    $"v2/cryptocurrency/quotes/latest?symbol={string.Join(",", cryptoTickers)}&convert={currency}",
-                    UriKind.Relative
-                )
-            };
+        HttpRequestMessage httpRequest = new()
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(
+                $"v2/cryptocurrency/quotes/latest?symbol={string.Join(",", cryptoTickers)}&convert={currency}",
+                UriKind.Relative
+            ),
+        };
         HttpResponseMessage response = await _httpClient.SendAsync(httpRequest);
         QuotesLatestResponse? quotesLatestResponse = await response.Content.ReadFromJsonAsync<QuotesLatestResponse>();
         return quotesLatestResponse!;

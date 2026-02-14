@@ -35,8 +35,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(string.Join(";", connectionStringParts));
 });
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder
+    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
         string jwtSecret = DotNetEnv.Env.GetString("JWT_SECRET");
@@ -67,8 +67,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services
-    .AddHttpClient<ICoinMarketCapHttpClient, CoinMarketCapHttpClient>(
+builder
+    .Services.AddHttpClient<ICoinMarketCapHttpClient, CoinMarketCapHttpClient>(
         (client, serviceProvider) =>
         {
             return new CoinMarketCapHttpClient(client, DotNetEnv.Env.GetString("COIN_MARKET_CAP_API_KEY"));
@@ -76,17 +76,16 @@ builder.Services
     )
     .AddPolicyHandler(GetRetryPolicy());
 
-builder.Services.Scan(
-    scan =>
-        scan.FromAssemblyOf<Program>()
-            .AddClasses(c => c.WithAttribute<Inject>())
-            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
-            .AsSelf()
-            .WithScopedLifetime()
-            .AddClasses()
-            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
-            .AsImplementedInterfaces()
-            .WithScopedLifetime()
+builder.Services.Scan(scan =>
+    scan.FromAssemblyOf<Program>()
+        .AddClasses(c => c.WithAttribute<Inject>())
+        .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+        .AsSelf()
+        .WithScopedLifetime()
+        .AddClasses()
+        .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+        .AsImplementedInterfaces()
+        .WithScopedLifetime()
 );
 
 var app = builder.Build();
