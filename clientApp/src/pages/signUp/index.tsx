@@ -1,20 +1,17 @@
 import { useContext, useState } from 'react';
 import { Link as ReactRouterLink, Navigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { routePaths } from '../../constants/routePaths';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { CreateUserRequest, ResponseError } from '../../api/generatedSdk';
-import { fiatCurrenciesApi, usersApi } from '../../api';
 import { UserContext, UserInfo } from '../../contexts/UserContext';
 import { Box, TextField, Link as MuiLink, Autocomplete, CircularProgress, Button } from '@mui/material';
 import { PageTitle } from '../../components/pageTitle';
 import { passwordSchema } from '../../validationSchemas/password';
-import { ProblemDetails } from '../../api/types';
 import { ArrowDropDown } from '@mui/icons-material';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useSignUp } from './mutations/useSignUp';
+import { useGetFiatCurrencies } from './queries/useGetFiatCurrencies';
 
-type FormValues = {
+export type SignUpFormValues = {
   email: string;
   password: string;
   confirmPassword: string;
@@ -23,23 +20,18 @@ type FormValues = {
 
 const SignUp = () => {
   const { setUserInfo } = useContext(UserContext);
+  const signUpMutation = useSignUp();
   const [userHasBeenCreated, setUserHasBeenCreated] = useState(false);
+  const fiatCurrenciesQuery = useGetFiatCurrencies();
 
-  const fiatCurrenciesQuery = useQuery({
-    queryKey: ['fiatCurrencies'],
-    queryFn: () => fiatCurrenciesApi.getFiatCurrencies(),
-    meta: {
-      errorMessage: 'Currencies could not be loaded',
-    },
-  });
-
-  const formik = useFormik<FormValues>({
+  const formik = useFormik<SignUpFormValues>({
     initialValues: {
       email: '',
       password: '',
       confirmPassword: '',
       fiatCurrency: 'USD',
     },
+
     validationSchema: Yup.object({
       email: Yup.string().email('Email must be a valid email').required('Required'),
       password: passwordSchema,
@@ -48,32 +40,19 @@ const SignUp = () => {
         .oneOf([Yup.ref('password')], 'Passwords must match'),
       fiatCurrency: Yup.string().required('Required'),
     }),
-    onSubmit: async (values) => {
-      await signUpMutation.mutateAsync(values);
-    },
-  });
 
-  const signUpMutation = useMutation({
-    mutationFn: async (values: FormValues) => {
-      const createUserRequest: CreateUserRequest = {
-        email: values.email,
-        password: values.password,
-        confirmedPassword: values.confirmPassword,
-        fiatCurrencyType: values.fiatCurrency,
-      };
-      const result = await usersApi.createUser({ createUserRequest });
-      const userInfo: UserInfo = {
-        userId: result.user.id,
-        fiatCurrency: result.user.fiatCurrencyTypeName,
-        token: result.accessToken,
-      };
-      setUserInfo(userInfo);
-      setUserHasBeenCreated(true);
-    },
-    onError: async (error) => {
-      const errorDetails = error instanceof ResponseError ? ((await error.response.json()) as ProblemDetails) : null;
-      const errorMessage = errorDetails?.detail ?? errorDetails?.title ?? 'Account could not be created';
-      toast.error(errorMessage);
+    onSubmit: async (values) => {
+      await signUpMutation.mutateAsync(values, {
+        onSuccess: (createUserResult) => {
+          const userInfo: UserInfo = {
+            userId: createUserResult.user.id,
+            fiatCurrency: createUserResult.user.fiatCurrencyTypeName,
+            token: createUserResult.accessToken,
+          };
+          setUserInfo(userInfo);
+          setUserHasBeenCreated(true);
+        },
+      });
     },
   });
 

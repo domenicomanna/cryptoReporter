@@ -1,25 +1,13 @@
-import { usersApi } from '../../api';
 import { useContext } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import PortfolioHoldingsTable from './portfolioHoldingsTable';
-import { useQuery } from '@tanstack/react-query';
 import PageLoader from '../../components/pageLoader';
 import { PageTitle } from '../../components/pageTitle';
+import { useGetPortfolio } from './queries/useGetPortfolio';
 
 const Portfolio = () => {
   const { userInfo } = useContext(UserContext);
-
-  const portfolioQuery = useQuery({
-    queryKey: ['portfolio'],
-    queryFn: () =>
-      usersApi.getPortfolio({
-        userId: userInfo!.userId,
-      }),
-    meta: {
-      errorMessage: 'Portfolio could not be loaded',
-    },
-  });
-
+  const portfolioQuery = useGetPortfolio(userInfo!.userId);
   return (
     <>
       <PageTitle>Portfolio</PageTitle>

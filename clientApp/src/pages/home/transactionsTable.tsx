@@ -8,58 +8,40 @@ import {
   useMaterialReactTable,
 } from 'material-react-table';
 import { Transaction } from '../../api/generatedSdk';
-import { FC, useContext, useRef, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useContext, useRef } from 'react';
 import { DateTime } from 'luxon';
 import { formatAsCurrency } from '../../utils/formatAsCurrency';
 import { UserContext } from '../../contexts/UserContext';
-import { transactionsApi } from '../../api';
-import { buildSortByString } from '../../utils/builtSortByString';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 type Props = {
+  records: Transaction[];
+  totalRowCount: number;
   transactedCryptos: string[];
+  isLoading: boolean;
+  isRefetching: boolean;
+  pagination: MRT_PaginationState;
+  sorting: MRT_SortingState;
+  columnFilters: MRT_ColumnFiltersState;
+  onPaginationChange: Dispatch<SetStateAction<MRT_PaginationState>>;
+  onSortingChange: Dispatch<SetStateAction<MRT_SortingState>>;
+  onColumnFiltersChange: Dispatch<SetStateAction<MRT_ColumnFiltersState>>;
 };
 
-export const transactionsQueryKey = 'transactions-table-data';
-
-export const TransactionsTable: FC<Props> = ({ transactedCryptos }) => {
+export const TransactionsTable: FC<Props> = ({
+  records,
+  totalRowCount,
+  transactedCryptos,
+  isLoading,
+  isRefetching,
+  pagination,
+  sorting,
+  columnFilters,
+  onPaginationChange,
+  onSortingChange,
+  onColumnFiltersChange,
+}) => {
   const { userInfo } = useContext(UserContext);
-
-  const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize: 50,
-  });
-
-  const [sorting, setSorting] = useState<MRT_SortingState>([
-    {
-      id: 'date',
-      desc: false,
-    },
-  ]);
-  const [columnFilters, setFilters] = useState<MRT_ColumnFiltersState>([]);
   const tableContainerRef = useRef<HTMLDivElement>(null);
-
-  const transactionsQuery = useQuery({
-    queryKey: [transactionsQueryKey, pagination, sorting, columnFilters],
-    queryFn: async () => {
-      const transactionTypesFilter = columnFilters.find((x) => x.id === 'transactionType')?.value as
-        | string[]
-        | undefined;
-      const cryptoTickersFilter = columnFilters.find((x) => x.id === 'cryptoTicker')?.value as string[] | undefined;
-      const paginationResult = await transactionsApi.getTransactions({
-        pageIndex: pagination.pageIndex,
-        pageSize: pagination.pageSize,
-        ...(sorting.length > 0 && { sortBy: buildSortByString(sorting) }),
-        ...(transactionTypesFilter && { transactionTypes: transactionTypesFilter.join(',') }),
-        ...(cryptoTickersFilter && { cryptoTickers: cryptoTickersFilter.join(',') }),
-      });
-      return paginationResult;
-    },
-    meta: {
-      errorMessage: 'Transactions could not be loaded',
-    },
-    placeholderData: keepPreviousData,
-  });
 
   const columnHelper = createMRTColumnHelper<Transaction>();
 
@@ -126,17 +108,17 @@ export const TransactionsTable: FC<Props> = ({ transactedCryptos }) => {
 
   const table = useMaterialReactTable({
     columns,
-    data: transactionsQuery.data?.records ?? [],
+    data: records,
     enableStickyHeader: true,
     enableGlobalFilter: false,
     enableColumnActions: false,
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
-    rowCount: transactionsQuery.data?.totalRecordCount ?? 0,
-    onPaginationChange: setPagination,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setFilters,
+    rowCount: totalRowCount,
+    onPaginationChange: onPaginationChange,
+    onSortingChange: onSortingChange,
+    onColumnFiltersChange: onColumnFiltersChange,
     muiTableContainerProps: {
       sx: {
         maxHeight: '70vh',
@@ -151,8 +133,8 @@ export const TransactionsTable: FC<Props> = ({ transactedCryptos }) => {
       pagination,
       sorting,
       columnFilters,
-      isLoading: transactionsQuery.isLoading,
-      showProgressBars: transactionsQuery.isRefetching,
+      isLoading,
+      showProgressBars: isRefetching,
     },
   });
 

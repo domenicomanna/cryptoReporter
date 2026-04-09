@@ -5,55 +5,41 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Button, TextField } from '@mui/material';
 import { PageTitle } from '../../components/pageTitle';
-import { ResetPasswordStepTwoRequest } from '../../api/generatedSdk';
 import { passwordSchema } from '../../validationSchemas/password';
-import { usersApi } from '../../api';
-import { useMutation } from '@tanstack/react-query';
+import { useResetPasswordStepTwo } from './mutations/useResetPasswordStepTwo';
 
 export type RouterState = {
   errorMessage?: string;
 };
 
-type FormValues = {
+export type ResetPasswordStepTwoFormValues = {
   password: string;
   confirmNewPassword: string;
+  token: string;
 };
 
 const ResetPasswordStepTwo = () => {
   const navigate = useNavigate();
   const { token } = useParams();
+  const resetPasswordStepTwoMutation = useResetPasswordStepTwo();
 
-  const formik = useFormik<FormValues>({
+  const formik = useFormik<ResetPasswordStepTwoFormValues>({
     initialValues: {
       password: '',
       confirmNewPassword: '',
+      token: token ?? '',
     },
     validationSchema: Yup.object({
       password: passwordSchema,
       confirmNewPassword: Yup.string().required('Required'),
     }),
     onSubmit: async (values) => {
-      await resetPasswordStepTwoMutation.mutateAsync(values);
-    },
-  });
-
-  const resetPasswordStepTwoMutation = useMutation({
-    mutationFn: async (values: FormValues) => {
-      const request: ResetPasswordStepTwoRequest = {
-        resetPasswordToken: token ?? '',
-        newPassword: values.password,
-        confirmedNewPassword: values.confirmNewPassword,
-      };
-      await usersApi.resetPasswordStepTwo({
-        resetPasswordStepTwoRequest: request,
+      await resetPasswordStepTwoMutation.mutateAsync(values, {
+        onSuccess: () => {
+          toast.success('Password reset!');
+          void navigate(routePaths.login);
+        },
       });
-    },
-    onSuccess: () => {
-      toast.success('Password reset!');
-      void navigate(routePaths.login);
-    },
-    onError: () => {
-      toast.error('Password could not be reset');
     },
   });
 

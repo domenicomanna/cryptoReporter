@@ -1,13 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { routePaths } from '../../constants/routePaths';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { ResetPasswordStepOneRequest } from '../../api/generatedSdk';
-import { usersApi } from '../../api';
 import { Box, Button, TextField } from '@mui/material';
 import { PageTitle } from '../../components/pageTitle';
-import { useMutation } from '@tanstack/react-query';
+import { useResetPasswordStepOne } from './mutations/useResetPasswordStepOne';
 
 export type RouterState = {
   errorMessage?: string;
@@ -19,6 +16,7 @@ type FormValues = {
 
 const ResetPasswordStepOne = () => {
   const navigate = useNavigate();
+  const resetPasswordStepOneMutation = useResetPasswordStepOne();
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -28,24 +26,9 @@ const ResetPasswordStepOne = () => {
       email: Yup.string().email('Email must be a valid email').required('Required'),
     }),
     onSubmit: async (values) => {
-      await resetPasswordStepOneMutation.mutateAsync(values);
-    },
-  });
-
-  const resetPasswordStepOneMutation = useMutation({
-    mutationFn: async (values: FormValues) => {
-      const request: ResetPasswordStepOneRequest = {
-        email: values.email,
-      };
-      await usersApi.resetPasswordStepOne({
-        resetPasswordStepOneRequest: request,
+      await resetPasswordStepOneMutation.mutateAsync(values.email, {
+        onSuccess: () => void navigate(routePaths.resetPasswordStepOneSuccess),
       });
-    },
-    onSuccess: () => {
-      void navigate(routePaths.resetPasswordStepOneSuccess);
-    },
-    onError: () => {
-      toast.error('Password could not be reset');
     },
   });
 

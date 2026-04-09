@@ -4,24 +4,23 @@ import { toast } from 'react-toastify';
 import { routePaths } from '../../constants/routePaths';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { LoginRequest } from '../../api/generatedSdk';
-import { usersApi } from '../../api';
 import { UserContext, UserInfo } from '../../contexts/UserContext';
 import { Box, TextField, Link as MuiLink, Button } from '@mui/material';
 import { PageTitle } from '../../components/pageTitle';
-import { useMutation } from '@tanstack/react-query';
+import { useLogin } from './mutations/useLogin';
 
 export type RouterState = {
   errorMessage?: string;
 };
 
-type FormValues = {
+export type LoginFormValues = {
   email: string;
   password: string;
 };
 
 const Login = () => {
   const { setUserInfo } = useContext(UserContext);
+  const loginMutation = useLogin();
   const [credentialsAreValid, setCredentialsAreValid] = useState(false);
   const navigate = useNavigate();
 
@@ -39,7 +38,7 @@ const Login = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const formik = useFormik<FormValues>({
+  const formik = useFormik<LoginFormValues>({
     initialValues: {
       email: '',
       password: '',
@@ -48,29 +47,17 @@ const Login = () => {
       email: Yup.string().email('Email must be a valid email').required('Required'),
       password: Yup.string().required('Required'),
     }),
-    onSubmit: async (values: FormValues) => {
-      await loginMutation.mutateAsync(values);
-    },
-  });
-
-  const loginMutation = useMutation({
-    mutationFn: async (values: FormValues) => {
-      const loginRequest: LoginRequest = {
-        email: values.email,
-        password: values.password,
-      };
-      const loginResult = await usersApi.login({ loginRequest });
-      const userInfo: UserInfo = {
-        userId: loginResult.user.id,
-        fiatCurrency: loginResult.user.fiatCurrencyTypeName,
-        token: loginResult.accessToken,
-      };
-      setUserInfo(userInfo);
-      setCredentialsAreValid(true);
-    },
-    onError: () => {
-      toast.error('Invalid email or password', {
-        toastId: 'invalidCredentials',
+    onSubmit: async (values: LoginFormValues) => {
+      await loginMutation.mutateAsync(values, {
+        onSuccess: (loginResult) => {
+          const userInfo: UserInfo = {
+            userId: loginResult.user.id,
+            fiatCurrency: loginResult.user.fiatCurrencyTypeName,
+            token: loginResult.accessToken,
+          };
+          setUserInfo(userInfo);
+          setCredentialsAreValid(true);
+        },
       });
     },
   });
