@@ -13,7 +13,7 @@ public class SingleTransaction
 {
     public DateOnly Date { get; set; }
     public string CryptoTicker { get; set; } = string.Empty;
-    public decimal QuantityTransacted { get; set; }
+    public decimal AmountTransacted { get; set; }
     public decimal Price { get; set; }
     public decimal Fee { get; set; }
     public string TransactionType { get; set; } = string.Empty;
@@ -32,7 +32,7 @@ public class SingleTransactionValidator : AbstractValidator<SingleTransaction>
 
         RuleFor(x => x.Date).NotEmpty();
         RuleFor(x => x.CryptoTicker).NotEmpty();
-        RuleFor(x => x.QuantityTransacted).NotNull();
+        RuleFor(x => x.AmountTransacted).NotNull();
         RuleFor(x => x.Price).NotNull();
         RuleFor(x => x.Fee).NotNull();
         RuleFor(x => x.TransactionType)
@@ -96,7 +96,7 @@ public class AddTransactionsHandler
             {
                 Date = x.Date,
                 CryptoTicker = x.CryptoTicker.ToUpper(),
-                QuantityTransacted = x.QuantityTransacted,
+                AmountTransacted = x.AmountTransacted,
                 Price = x.Price,
                 Fee = x.Fee,
                 TransactionType = transactionTypes.First(transactionType =>

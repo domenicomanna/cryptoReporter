@@ -58,8 +58,8 @@ export const TransactionsTable: FC<Props> = ({
       filterVariant: 'multi-select',
       filterSelectOptions: transactedCryptos,
     }),
-    columnHelper.accessor('quantityTransacted', {
-      header: 'Quantity Transacted',
+    columnHelper.accessor('amountTransacted', {
+      header: 'Amount Transacted',
       Cell: ({ cell }) => {
         return <span>{formatAsCurrency(cell.getValue<number>(), userInfo?.fiatCurrency)}</span>;
       },

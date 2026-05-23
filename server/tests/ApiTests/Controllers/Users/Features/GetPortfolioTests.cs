@@ -42,7 +42,7 @@ public class GetPortfolioTests : IClassFixture<DatabaseFixture>
                 {
                     Date = new DateOnly(2022, 1, 1),
                     CryptoTicker = "BTC",
-                    QuantityTransacted = 1000,
+                    AmountTransacted = 1000,
                     Price = 10000,
                     Fee = 10,
                     TransactionType = appDbContext
@@ -55,7 +55,7 @@ public class GetPortfolioTests : IClassFixture<DatabaseFixture>
                 {
                     Date = new DateOnly(2022, 1, 1),
                     CryptoTicker = "BTC",
-                    QuantityTransacted = 1000,
+                    AmountTransacted = 1000,
                     Price = 20000,
                     Fee = 10,
                     TransactionType = appDbContext
@@ -68,7 +68,7 @@ public class GetPortfolioTests : IClassFixture<DatabaseFixture>
                 {
                     Date = new DateOnly(2022, 1, 1),
                     CryptoTicker = "ETH",
-                    QuantityTransacted = 500,
+                    AmountTransacted = 500,
                     Price = 1000,
                     Fee = 5,
                     TransactionType = appDbContext
@@ -81,7 +81,7 @@ public class GetPortfolioTests : IClassFixture<DatabaseFixture>
                 {
                     Date = new DateOnly(2022, 2, 1),
                     CryptoTicker = "ETH",
-                    QuantityTransacted = 1000,
+                    AmountTransacted = 1000,
                     Price = 1000,
                     Fee = 10,
                     TransactionType = appDbContext

@@ -42,7 +42,7 @@ export interface Transaction {
      * @type {number}
      * @memberof Transaction
      */
-    quantityTransacted: number;
+    amountTransacted: number;
     /**
      * 
      * @type {number}
@@ -101,7 +101,7 @@ export function instanceOfTransaction(value: object): boolean {
     isInstance = isInstance && "id" in value;
     isInstance = isInstance && "cryptoTicker" in value;
     isInstance = isInstance && "date" in value;
-    isInstance = isInstance && "quantityTransacted" in value;
+    isInstance = isInstance && "amountTransacted" in value;
     isInstance = isInstance && "price" in value;
     isInstance = isInstance && "fee" in value;
     isInstance = isInstance && "coinsTransacted" in value;
@@ -125,7 +125,7 @@ export function TransactionFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'id': json['id'],
         'cryptoTicker': json['cryptoTicker'],
         'date': json['date'],
-        'quantityTransacted': json['quantityTransacted'],
+        'amountTransacted': json['amountTransacted'],
         'price': json['price'],
         'fee': json['fee'],
         'coinsTransacted': json['coinsTransacted'],
@@ -149,7 +149,7 @@ export function TransactionToJSON(value?: Transaction | null): any {
         'id': value.id,
         'cryptoTicker': value.cryptoTicker,
         'date': value.date,
-        'quantityTransacted': value.quantityTransacted,
+        'amountTransacted': value.amountTransacted,
         'price': value.price,
         'fee': value.fee,
         'coinsTransacted': value.coinsTransacted,

@@ -11,7 +11,7 @@ export const buildTransactions = (
   return csvRecords.map((record) => ({
     date: formatDateString(record[mappingConfig.dateColumnName ?? ''] ?? ''),
     cryptoTicker: getCryptoTicker(record[mappingConfig.cryptoTickerColumnName ?? ''] ?? ''),
-    quantityTransacted: convertToNumber(record[mappingConfig.quantityTransactedColumnName ?? '']),
+    amountTransacted: convertToNumber(record[mappingConfig.amountTransactedColumnName ?? '']),
     price: parseFloat(record[mappingConfig.priceColumnName ?? ''] ?? '0'),
     fee: convertToNumber(record[mappingConfig.feeColumnName ?? '']),
     transactionType: getTransactionType(record[mappingConfig.transactionTypeColumnName ?? ''] ?? ''),

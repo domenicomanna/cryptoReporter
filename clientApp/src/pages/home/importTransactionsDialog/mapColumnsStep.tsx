@@ -8,7 +8,7 @@ import ActionButtons from '../../../components/actionButtons';
 export type MapColumnsFormValues = {
   dateColumnName: string | null;
   cryptoTickerColumnName: string | null;
-  quantityTransactedColumnName: string | null;
+  amountTransactedColumnName: string | null;
   priceColumnName: string | null;
   feeColumnName: string | null;
   transactionTypeColumnName: string | null;
@@ -36,8 +36,8 @@ const formFields: SourceColumnFormField[] = [
     valueIsRequired: true,
   },
   {
-    sourceFieldName: 'quantityTransactedColumnName',
-    targetColumnName: 'Quantity Transacted',
+    sourceFieldName: 'amountTransactedColumnName',
+    targetColumnName: 'Amount Transacted',
     valueIsRequired: true,
   },
   {
@@ -96,7 +96,7 @@ const MapColumnsStep: FC<Props> = ({
     validationSchema: Yup.object({
       dateColumnName: Yup.string().required('Required'),
       cryptoTickerColumnName: Yup.string().required('Required'),
-      quantityTransactedColumnName: Yup.string().required('Required'),
+      amountTransactedColumnName: Yup.string().required('Required'),
       priceColumnName: Yup.string().required('Required'),
       feeColumnName: Yup.string().required('Required'),
       transactionTypeColumnName: Yup.string().required('Required'),

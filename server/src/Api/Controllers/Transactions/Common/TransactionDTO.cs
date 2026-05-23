@@ -7,7 +7,7 @@ public class TransactionDTO
     public int Id { get; set; }
     public string CryptoTicker { get; set; } = string.Empty;
     public DateOnly Date { get; set; }
-    public decimal QuantityTransacted { get; set; }
+    public decimal AmountTransacted { get; set; }
     public decimal Price { get; set; }
     public decimal Fee { get; set; }
 

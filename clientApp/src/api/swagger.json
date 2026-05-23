@@ -746,12 +746,12 @@
       },
       "SingleTransaction": {
         "required": [
+          "amountTransacted",
           "cryptoTicker",
           "date",
           "fee",
           "numberOfCoinsSold",
           "price",
-          "quantityTransacted",
           "transactionType"
         ],
         "type": "object",
@@ -763,7 +763,7 @@
           "cryptoTicker": {
             "type": "string"
           },
-          "quantityTransacted": {
+          "amountTransacted": {
             "type": "number",
             "format": "double"
           },
@@ -795,6 +795,7 @@
       },
       "Transaction": {
         "required": [
+          "amountTransacted",
           "coinsTransacted",
           "cryptoTicker",
           "date",
@@ -802,7 +803,6 @@
           "id",
           "numberOfCoinsSold",
           "price",
-          "quantityTransacted",
           "transactionType",
           "userId"
         ],
@@ -819,7 +819,7 @@
             "type": "string",
             "format": "date"
           },
-          "quantityTransacted": {
+          "amountTransacted": {
             "type": "number",
             "format": "double"
           },

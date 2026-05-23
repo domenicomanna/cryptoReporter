@@ -53,7 +53,7 @@ const ImportTransactionsDialog: FC<Props> = ({ onCloseDialog, onTransactionsImpo
       : {
           dateColumnName: null,
           cryptoTickerColumnName: null,
-          quantityTransactedColumnName: null,
+          amountTransactedColumnName: null,
           priceColumnName: null,
           feeColumnName: null,
           transactionTypeColumnName: null,

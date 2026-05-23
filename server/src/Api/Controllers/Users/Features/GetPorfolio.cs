@@ -119,21 +119,21 @@ public class GetPortfolioHandler
                 // round to ensure the calculated values don't exceed the maximum number of digits allowed in a decimal
                 CoinsOwned = Math.Round(
                     group.Sum(transaction =>
-                        ((transaction.QuantityTransacted - transaction.Fee) / transaction.Price) // coins acquired from this transaction
+                        ((transaction.AmountTransacted - transaction.Fee) / transaction.Price) // coins acquired from this transaction
                         - transaction.NumberOfCoinsSold
                     ),
                     6
                 ),
                 InvestmentAmountIncludingFee = Math.Round(
                     group.Sum(transaction =>
-                        transaction.QuantityTransacted
+                        transaction.AmountTransacted
                         - (
                             transaction.NumberOfCoinsSold
                             *
                             // price per coin
                             (
-                                transaction.QuantityTransacted
-                                / ((transaction.QuantityTransacted - transaction.Fee) / transaction.Price)
+                                transaction.AmountTransacted
+                                / ((transaction.AmountTransacted - transaction.Fee) / transaction.Price)
                             )
                         )
                     ),

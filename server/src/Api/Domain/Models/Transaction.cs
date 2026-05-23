@@ -5,10 +5,10 @@ public class Transaction
     public int Id { get; set; }
     public DateOnly Date { get; set; }
     public string CryptoTicker { get; set; } = string.Empty;
-    public decimal QuantityTransacted { get; set; }
+    public decimal AmountTransacted { get; set; }
     public decimal Price { get; set; }
     public decimal Fee { get; set; }
-    public decimal CoinsTransacted => (QuantityTransacted - Fee) / Price;
+    public decimal CoinsTransacted => (AmountTransacted - Fee) / Price;
     public TransactionTypeId TransactionTypeId { get; set; }
     public TransactionType TransactionType { get; set; } = null!;
     public string? Exchange { get; set; }

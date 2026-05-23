@@ -40,7 +40,7 @@ public class GetTransactionsTests : IClassFixture<DatabaseFixture>
                 {
                     Date = new DateOnly(2022, 1, 1),
                     CryptoTicker = "BTC",
-                    QuantityTransacted = 100,
+                    AmountTransacted = 100,
                     Price = 10000,
                     Fee = 1,
                     TransactionType = appDbContext
@@ -52,7 +52,7 @@ public class GetTransactionsTests : IClassFixture<DatabaseFixture>
                 {
                     Date = new DateOnly(2022, 1, 1),
                     CryptoTicker = "ETH",
-                    QuantityTransacted = 100,
+                    AmountTransacted = 100,
                     Price = 1000,
                     Fee = 1,
                     TransactionType = appDbContext.TransactionTypes.Where(x => x.Id == TransactionTypeId.Sale).First(),
