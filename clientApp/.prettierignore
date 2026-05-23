@@ -1,2 +1,4 @@
 package-lock.json
 build
+src/api/generatedSdk
+src/api/swagger.json
